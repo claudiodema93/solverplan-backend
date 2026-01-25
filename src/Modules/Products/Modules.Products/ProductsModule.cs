@@ -1,0 +1,42 @@
+using Asp.Versioning;
+using FSH.Framework.Persistence;
+using FSH.Framework.Web.Modules;
+using FSH.Modules.Products.Data;
+using FSH.Modules.Products.Features.v1.CreateProduct;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Hosting;
+
+namespace FSH.Modules.Products;
+
+public sealed class ProductsModule : IModule
+{
+    public void ConfigureServices(IHostApplicationBuilder builder)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+
+        builder.Services.AddHeroDbContext<ProductsDbContext>();
+
+        builder.Services.AddHealthChecks()
+            .AddDbContextCheck<ProductsDbContext>(
+                name: "db:products",
+                failureStatus: HealthStatus.Unhealthy);
+    }
+
+    public void MapEndpoints(IEndpointRouteBuilder endpoints)
+    {
+        var versionSet = endpoints.NewApiVersionSet()
+            .HasApiVersion(new ApiVersion(1))
+            .ReportApiVersions()
+            .Build();
+
+        var group = endpoints.MapGroup("api/v{version:apiVersion}/products")
+            .WithTags("Products")
+            .WithApiVersionSet(versionSet);
+
+        CreateProductEndpoint.Map(group);
+    }
+}

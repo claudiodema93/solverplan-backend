@@ -7,6 +7,9 @@ using FSH.Modules.Identity.Features.v1.Tokens.TokenGeneration;
 using FSH.Modules.Multitenancy;
 using FSH.Modules.Multitenancy.Contracts.v1.GetTenantStatus;
 using FSH.Modules.Multitenancy.Features.v1.GetTenantStatus;
+using FSH.Modules.Products;
+using FSH.Modules.Products.Contracts.v1.CreateProduct;
+using FSH.Modules.Products.Features.v1.CreateProduct;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,14 +39,17 @@ builder.Services.AddMediator(o =>
         typeof(GetTenantStatusQuery),
         typeof(GetTenantStatusQueryHandler),
         typeof(FSH.Modules.Auditing.Contracts.AuditEnvelope),
-        typeof(FSH.Modules.Auditing.Persistence.AuditDbContext)];
+        typeof(FSH.Modules.Auditing.Persistence.AuditDbContext),
+        typeof(CreateProductCommand),
+        typeof(CreateProductCommandHandler)];
 });
 
 var moduleAssemblies = new Assembly[]
 {
     typeof(IdentityModule).Assembly,
     typeof(MultitenancyModule).Assembly,
-    typeof(AuditingModule).Assembly
+    typeof(AuditingModule).Assembly,
+    typeof(ProductsModule).Assembly
 };
 
 builder.AddHeroPlatform(o =>
