@@ -52,21 +52,17 @@ public sealed class SessionService : ISessionService
 
         var clientInfo = _uaParser.Parse(userAgent);
 
-        var session = new UserSession
-        {
-            UserId = userId,
-            RefreshTokenHash = refreshTokenHash,
-            IpAddress = ipAddress,
-            UserAgent = userAgent,
-            DeviceType = GetDeviceType(clientInfo.Device.Family),
-            Browser = clientInfo.UA.Family,
-            BrowserVersion = clientInfo.UA.Major,
-            OperatingSystem = clientInfo.OS.Family,
-            OsVersion = clientInfo.OS.Major,
-            ExpiresAt = expiresAt,
-            CreatedAt = DateTime.UtcNow,
-            LastActivityAt = DateTime.UtcNow
-        };
+        var session = UserSession.Create(
+            userId: userId,
+            refreshTokenHash: refreshTokenHash,
+            ipAddress: ipAddress,
+            userAgent: userAgent,
+            expiresAt: expiresAt,
+            deviceType: DeviceTypeClassifier.Classify(clientInfo.Device.Family),
+            browser: clientInfo.UA.Family,
+            browserVersion: clientInfo.UA.Major,
+            operatingSystem: clientInfo.OS.Family,
+            osVersion: clientInfo.OS.Major);
 
         _db.UserSessions.Add(session);
         await _db.SaveChangesAsync(cancellationToken);
@@ -149,10 +145,8 @@ public sealed class SessionService : ISessionService
             throw new UnauthorizedAccessException("Cannot revoke session for another user");
         }
 
-        session.IsRevoked = true;
-        session.RevokedAt = DateTime.UtcNow;
-        session.RevokedBy = revokedBy;
-        session.RevokedReason = reason ?? "User requested";
+        var tenantId = _multiTenantContextAccessor?.MultiTenantContext?.TenantInfo?.Id;
+        session.Revoke(revokedBy, reason ?? "User requested", tenantId);
 
         await _db.SaveChangesAsync(cancellationToken);
 
@@ -186,12 +180,10 @@ public sealed class SessionService : ISessionService
 
         var sessions = await query.ToListAsync(cancellationToken);
 
+        var tenantId = _multiTenantContextAccessor?.MultiTenantContext?.TenantInfo?.Id;
         foreach (var session in sessions)
         {
-            session.IsRevoked = true;
-            session.RevokedAt = DateTime.UtcNow;
-            session.RevokedBy = revokedBy;
-            session.RevokedReason = reason ?? "User requested logout from all devices";
+            session.Revoke(revokedBy, reason ?? "User requested logout from all devices", tenantId);
         }
 
         await _db.SaveChangesAsync(cancellationToken);
@@ -213,12 +205,10 @@ public sealed class SessionService : ISessionService
             .Where(s => s.UserId == userId && !s.IsRevoked)
             .ToListAsync(cancellationToken);
 
+        var tenantId = _multiTenantContextAccessor?.MultiTenantContext?.TenantInfo?.Id;
         foreach (var session in sessions)
         {
-            session.IsRevoked = true;
-            session.RevokedAt = DateTime.UtcNow;
-            session.RevokedBy = revokedBy;
-            session.RevokedReason = reason ?? "Admin requested";
+            session.Revoke(revokedBy, reason ?? "Admin requested", tenantId);
         }
 
         await _db.SaveChangesAsync(cancellationToken);
@@ -245,10 +235,8 @@ public sealed class SessionService : ISessionService
             return false;
         }
 
-        session.IsRevoked = true;
-        session.RevokedAt = DateTime.UtcNow;
-        session.RevokedBy = revokedBy;
-        session.RevokedReason = reason ?? "Admin requested";
+        var tenantId = _multiTenantContextAccessor?.MultiTenantContext?.TenantInfo?.Id;
+        session.Revoke(revokedBy, reason ?? "Admin requested", tenantId);
 
         await _db.SaveChangesAsync(cancellationToken);
 
@@ -268,7 +256,7 @@ public sealed class SessionService : ISessionService
 
         if (session is not null)
         {
-            session.LastActivityAt = DateTime.UtcNow;
+            session.UpdateActivity();
             await _db.SaveChangesAsync(cancellationToken);
         }
     }
@@ -286,9 +274,7 @@ public sealed class SessionService : ISessionService
 
         if (session is not null)
         {
-            session.RefreshTokenHash = newRefreshTokenHash;
-            session.ExpiresAt = newExpiresAt;
-            session.LastActivityAt = DateTime.UtcNow;
+            session.UpdateRefreshToken(newRefreshTokenHash, newExpiresAt);
             await _db.SaveChangesAsync(cancellationToken);
 
             _logger.LogInformation("Updated session {SessionId} with new refresh token", session.Id);
@@ -340,30 +326,6 @@ public sealed class SessionService : ISessionService
             await _db.SaveChangesAsync(cancellationToken);
             _logger.LogInformation("Cleaned up {Count} expired sessions", expiredSessions.Count);
         }
-    }
-
-    private static string GetDeviceType(string deviceFamily)
-    {
-        if (string.IsNullOrWhiteSpace(deviceFamily) || deviceFamily == "Other")
-        {
-            return "Desktop";
-        }
-
-        if (deviceFamily.Contains("mobile", StringComparison.OrdinalIgnoreCase) ||
-            deviceFamily.Contains("phone", StringComparison.OrdinalIgnoreCase) ||
-            deviceFamily.Contains("iphone", StringComparison.OrdinalIgnoreCase) ||
-            deviceFamily.Contains("android", StringComparison.OrdinalIgnoreCase))
-        {
-            return "Mobile";
-        }
-
-        if (deviceFamily.Contains("tablet", StringComparison.OrdinalIgnoreCase) ||
-            deviceFamily.Contains("ipad", StringComparison.OrdinalIgnoreCase))
-        {
-            return "Tablet";
-        }
-
-        return "Desktop";
     }
 
     private static UserSessionDto MapToDto(UserSession session, bool isCurrentSession)

@@ -73,11 +73,24 @@ public class IdentityModule : IModule
         ArgumentNullException.ThrowIfNull(builder);
         var services = builder.Services;
         services.AddSingleton<IAuthorizationMiddlewareResultHandler, PathAwareAuthorizationHandler>();
-        services.AddScoped<ICurrentUser, CurrentUserService>();
-        services.AddScoped<IRequestContext, RequestContextService>();
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
+        services.AddScoped<ICurrentUser>(sp => sp.GetRequiredService<ICurrentUserService>());
+        services.AddScoped<ICurrentUserInitializer>(sp => sp.GetRequiredService<ICurrentUserService>());
+        services.AddScoped<IRequestContextService, RequestContextService>();
+        services.AddScoped<IRequestContext>(sp => sp.GetRequiredService<IRequestContextService>());
         services.AddScoped<ITokenService, TokenService>();
-        services.AddScoped(sp => (ICurrentUserInitializer)sp.GetRequiredService<ICurrentUser>());
+
+        // User services - focused single-responsibility services
+        services.AddTransient<IUserRegistrationService, UserRegistrationService>();
+        services.AddTransient<IUserProfileService, UserProfileService>();
+        services.AddTransient<IUserStatusService, UserStatusService>();
+        services.AddTransient<IUserRoleService, UserRoleService>();
+        services.AddTransient<IUserPasswordService, UserPasswordService>();
+        services.AddTransient<IUserPermissionService, UserPermissionService>();
+
+        // Facade for backward compatibility
         services.AddTransient<IUserService, UserService>();
+
         services.AddTransient<IRoleService, RoleService>();
         services.AddHeroStorage(builder.Configuration);
         services.AddScoped<IIdentityService, IdentityService>();
@@ -100,8 +113,9 @@ public class IdentityModule : IModule
         // Register password expiry service
         services.AddScoped<IPasswordExpiryService, PasswordExpiryService>();
 
-        // Register session service
+        // Register session service and background cleanup
         services.AddScoped<ISessionService, SessionService>();
+        services.AddHostedService<SessionCleanupHostedService>();
 
         // Register group role service for group-derived permissions
         services.AddScoped<IGroupRoleService, GroupRoleService>();
