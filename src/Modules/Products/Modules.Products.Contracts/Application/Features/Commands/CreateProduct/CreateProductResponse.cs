@@ -1,3 +1,3 @@
 namespace FSH.Modules.Products.Contracts.v1.CreateProduct;
 
-public sealed record CreateProductResponse(Guid Id);
+public sealed record CreateProductResponse(int Id);

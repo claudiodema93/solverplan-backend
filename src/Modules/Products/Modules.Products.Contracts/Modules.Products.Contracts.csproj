@@ -11,4 +11,10 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\BuildingBlocks\Shared\Shared.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Application\" />
+	  <Folder Include="Application\Features\Commands\" />
+	  <Folder Include="Application\Features\Queries\" />
+	  <Folder Include="Domain\Events\" />
+	</ItemGroup>
 </Project>

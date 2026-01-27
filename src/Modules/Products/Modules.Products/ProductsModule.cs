@@ -1,8 +1,8 @@
 using Asp.Versioning;
 using FSH.Framework.Persistence;
 using FSH.Framework.Web.Modules;
-using FSH.Modules.Products.Data;
-using FSH.Modules.Products.Features.v1.CreateProduct;
+using FSH.Modules.Products.Endpoints.v1;
+using FSH.Modules.Products.Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;

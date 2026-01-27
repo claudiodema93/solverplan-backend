@@ -8,4 +8,5 @@ public sealed class ProductsModuleConstants : IModuleConstants
     public string ModuleName => "Products";
     public string ApiPrefix => "products";
     public const string SchemaName = "products";
+    public const string StorageName = "products";
 }

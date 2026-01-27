@@ -1,8 +1,9 @@
 using FSH.Modules.Products.Domain;
+using FSH.Modules.Products.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FSH.Modules.Products.Data.Configurations;
+namespace FSH.Modules.Products.Infrastructure.Data.Configurations;
 
 public class ProductConfiguration : IEntityTypeConfiguration<Product>
 {
@@ -10,7 +11,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
     {
         ArgumentNullException.ThrowIfNull(builder);
 
-        builder.ToTable("Products", ProductsDbContext.Schema);
+        builder.ToTable("Products", ProductsModuleConstants.SchemaName);
 
         builder.HasKey(p => p.Id);
 

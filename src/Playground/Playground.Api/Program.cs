@@ -8,8 +8,8 @@ using FSH.Modules.Multitenancy;
 using FSH.Modules.Multitenancy.Contracts.v1.GetTenantStatus;
 using FSH.Modules.Multitenancy.Features.v1.GetTenantStatus;
 using FSH.Modules.Products;
-using FSH.Modules.Products.Contracts.v1.CreateProduct;
-using FSH.Modules.Products.Features.v1.CreateProduct;
+using FSH.Modules.Products.Application.Features.Commands.CreateProduct;
+using FSH.Modules.Products.Contracts.Application.Features.Commands.CreateProduct;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);

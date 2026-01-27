@@ -17,4 +17,10 @@
 		<ProjectReference Include="..\..\..\BuildingBlocks\Web\Web.csproj" />
 		<ProjectReference Include="..\Modules.Products.Contracts\Modules.Products.Contracts.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Application\Features\Queries\" />
+	  <Folder Include="Domain\Enums\" />
+	  <Folder Include="Domain\Events\" />
+	  <Folder Include="Infrastructure\" />
+	</ItemGroup>
 </Project>
