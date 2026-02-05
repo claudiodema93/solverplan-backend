@@ -39,5 +39,6 @@ public sealed class ProductsModule : IModule
 
         CreateProductEndpoint.Map(group);
         GetProductByIdEndpoint.Map(group);
+        SearchProductsEndpoint.Map(group);
     }
 }

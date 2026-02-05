@@ -41,7 +41,7 @@ Establish the complete CRUD functionality for Products with all necessary comman
     - Endpoint registered in ProductsModule.MapEndpoints
     - Build successful with 0 errors
 
-- [ ] Implement SearchProducts query with pagination and filtering:
+- [x] Implement SearchProducts query with pagination and filtering:
   - Create SearchProductsQuery.cs in Contracts/Application/Features/Queries/SearchProducts/
     - Inherit from PagedRequest and implement IQuery<PagedResponse<ProductDto>>
     - Include filter properties: Search, CategoryId, Status, IsLatest
@@ -57,6 +57,13 @@ Establish the complete CRUD functionality for Products with all necessary comman
     - MapGet("/") with query parameters
     - Apply RequirePermission(ProductsPermissions.View)
   - Register endpoint in ProductsModule.MapEndpoints
+  - **Completed**: All files created successfully following FSH patterns
+    - SearchProductsQuery implementing IPagedQuery with filters: Search, CategoryId, Status, IsLatest
+    - SearchProductsQueryHandler with EF.Functions.Like for case-insensitive search, tenant filtering, and sortable fields
+    - SearchProductsQueryValidator with PagedQueryValidator and field validations
+    - SearchProductsEndpoint using MapGet("/") with [AsParameters] pattern
+    - Endpoint registered in ProductsModule.MapEndpoints
+    - Build successful with 0 errors, 0 warnings
 
 - [ ] Implement UpdateProduct command feature:
   - Create UpdateProductCommand.cs in Contracts/Application/Features/Commands/UpdateProduct/
