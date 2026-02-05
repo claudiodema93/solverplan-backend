@@ -18,7 +18,7 @@ public class Product : BaseEntity<int>, IHasTenant, IAuditableEntity
     /// <summary>
     /// The revision number of the product. Increments with each revision.
     /// </summary>
-    public int Revision { get; set; } = 0;
+    public int Revision { get; set; }
 
     /// <summary>
     /// The current state of the product (e.g., Draft, Active, Archived).
@@ -33,7 +33,7 @@ public class Product : BaseEntity<int>, IHasTenant, IAuditableEntity
     /// <summary>
     /// Indicates whether the product is private or publicly accessible.
     /// </summary>
-    public bool Private { get; set; } = false;
+    public bool Private { get; set; }
 
     /// <summary>
     /// Foreign key to the associated customer. Nullable if product is not customer-specific.
@@ -48,7 +48,7 @@ public class Product : BaseEntity<int>, IHasTenant, IAuditableEntity
     /// <summary>
     /// The version number of the product. Used for tracking product evolution.
     /// </summary>
-    public int Version { get; set; } = 0;
+    public int Version { get; set; }
 
     /// <summary>
     /// Foreign key to the category. Nullable if product is uncategorized.
@@ -93,7 +93,7 @@ public class Product : BaseEntity<int>, IHasTenant, IAuditableEntity
     /// <summary>
     /// Indicates whether the product has new version and is no longer active.
     /// </summary>
-    public bool IsLatest { get; set; } = false;
+    public bool IsLatest { get; set; }
 
     /// <summary>
     /// Information about product mirroring from another product.

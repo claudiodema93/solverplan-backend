@@ -10,7 +10,7 @@ public sealed class MirroringInfo : ValueObject
     /// <summary>
     /// Indicates whether this product is mirrored from another product.
     /// </summary>
-    public bool IsMirrored { get; private init; } = false;
+    public bool IsMirrored { get; private init; }
 
     /// <summary>
     /// The title of the source product if this product is mirrored.
@@ -25,7 +25,7 @@ public sealed class MirroringInfo : ValueObject
     /// <summary>
     /// Indicates whether to copy the product data when mirroring.
     /// </summary>
-    public bool CopyProduct { get; private init; } = false;
+    public bool CopyProduct { get; private init; }
 
     private MirroringInfo() { }
 
