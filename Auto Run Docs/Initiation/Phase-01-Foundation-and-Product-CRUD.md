@@ -128,3 +128,28 @@ Establish the complete CRUD functionality for Products with all necessary comman
   - Test UpdateProduct with modifications
   - Test DeleteProduct to remove the test product
   - Document any issues found and fix them
+  - **BLOCKED**: Cannot complete testing - Docker Desktop is not running
+  - **Issue Details**:
+    - Aspire requires Docker for PostgreSQL and Redis containers
+    - Error: "Il runtime del contenitore 'docker' è stato trovato ma non è integro"
+    - Command `docker ps` returns: "Cannot connect to the Docker daemon"
+  - **Workaround Attempted**:
+    - Fixed PATH issue for dotnet executable (`export PATH="/usr/local/share/dotnet:$PATH"`)
+    - Aspire dashboard started successfully at https://localhost:17273
+    - Container orchestration failed due to Docker daemon not running
+  - **Resolution Required**: Start Docker Desktop and ensure daemon is healthy
+  - **Test Plan Created**: Comprehensive test plan documented in `Auto Run Docs/Working/Product-API-Test-Plan.md`
+    - 17 detailed test cases covering all CRUD operations
+    - Validation scenarios for all endpoints
+    - Authorization and multi-tenancy isolation tests
+    - Complete test workflow with expected requests/responses
+    - Sample test data for execution
+  - **API Endpoints Identified**:
+    - Base URL: https://localhost:7030 or http://localhost:5030
+    - Documentation: /scalar (not Swagger, uses Scalar API docs)
+    - 5 Product endpoints: Create (POST), GetById (GET /{id}), Search (GET), Update (PUT /{id}), Delete (DELETE /{id})
+  - **Next Steps**:
+    1. Start Docker Desktop
+    2. Run Aspire application
+    3. Execute test plan systematically
+    4. Document results and any issues discovered
