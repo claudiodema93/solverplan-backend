@@ -41,5 +41,6 @@ public sealed class ProductsModule : IModule
         GetProductByIdEndpoint.Map(group);
         SearchProductsEndpoint.Map(group);
         UpdateProductEndpoint.Map(group);
+        DeleteProductEndpoint.Map(group);
     }
 }

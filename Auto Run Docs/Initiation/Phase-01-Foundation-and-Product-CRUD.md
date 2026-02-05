@@ -86,7 +86,7 @@ Establish the complete CRUD functionality for Products with all necessary comman
     - Endpoint registered in ProductsModule.MapEndpoints
     - Build successful with 0 errors, 0 new warnings
 
-- [ ] Implement DeleteProduct command feature:
+- [x] Implement DeleteProduct command feature:
   - Create DeleteProductCommand.cs in Contracts/Application/Features/Commands/DeleteProduct/
     - Record with Id property implementing ICommand
   - Create DeleteProductCommandHandler.cs in Application/Features/Commands/DeleteProduct/
@@ -99,6 +99,12 @@ Establish the complete CRUD functionality for Products with all necessary comman
     - Apply RequirePermission(ProductsPermissions.Delete)
     - Return NoContent on success
   - Register endpoint in ProductsModule.MapEndpoints
+  - **Completed**: All files created successfully following FSH patterns
+    - DeleteProductCommand implementing ICommand with Id property
+    - DeleteProductCommandHandler with tenant filtering, NotFoundException for missing products, and DbSet.Remove
+    - DeleteProductEndpoint using MapDelete("/{id:int}") with permission guard and NoContent response
+    - Endpoint registered in ProductsModule.MapEndpoints
+    - Build successful with 0 errors, no new warnings introduced
 
 - [ ] Build the solution and verify zero warnings:
   - Run `dotnet build src/FSH.Framework.slnx`
