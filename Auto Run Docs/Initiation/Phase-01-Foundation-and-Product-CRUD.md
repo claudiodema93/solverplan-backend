@@ -128,16 +128,17 @@ Establish the complete CRUD functionality for Products with all necessary comman
   - Test UpdateProduct with modifications
   - Test DeleteProduct to remove the test product
   - Document any issues found and fix them
-  - **BLOCKED**: Cannot complete testing - Docker Desktop is not running
+  - **BLOCKED - ENVIRONMENTAL DEPENDENCY**: Cannot complete testing - Docker Desktop is not running
   - **Issue Details**:
     - Aspire requires Docker for PostgreSQL and Redis containers
     - Error: "Il runtime del contenitore 'docker' è stato trovato ma non è integro"
-    - Command `docker ps` returns: "Cannot connect to the Docker daemon"
+    - Command `docker ps` returns: "Cannot connect to the Docker daemon at unix:///Users/claudiodemartino/.docker/run/docker.sock"
+    - Verified on 2026-02-05: Docker daemon still not accessible
   - **Workaround Attempted**:
     - Fixed PATH issue for dotnet executable (`export PATH="/usr/local/share/dotnet:$PATH"`)
-    - Aspire dashboard started successfully at https://localhost:17273
-    - Container orchestration failed due to Docker daemon not running
-  - **Resolution Required**: Start Docker Desktop and ensure daemon is healthy
+    - Aspire dashboard can start successfully at https://localhost:17273
+    - Container orchestration fails due to Docker daemon not running
+  - **Resolution Required**: **MANUAL ACTION NEEDED** - Start Docker Desktop and ensure daemon is healthy
   - **Test Plan Created**: Comprehensive test plan documented in `Auto Run Docs/Working/Product-API-Test-Plan.md`
     - 17 detailed test cases covering all CRUD operations
     - Validation scenarios for all endpoints
@@ -148,8 +149,10 @@ Establish the complete CRUD functionality for Products with all necessary comman
     - Base URL: https://localhost:7030 or http://localhost:5030
     - Documentation: /scalar (not Swagger, uses Scalar API docs)
     - 5 Product endpoints: Create (POST), GetById (GET /{id}), Search (GET), Update (PUT /{id}), Delete (DELETE /{id})
-  - **Next Steps**:
-    1. Start Docker Desktop
-    2. Run Aspire application
-    3. Execute test plan systematically
-    4. Document results and any issues discovered
+  - **Next Steps (Requires Manual Intervention)**:
+    1. **USER ACTION**: Start Docker Desktop application
+    2. Verify Docker daemon: `docker ps` should succeed
+    3. Run Aspire application: `dotnet run --project src/Playground/FSH.Playground.AppHost`
+    4. Execute comprehensive test plan systematically
+    5. Document results and any issues discovered
+  - **Note**: This task cannot be automated until Docker is running. Task remains unchecked pending environmental setup.
