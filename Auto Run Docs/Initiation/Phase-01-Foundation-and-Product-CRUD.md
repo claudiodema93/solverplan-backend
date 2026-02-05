@@ -1,0 +1,92 @@
+# Phase 01: Foundation and Product CRUD
+
+Establish the complete CRUD functionality for Products with all necessary commands, queries, validators, and endpoints. By the end of this phase, you'll have a fully working API for managing products that can be tested with Swagger UI.
+
+## Tasks
+
+- [x] Analyze the existing Product entity structure and CreateProduct implementation:
+  - Read Product.cs entity to understand all properties and relationships
+  - Read existing CreateProductCommand, Handler, Validator, and Endpoint
+  - Read ProductsDbContext to understand the database configuration
+  - Document the patterns used (ICommand, ICommandHandler, ValueTask, validators, permissions)
+  - **Completed**: Comprehensive analysis documented in `Auto Run Docs/Working/Product-Entity-Analysis.md`
+  - Analyzed 11 files: Product.cs, CreateProductCommand.cs, CreateProductCommandHandler.cs, CreateProductCommandValidator.cs, CreateProductEndpoint.cs, CreateProductResponse.cs, ProductsDbContext.cs, ProductsPermissions.cs, ProductCharacteristics.cs, MirroringInfo.cs, ProductState.cs, Category.cs
+
+- [ ] Update ProductsPermissions to include missing CRUD permissions:
+  - Verify existing permissions (Create, View, Update, Delete) in ProductsPermissions.cs
+  - Add any missing permission constants following the pattern "Permissions.Products.{Action}"
+  - Add List permission if not present for search/pagination queries
+
+- [ ] Implement GetProductById query feature:
+  - Create GetProductByIdQuery.cs in Contracts/Application/Features/Queries/GetProductById/
+    - Record with Id property implementing IQuery<ProductDto>
+  - Create ProductDto.cs in Contracts/DTOs/ with all Product properties
+  - Create GetProductByIdQueryHandler.cs in Application/Features/Queries/GetProductById/
+    - Inject ProductsDbContext
+    - Use EF Core to find product by Id and tenant
+    - Return mapped ProductDto or throwNotFoundException
+  - Create GetProductByIdEndpoint.cs in Endpoints/v1/
+    - MapGet("/{id}") with IMediator
+    - Apply RequirePermission(ProductsPermissions.View)
+    - Return TypedResults with ProductDto
+  - Register endpoint in ProductsModule.MapEndpoints
+
+- [ ] Implement SearchProducts query with pagination and filtering:
+  - Create SearchProductsQuery.cs in Contracts/Application/Features/Queries/SearchProducts/
+    - Inherit from PagedRequest and implement IQuery<PagedResponse<ProductDto>>
+    - Include filter properties: Search, CategoryId, Status, IsLatest
+    - Include Sort property for multi-field sorting
+  - Create SearchProductsQueryHandler.cs in Application/Features/Queries/SearchProducts/
+    - Inject ProductsDbContext and ICurrentUser
+    - Build IQueryable with filters for search term, category, status, isLatest
+    - Implement sorting with dictionary of sortable fields (Title, Status, CreatedOnUtc)
+    - Use .ToPagedResponseAsync extension for pagination
+    - Return PagedResponse<ProductDto>
+  - Create SearchProductsQueryValidator.cs with validation rules
+  - Create SearchProductsEndpoint.cs in Endpoints/v1/
+    - MapGet("/") with query parameters
+    - Apply RequirePermission(ProductsPermissions.View)
+  - Register endpoint in ProductsModule.MapEndpoints
+
+- [ ] Implement UpdateProduct command feature:
+  - Create UpdateProductCommand.cs in Contracts/Application/Features/Commands/UpdateProduct/
+    - Record with Id and all updatable Product properties implementing ICommand
+  - Create UpdateProductCommandHandler.cs in Application/Features/Commands/UpdateProduct/
+    - Inject ProductsDbContext and ICurrentUser
+    - Find existing product by Id and tenant or throw NotFoundException
+    - Update all properties from command
+    - Call SaveChangesAsync and return success
+  - Create UpdateProductCommandValidator.cs with validation rules matching CreateProduct
+  - Create UpdateProductEndpoint.cs in Endpoints/v1/
+    - MapPut("/{id}") with IMediator
+    - Apply RequirePermission(ProductsPermissions.Update)
+  - Register endpoint in ProductsModule.MapEndpoints
+
+- [ ] Implement DeleteProduct command feature:
+  - Create DeleteProductCommand.cs in Contracts/Application/Features/Commands/DeleteProduct/
+    - Record with Id property implementing ICommand
+  - Create DeleteProductCommandHandler.cs in Application/Features/Commands/DeleteProduct/
+    - Inject ProductsDbContext and ICurrentUser
+    - Find product by Id and tenant or throw NotFoundException
+    - Remove product from DbSet
+    - Call SaveChangesAsync
+  - Create DeleteProductEndpoint.cs in Endpoints/v1/
+    - MapDelete("/{id}") with IMediator
+    - Apply RequirePermission(ProductsPermissions.Delete)
+    - Return NoContent on success
+  - Register endpoint in ProductsModule.MapEndpoints
+
+- [ ] Build the solution and verify zero warnings:
+  - Run `dotnet build src/FSH.Framework.slnx`
+  - Fix any compilation errors or warnings
+  - Ensure all files follow FSH code style and patterns
+
+- [ ] Test the complete Product CRUD API:
+  - Run the application with `dotnet run --project src/Playground/FSH.Playground.AppHost`
+  - Access Swagger UI and verify all 5 Product endpoints appear
+  - Test CreateProduct endpoint with sample data
+  - Test GetProductById with created product ID
+  - Test SearchProducts with pagination and filters
+  - Test UpdateProduct with modifications
+  - Test DeleteProduct to remove the test product
+  - Document any issues found and fix them

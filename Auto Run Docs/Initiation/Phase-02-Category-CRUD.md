@@ -1,0 +1,95 @@
+# Phase 02: Category CRUD
+
+Implement complete CRUD functionality for Category entities following the same patterns established in Phase 01. Categories are simpler than Products but require the same vertical slice architecture.
+
+## Tasks
+
+- [ ] Add Category permissions to ProductsPermissions:
+  - Add nested Categories class in ProductsPermissions.cs
+  - Define Create, View, Update, Delete, and List permission constants
+  - Follow pattern: "Permissions.Products.Categories.{Action}"
+
+- [ ] Implement CreateCategory command feature:
+  - Create CreateCategoryCommand.cs in Contracts/Application/Features/Commands/CreateCategory/
+    - Record with Name property implementing ICommand<int>
+  - Create CreateCategoryResponse.cs with Id property
+  - Create CreateCategoryCommandHandler.cs in Application/Features/Commands/CreateCategory/
+    - Inject ProductsDbContext and ICurrentUser
+    - Create new Category entity with TenantId
+    - Save to database and return Id
+  - Create CreateCategoryCommandValidator.cs
+    - Validate Name is required and has max length
+  - Create CreateCategoryEndpoint.cs in Endpoints/v1/
+    - MapPost("/categories") with IMediator
+    - Apply RequirePermission(ProductsPermissions.Categories.Create)
+    - Return Created with response
+  - Register endpoint in ProductsModule.MapEndpoints with categories group
+
+- [ ] Implement GetCategoryById query feature:
+  - Create CategoryDto.cs in Contracts/DTOs/
+    - Properties: Id, Name, TenantId, CreatedOnUtc, CreatedBy, LastModifiedOnUtc, LastModifiedBy
+  - Create GetCategoryByIdQuery.cs in Contracts/Application/Features/Queries/GetCategoryById/
+    - Record with Id property implementing IQuery<CategoryDto>
+  - Create GetCategoryByIdQueryHandler.cs in Application/Features/Queries/GetCategoryById/
+    - Inject ProductsDbContext and ICurrentUser
+    - Find category by Id and tenant
+    - Map to CategoryDto and return
+  - Create GetCategoryByIdEndpoint.cs in Endpoints/v1/
+    - MapGet("/categories/{id}") with IMediator
+    - Apply RequirePermission(ProductsPermissions.Categories.View)
+  - Register endpoint in ProductsModule
+
+- [ ] Implement SearchCategories query with pagination:
+  - Create SearchCategoriesQuery.cs in Contracts/Application/Features/Queries/SearchCategories/
+    - Inherit from PagedRequest implementing IQuery<PagedResponse<CategoryDto>>
+    - Include Search and Sort properties
+  - Create SearchCategoriesQueryHandler.cs in Application/Features/Queries/SearchCategories/
+    - Inject ProductsDbContext and ICurrentUser
+    - Filter by tenant and optional search term on Name
+    - Implement sorting by Name and CreatedOnUtc
+    - Use ToPagedResponseAsync for pagination
+  - Create SearchCategoriesQueryValidator.cs
+  - Create SearchCategoriesEndpoint.cs in Endpoints/v1/
+    - MapGet("/categories") with query parameters
+    - Apply RequirePermission(ProductsPermissions.Categories.View)
+  - Register endpoint in ProductsModule
+
+- [ ] Implement UpdateCategory command feature:
+  - Create UpdateCategoryCommand.cs in Contracts/Application/Features/Commands/UpdateCategory/
+    - Record with Id and Name properties implementing ICommand
+  - Create UpdateCategoryCommandHandler.cs in Application/Features/Commands/UpdateCategory/
+    - Inject ProductsDbContext and ICurrentUser
+    - Find category by Id and tenant
+    - Update Name property
+    - Save changes
+  - Create UpdateCategoryCommandValidator.cs
+  - Create UpdateCategoryEndpoint.cs in Endpoints/v1/
+    - MapPut("/categories/{id}") with IMediator
+    - Apply RequirePermission(ProductsPermissions.Categories.Update)
+  - Register endpoint in ProductsModule
+
+- [ ] Implement DeleteCategory command feature:
+  - Create DeleteCategoryCommand.cs in Contracts/Application/Features/Commands/DeleteCategory/
+    - Record with Id property implementing ICommand
+  - Create DeleteCategoryCommandHandler.cs in Application/Features/Commands/DeleteCategory/
+    - Inject ProductsDbContext and ICurrentUser
+    - Find category by Id and tenant
+    - Check if any products reference this category
+    - If referenced, throw BadRequestException with message
+    - Otherwise remove category and save
+  - Create DeleteCategoryEndpoint.cs in Endpoints/v1/
+    - MapDelete("/categories/{id}") with IMediator
+    - Apply RequirePermission(ProductsPermissions.Categories.Delete)
+  - Register endpoint in ProductsModule
+
+- [ ] Build and test Category CRUD functionality:
+  - Run `dotnet build src/FSH.Framework.slnx` and ensure zero warnings
+  - Run application and access Swagger UI
+  - Test complete CRUD workflow for categories:
+    - Create 2-3 test categories
+    - Get category by ID
+    - Search categories with pagination
+    - Update a category name
+    - Try to delete a category (should work if no products reference it)
+    - Create a product with a category, then try to delete that category (should fail with proper error)
+  - Document test results
