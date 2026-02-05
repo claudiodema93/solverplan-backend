@@ -20,7 +20,7 @@ Establish the complete CRUD functionality for Products with all necessary comman
   - Verified against Identity and Multitenancy modules: FSH framework uses "View" permission for both individual retrieval and list/search operations - no separate "List" permission needed
   - File location: `src/Modules/Products/Modules.Products.Contracts/ProductsPermissions.cs`
 
-- [ ] Implement GetProductById query feature:
+- [x] Implement GetProductById query feature:
   - Create GetProductByIdQuery.cs in Contracts/Application/Features/Queries/GetProductById/
     - Record with Id property implementing IQuery<ProductDto>
   - Create ProductDto.cs in Contracts/DTOs/ with all Product properties
@@ -33,6 +33,13 @@ Establish the complete CRUD functionality for Products with all necessary comman
     - Apply RequirePermission(ProductsPermissions.View)
     - Return TypedResults with ProductDto
   - Register endpoint in ProductsModule.MapEndpoints
+  - **Completed**: All files created following FSH patterns
+    - ProductDto with all entity properties including nested DTOs (ProductCharacteristicsDto, MirroringInfoDto)
+    - GetProductByIdQuery implementing IQuery<ProductDto?>
+    - GetProductByIdQueryHandler with tenant filtering and EF Core projection
+    - GetProductByIdEndpoint using MapGet("/{id:int}") with permission guard
+    - Endpoint registered in ProductsModule.MapEndpoints
+    - Build successful with 0 errors
 
 - [ ] Implement SearchProducts query with pagination and filtering:
   - Create SearchProductsQuery.cs in Contracts/Application/Features/Queries/SearchProducts/
