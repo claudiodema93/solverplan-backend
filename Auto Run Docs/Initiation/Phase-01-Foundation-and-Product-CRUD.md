@@ -65,7 +65,7 @@ Establish the complete CRUD functionality for Products with all necessary comman
     - Endpoint registered in ProductsModule.MapEndpoints
     - Build successful with 0 errors, 0 warnings
 
-- [ ] Implement UpdateProduct command feature:
+- [x] Implement UpdateProduct command feature:
   - Create UpdateProductCommand.cs in Contracts/Application/Features/Commands/UpdateProduct/
     - Record with Id and all updatable Product properties implementing ICommand
   - Create UpdateProductCommandHandler.cs in Application/Features/Commands/UpdateProduct/
@@ -78,6 +78,13 @@ Establish the complete CRUD functionality for Products with all necessary comman
     - MapPut("/{id}") with IMediator
     - Apply RequirePermission(ProductsPermissions.Update)
   - Register endpoint in ProductsModule.MapEndpoints
+  - **Completed**: All files created successfully following FSH patterns
+    - UpdateProductCommand implementing ICommand with Id and all updatable properties
+    - UpdateProductCommandHandler with tenant filtering, NotFoundException for missing products, and property updates including value objects
+    - UpdateProductCommandValidator with same validation rules as CreateProduct plus Id validation
+    - UpdateProductEndpoint using MapPut("/{id:int}") with permission guard, separating route Id from request body
+    - Endpoint registered in ProductsModule.MapEndpoints
+    - Build successful with 0 errors, 0 new warnings
 
 - [ ] Implement DeleteProduct command feature:
   - Create DeleteProductCommand.cs in Contracts/Application/Features/Commands/DeleteProduct/
