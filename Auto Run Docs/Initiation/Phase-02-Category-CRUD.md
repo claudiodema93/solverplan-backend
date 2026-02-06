@@ -36,7 +36,7 @@ Implement complete CRUD functionality for Category entities following the same p
   - ProductsModule updated with categories endpoint group
   - Build verified: 0 errors, no new warnings introduced
 
-- [ ] Implement GetCategoryById query feature:
+- [x] Implement GetCategoryById query feature:
   - Create CategoryDto.cs in Contracts/DTOs/
     - Properties: Id, Name, TenantId, CreatedOnUtc, CreatedBy, LastModifiedOnUtc, LastModifiedBy
   - Create GetCategoryByIdQuery.cs in Contracts/Application/Features/Queries/GetCategoryById/
@@ -49,6 +49,14 @@ Implement complete CRUD functionality for Category entities following the same p
     - MapGet("/categories/{id}") with IMediator
     - Apply RequirePermission(ProductsPermissions.Categories.View)
   - Register endpoint in ProductsModule
+  - ✅ Completed: Implemented complete GetCategoryById query feature following FSH vertical slice architecture
+  - Files created:
+    - CategoryDto.cs (DTO with Id, Name, TenantId, and audit properties)
+    - GetCategoryByIdQuery.cs (IQuery<CategoryDto?> with Id parameter)
+    - GetCategoryByIdQueryHandler.cs (handles retrieval with tenant isolation and NotFoundException)
+    - GetCategoryByIdEndpoint.cs (GET /categories/{id} with permission check)
+  - ProductsModule updated with GetCategoryById endpoint registration
+  - Build verified: 0 errors, no new warnings introduced
 
 - [ ] Implement SearchCategories query with pagination:
   - Create SearchCategoriesQuery.cs in Contracts/Application/Features/Queries/SearchCategories/
