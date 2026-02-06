@@ -15,4 +15,13 @@ public static class ProductsPermissions
         public const string Delete = "Permissions.Products.Categories.Delete";
         public const string List = "Permissions.Products.Categories.List";
     }
+
+    public static class Issues
+    {
+        public const string Create = "Permissions.Products.Issues.Create";
+        public const string View = "Permissions.Products.Issues.View";
+        public const string Update = "Permissions.Products.Issues.Update";
+        public const string Delete = "Permissions.Products.Issues.Delete";
+        public const string List = "Permissions.Products.Issues.List";
+    }
 }

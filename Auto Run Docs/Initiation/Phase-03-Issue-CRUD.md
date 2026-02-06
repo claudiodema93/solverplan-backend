@@ -4,10 +4,11 @@ Implement complete CRUD functionality for Issue entities. Issues are related to 
 
 ## Tasks
 
-- [ ] Add Issue permissions to ProductsPermissions:
+- [x] Add Issue permissions to ProductsPermissions:
   - Add nested Issues class in ProductsPermissions.cs
   - Define Create, View, Update, Delete, and List permission constants
   - Follow pattern: "Permissions.Products.Issues.{Action}"
+  - **Completed**: Added Issues nested class with all 5 permission constants following the same pattern as Categories.
 
 - [ ] Implement CreateIssue command feature:
   - Create CreateIssueCommand.cs in Contracts/Application/Features/Commands/CreateIssue/
