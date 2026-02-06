@@ -4,10 +4,12 @@ Implement complete CRUD functionality for Category entities following the same p
 
 ## Tasks
 
-- [ ] Add Category permissions to ProductsPermissions:
+- [x] Add Category permissions to ProductsPermissions:
   - Add nested Categories class in ProductsPermissions.cs
   - Define Create, View, Update, Delete, and List permission constants
   - Follow pattern: "Permissions.Products.Categories.{Action}"
+  - ✅ Completed: Added nested Categories class with all 5 permissions (Create, View, Update, Delete, List)
+  - Build verified: 0 warnings, 0 errors
 
 - [ ] Implement CreateCategory command feature:
   - Create CreateCategoryCommand.cs in Contracts/Application/Features/Commands/CreateCategory/
