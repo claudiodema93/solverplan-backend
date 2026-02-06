@@ -81,7 +81,7 @@ Implement complete CRUD functionality for Category entities following the same p
   - ProductsModule updated with SearchCategoriesEndpoint registration
   - Build verified: 0 errors, no new warnings introduced (33 pre-existing warnings in other modules)
 
-- [ ] Implement UpdateCategory command feature:
+- [x] Implement UpdateCategory command feature:
   - Create UpdateCategoryCommand.cs in Contracts/Application/Features/Commands/UpdateCategory/
     - Record with Id and Name properties implementing ICommand
   - Create UpdateCategoryCommandHandler.cs in Application/Features/Commands/UpdateCategory/
@@ -94,6 +94,14 @@ Implement complete CRUD functionality for Category entities following the same p
     - MapPut("/categories/{id}") with IMediator
     - Apply RequirePermission(ProductsPermissions.Categories.Update)
   - Register endpoint in ProductsModule
+  - ✅ Completed: Implemented complete UpdateCategory command feature following FSH vertical slice architecture
+  - Files created:
+    - UpdateCategoryCommand.cs (ICommand with Id and Name properties)
+    - UpdateCategoryCommandHandler.cs (handles update with tenant isolation and NotFoundException)
+    - UpdateCategoryCommandValidator.cs (validates Id > 0, Name: required, max 128 chars)
+    - UpdateCategoryEndpoint.cs (PUT /categories/{id} with permission check)
+  - ProductsModule updated with UpdateCategoryEndpoint registration
+  - Build verified: 0 errors, no new warnings introduced (33 pre-existing warnings)
 
 - [ ] Implement DeleteCategory command feature:
   - Create DeleteCategoryCommand.cs in Contracts/Application/Features/Commands/DeleteCategory/
