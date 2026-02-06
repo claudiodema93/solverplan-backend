@@ -49,5 +49,6 @@ public sealed class ProductsModule : IModule
 
         CreateCategoryEndpoint.Map(categoriesGroup);
         GetCategoryByIdEndpoint.Map(categoriesGroup);
+        SearchCategoriesEndpoint.Map(categoriesGroup);
     }
 }

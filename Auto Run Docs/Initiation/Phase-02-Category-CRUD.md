@@ -58,7 +58,7 @@ Implement complete CRUD functionality for Category entities following the same p
   - ProductsModule updated with GetCategoryById endpoint registration
   - Build verified: 0 errors, no new warnings introduced
 
-- [ ] Implement SearchCategories query with pagination:
+- [x] Implement SearchCategories query with pagination:
   - Create SearchCategoriesQuery.cs in Contracts/Application/Features/Queries/SearchCategories/
     - Inherit from PagedRequest implementing IQuery<PagedResponse<CategoryDto>>
     - Include Search and Sort properties
@@ -72,6 +72,14 @@ Implement complete CRUD functionality for Category entities following the same p
     - MapGet("/categories") with query parameters
     - Apply RequirePermission(ProductsPermissions.Categories.View)
   - Register endpoint in ProductsModule
+  - ✅ Completed: Implemented complete SearchCategories query feature following FSH vertical slice architecture
+  - Files created:
+    - SearchCategoriesQuery.cs (IPagedQuery + IQuery<PagedResponse<CategoryDto>> with Search and Sort properties)
+    - SearchCategoriesQueryHandler.cs (handles search with tenant isolation, filtering by name, sorting by Name/CreatedOnUtc)
+    - SearchCategoriesQueryValidator.cs (validates Search max 128 chars, includes PagedQueryValidator)
+    - SearchCategoriesEndpoint.cs (GET /categories with pagination support and permission check)
+  - ProductsModule updated with SearchCategoriesEndpoint registration
+  - Build verified: 0 errors, no new warnings introduced (33 pre-existing warnings in other modules)
 
 - [ ] Implement UpdateCategory command feature:
   - Create UpdateCategoryCommand.cs in Contracts/Application/Features/Commands/UpdateCategory/
