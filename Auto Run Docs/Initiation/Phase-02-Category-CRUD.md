@@ -11,7 +11,7 @@ Implement complete CRUD functionality for Category entities following the same p
   - ✅ Completed: Added nested Categories class with all 5 permissions (Create, View, Update, Delete, List)
   - Build verified: 0 warnings, 0 errors
 
-- [ ] Implement CreateCategory command feature:
+- [x] Implement CreateCategory command feature:
   - Create CreateCategoryCommand.cs in Contracts/Application/Features/Commands/CreateCategory/
     - Record with Name property implementing ICommand<int>
   - Create CreateCategoryResponse.cs with Id property
@@ -26,6 +26,15 @@ Implement complete CRUD functionality for Category entities following the same p
     - Apply RequirePermission(ProductsPermissions.Categories.Create)
     - Return Created with response
   - Register endpoint in ProductsModule.MapEndpoints with categories group
+  - ✅ Completed: Implemented complete CreateCategory feature following FSH vertical slice architecture
+  - Files created:
+    - CreateCategoryCommand.cs (ICommand<int> with Name property)
+    - CreateCategoryResponse.cs (returns category Id)
+    - CreateCategoryCommandHandler.cs (handles creation with tenant isolation)
+    - CreateCategoryCommandValidator.cs (validates Name: required, max 128 chars)
+    - CreateCategoryEndpoint.cs (POST /categories with permission check)
+  - ProductsModule updated with categories endpoint group
+  - Build verified: 0 errors, no new warnings introduced
 
 - [ ] Implement GetCategoryById query feature:
   - Create CategoryDto.cs in Contracts/DTOs/

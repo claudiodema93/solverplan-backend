@@ -42,5 +42,11 @@ public sealed class ProductsModule : IModule
         SearchProductsEndpoint.Map(group);
         UpdateProductEndpoint.Map(group);
         DeleteProductEndpoint.Map(group);
+
+        var categoriesGroup = endpoints.MapGroup("api/v{version:apiVersion}/categories")
+            .WithTags("Categories")
+            .WithApiVersionSet(versionSet);
+
+        CreateCategoryEndpoint.Map(categoriesGroup);
     }
 }
