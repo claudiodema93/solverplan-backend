@@ -103,19 +103,26 @@ Implement complete CRUD functionality for Category entities following the same p
   - ProductsModule updated with UpdateCategoryEndpoint registration
   - Build verified: 0 errors, no new warnings introduced (33 pre-existing warnings)
 
-- [ ] Implement DeleteCategory command feature:
+- [x] Implement DeleteCategory command feature:
   - Create DeleteCategoryCommand.cs in Contracts/Application/Features/Commands/DeleteCategory/
     - Record with Id property implementing ICommand
   - Create DeleteCategoryCommandHandler.cs in Application/Features/Commands/DeleteCategory/
     - Inject ProductsDbContext and ICurrentUser
     - Find category by Id and tenant
     - Check if any products reference this category
-    - If referenced, throw BadRequestException with message
+    - If referenced, throw CustomException with BadRequest status code
     - Otherwise remove category and save
   - Create DeleteCategoryEndpoint.cs in Endpoints/v1/
     - MapDelete("/categories/{id}") with IMediator
     - Apply RequirePermission(ProductsPermissions.Categories.Delete)
   - Register endpoint in ProductsModule
+  - ✅ Completed: Implemented complete DeleteCategory command feature following FSH vertical slice architecture
+  - Files created:
+    - DeleteCategoryCommand.cs (ICommand with Id property)
+    - DeleteCategoryCommandHandler.cs (handles deletion with tenant isolation, product reference check using CustomException, and NotFoundException)
+    - DeleteCategoryEndpoint.cs (DELETE /categories/{id} with permission check and proper status codes)
+  - ProductsModule updated with DeleteCategoryEndpoint registration
+  - Build verified: 0 errors, no new warnings introduced (1 pre-existing warning in migrations)
 
 - [ ] Build and test Category CRUD functionality:
   - Run `dotnet build src/FSH.Framework.slnx` and ensure zero warnings
