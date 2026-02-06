@@ -9,6 +9,7 @@ using FSH.Modules.Multitenancy.Contracts.v1.GetTenantStatus;
 using FSH.Modules.Multitenancy.Features.v1.GetTenantStatus;
 using FSH.Modules.Products;
 using FSH.Modules.Products.Application.Features.Commands.CreateProduct;
+using FSH.Modules.Products.Contracts;
 using FSH.Modules.Products.Contracts.Application.Features.Commands.CreateProduct;
 using System.Reflection;
 
@@ -40,8 +41,8 @@ builder.Services.AddMediator(o =>
         typeof(GetTenantStatusQueryHandler),
         typeof(FSH.Modules.Auditing.Contracts.AuditEnvelope),
         typeof(FSH.Modules.Auditing.Persistence.AuditDbContext),
-        typeof(CreateProductCommand),
-        typeof(CreateProductCommandHandler)];
+        typeof(ProductsModuleConstants),
+        typeof(ProductsPermissions)];
 });
 
 var moduleAssemblies = new Assembly[]

@@ -499,3 +499,7 @@ tmpclaude**
 
 # Auto Claude data directory
 .auto-claude/
+
+# Cross-platform build artifacts (backslash in directory names)
+**/bin\\*
+**/obj\\*
