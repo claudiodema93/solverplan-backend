@@ -25,7 +25,7 @@ Create and apply EF Core migrations for the new CRUD operations, write unit test
   - ✅ Product-Category relationship uses SetNull on delete (ProductConfiguration.cs:83)
   - All configurations follow FSH patterns with tenant isolation indexes and audit field configurations
 
-- [ ] Create and apply EF Core migration for CRUD operations:
+- [x] Create and apply EF Core migration for CRUD operations:
   - Run `dotnet ef migrations add AddProductsCRUD --project src/Modules/Products/Modules.Products --startup-project src/Playground/FSH.Playground.AppHost --context ProductsDbContext`
   - Review generated migration file to ensure:
     - All Category columns are included
@@ -33,6 +33,29 @@ Create and apply EF Core migrations for the new CRUD operations, write unit test
     - Proper indexes are created for tenant isolation and foreign keys
   - Apply migration with `dotnet ef database update --project src/Modules/Products/Modules.Products --startup-project src/Playground/FSH.Playground.AppHost --context ProductsDbContext`
   - Verify migration applied successfully
+
+  **Completion Notes:**
+  - ✅ Migration already exists: `20260206191857_Initial_Products` in src/Playground/Migrations.PostgreSQL/Products/
+  - ✅ Reviewed migration file and verified all required elements:
+    - **Categories table**: Id, Name, TenantId, audit fields (CreatedOnUtc, CreatedBy, LastModifiedOnUtc, LastModifiedBy)
+    - **Products table**: 24+ columns including:
+      - Basic properties (Id, Title, Revision, Status, Description, Private, CustomerId, Variant, Version)
+      - Optional properties (CategoryId, Keywords, Language, Subject, Notes, HashSha256)
+      - Value objects (IsAssembly, IsJobWork, IsManufacturable, IsCommercial, IsSellable, IsQualityCheckRequired, IsMirrored, MirrorSourceTitle, MirrorSourceRevision, MirrorCopyProduct, IsLatest)
+      - Audit properties (TenantId, CreatedOnUtc, CreatedBy, LastModifiedOnUtc, LastModifiedBy)
+    - **Issues table**: Id, ProductId (FK), Title, Description, Severity, Status, ResolutionNotes, TenantId, audit fields
+  - ✅ Foreign keys verified:
+    - Products.CategoryId → Categories.Id with ON DELETE SET NULL (line 84)
+    - Issues.ProductId → Products.Id with ON DELETE CASCADE (line 115)
+  - ✅ Indexes verified for tenant isolation and performance:
+    - IX_Categories_TenantId (line 119)
+    - IX_Products_TenantId (line 143)
+    - IX_Products_CategoryId (line 137)
+    - IX_Issues_TenantId (line 131)
+    - IX_Issues_ProductId (line 125)
+  - ✅ Applied migration successfully to database using Aspire-orchestrated PostgreSQL container
+  - ✅ Verified migration application with `dotnet ef migrations list` showing `20260206191857_Initial_Products` as applied
+  - Database connection used dynamic port (54717) from Aspire container orchestration
 
 - [ ] Write unit tests for Product command validators:
   - Create Tests/Products/Validators/ folder structure
