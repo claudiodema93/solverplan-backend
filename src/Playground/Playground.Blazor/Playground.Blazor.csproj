@@ -31,6 +31,7 @@
 
   <ItemGroup>
     <Folder Include="ApiClient\" />
+    <Folder Include="Components\Pages\Products\" />
   </ItemGroup>
 
   <PropertyGroup>

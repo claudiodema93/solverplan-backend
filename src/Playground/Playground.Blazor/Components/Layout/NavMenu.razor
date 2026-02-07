@@ -26,10 +26,10 @@
 
         @if (_isRootTenantAdmin)
         {
-            <MudNavLink Href="/tenants" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.CorporateFare">
+            <MudNavLink Href="/tenants" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.CorporateFare">
                 Tenants
             </MudNavLink>
-            <MudNavLink Href="/tenants/settings" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.Tune">
+            <MudNavLink Href="/tenants/settings" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Tune">
                 Tenant Settings
             </MudNavLink>
         }
