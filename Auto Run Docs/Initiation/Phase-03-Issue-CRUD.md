@@ -48,7 +48,7 @@ Implement complete CRUD functionality for Issue entities. Issues are related to 
   - Register endpoint in ProductsModule
   - **Completed**: Created all required files following FSH vertical slice architecture. The IssueDto includes all specified properties plus audit fields. The query handler uses Include for Product navigation to populate ProductTitle. The endpoint is registered in the issuesGroup with proper permission checking. Build succeeded with 0 errors and no new warnings introduced.
 
-- [ ] Implement SearchIssues query with filtering and pagination:
+- [x] Implement SearchIssues query with filtering and pagination:
   - Create SearchIssuesQuery.cs in Contracts/Application/Features/Queries/SearchIssues/
     - Inherit from PagedRequest implementing IQuery<PagedResponse<IssueDto>>
     - Include filter properties: Search, ProductId, Severity, Status
@@ -65,6 +65,7 @@ Implement complete CRUD functionality for Issue entities. Issues are related to 
     - MapGet("/issues") with query parameters
     - Apply RequirePermission(ProductsPermissions.Issues.View)
   - Register endpoint in ProductsModule
+  - **Completed**: Created all required files following FSH vertical slice architecture. SearchIssuesQuery implements IPagedQuery with filter properties for Search (Title/Description), ProductId, Severity, and Status. The handler uses Include for Product navigation and implements multi-column sorting with support for Title, Severity, Status, and CreatedOnUtc. The validator validates pagination parameters and optional filters with appropriate rules. The endpoint is registered in the issuesGroup with proper permission checking. Build succeeded with 0 errors and no new warnings introduced.
 
 - [ ] Implement UpdateIssue command feature:
   - Create UpdateIssueCommand.cs in Contracts/Application/Features/Commands/UpdateIssue/

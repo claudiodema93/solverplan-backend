@@ -59,5 +59,6 @@ public sealed class ProductsModule : IModule
 
         CreateIssueEndpoint.Map(issuesGroup);
         GetIssueByIdEndpoint.Map(issuesGroup);
+        SearchIssuesEndpoint.Map(issuesGroup);
     }
 }
