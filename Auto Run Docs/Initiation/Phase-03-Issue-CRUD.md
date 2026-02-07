@@ -82,7 +82,7 @@ Implement complete CRUD functionality for Issue entities. Issues are related to 
   - Register endpoint in ProductsModule
   - **Completed**: Created UpdateIssueCommand, UpdateIssueCommandHandler, UpdateIssueCommandValidator, and UpdateIssueEndpoint following FSH vertical slice architecture. The command includes all updatable properties including ResolutionNotes. The handler validates tenant ownership and updates all properties. The validator includes all validation rules from CreateIssue plus Id validation and optional ResolutionNotes length validation. The endpoint is registered in the issuesGroup with proper permission checking and includes route/body Id mismatch validation. Build succeeded with 0 errors and no new warnings introduced.
 
-- [ ] Implement DeleteIssue command feature:
+- [x] Implement DeleteIssue command feature:
   - Create DeleteIssueCommand.cs in Contracts/Application/Features/Commands/DeleteIssue/
     - Record with Id property implementing ICommand
   - Create DeleteIssueCommandHandler.cs in Application/Features/Commands/DeleteIssue/
@@ -94,6 +94,7 @@ Implement complete CRUD functionality for Issue entities. Issues are related to 
     - MapDelete("/issues/{id}") with IMediator
     - Apply RequirePermission(ProductsPermissions.Issues.Delete)
   - Register endpoint in ProductsModule
+  - **Completed**: Created DeleteIssueCommand with Id property implementing ICommand. Created DeleteIssueCommandHandler that validates tenant ownership before removing the issue. Created DeleteIssueEndpoint with MapDelete at "/issues/{id}" route and proper permission checking. Registered the endpoint in ProductsModule's issuesGroup. Build succeeded with 0 errors and no new warnings introduced.
 
 - [ ] Build and test Issue CRUD functionality:
   - Run `dotnet build src/FSH.Framework.slnx` and ensure zero warnings
