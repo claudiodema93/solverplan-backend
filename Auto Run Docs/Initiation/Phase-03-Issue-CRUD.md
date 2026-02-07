@@ -67,7 +67,7 @@ Implement complete CRUD functionality for Issue entities. Issues are related to 
   - Register endpoint in ProductsModule
   - **Completed**: Created all required files following FSH vertical slice architecture. SearchIssuesQuery implements IPagedQuery with filter properties for Search (Title/Description), ProductId, Severity, and Status. The handler uses Include for Product navigation and implements multi-column sorting with support for Title, Severity, Status, and CreatedOnUtc. The validator validates pagination parameters and optional filters with appropriate rules. The endpoint is registered in the issuesGroup with proper permission checking. Build succeeded with 0 errors and no new warnings introduced.
 
-- [ ] Implement UpdateIssue command feature:
+- [x] Implement UpdateIssue command feature:
   - Create UpdateIssueCommand.cs in Contracts/Application/Features/Commands/UpdateIssue/
     - Record with Id, Title, Description, Severity, Status, ResolutionNotes properties implementing ICommand
   - Create UpdateIssueCommandHandler.cs in Application/Features/Commands/UpdateIssue/
@@ -80,6 +80,7 @@ Implement complete CRUD functionality for Issue entities. Issues are related to 
     - MapPut("/issues/{id}") with IMediator
     - Apply RequirePermission(ProductsPermissions.Issues.Update)
   - Register endpoint in ProductsModule
+  - **Completed**: Created UpdateIssueCommand, UpdateIssueCommandHandler, UpdateIssueCommandValidator, and UpdateIssueEndpoint following FSH vertical slice architecture. The command includes all updatable properties including ResolutionNotes. The handler validates tenant ownership and updates all properties. The validator includes all validation rules from CreateIssue plus Id validation and optional ResolutionNotes length validation. The endpoint is registered in the issuesGroup with proper permission checking and includes route/body Id mismatch validation. Build succeeded with 0 errors and no new warnings introduced.
 
 - [ ] Implement DeleteIssue command feature:
   - Create DeleteIssueCommand.cs in Contracts/Application/Features/Commands/DeleteIssue/
