@@ -15,7 +15,12 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
 
         builder.HasKey(p => p.Id);
 
+        // Performance indexes for frequently filtered columns
         builder.HasIndex(p => p.TenantId);
+        builder.HasIndex(p => p.CategoryId);
+        builder.HasIndex(p => p.Status);
+        builder.HasIndex(p => new { p.TenantId, p.Status });
+        builder.HasIndex(p => new { p.TenantId, p.CategoryId });
 
         builder.Property(p => p.TenantId)
             .HasMaxLength(64)

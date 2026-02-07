@@ -15,7 +15,13 @@ public class IssueConfiguration : IEntityTypeConfiguration<Issue>
 
         builder.HasKey(i => i.Id);
 
+        // Performance indexes for frequently filtered columns
         builder.HasIndex(i => i.TenantId);
+        builder.HasIndex(i => i.ProductId);
+        builder.HasIndex(i => i.Severity);
+        builder.HasIndex(i => i.Status);
+        builder.HasIndex(i => new { i.TenantId, i.ProductId });
+        builder.HasIndex(i => new { i.TenantId, i.Status });
 
         builder.Property(i => i.TenantId)
             .HasMaxLength(64)
