@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace FSH.Modules.Products.Endpoints.v1;
 
+/// <summary>
+/// Endpoint for deleting a product issue.
+/// </summary>
 public static class DeleteIssueEndpoint
 {
     public static RouteHandlerBuilder Map(this IEndpointRouteBuilder endpoints)
@@ -24,9 +27,9 @@ public static class DeleteIssueEndpoint
             return TypedResults.NoContent();
         })
         .WithName("DeleteIssue")
-        .WithSummary("Delete issue")
+        .WithSummary("Delete an issue")
         .RequirePermission(ProductsPermissions.Issues.DeleteIssue)
-        .WithDescription("Delete an existing issue.")
+        .WithDescription("Deletes an existing product issue from the current tenant. This operation permanently removes the issue and all its associated data. Returns 404 if the issue is not found.")
         .Produces(StatusCodes.Status204NoContent)
         .Produces(StatusCodes.Status404NotFound);
     }

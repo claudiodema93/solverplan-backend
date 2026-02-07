@@ -25,9 +25,9 @@ public static class GetIssueByIdEndpoint
             return TypedResults.Ok(result);
         })
         .WithName(nameof(GetIssueByIdQuery))
-        .WithSummary("Get issue by ID")
+        .WithSummary("Retrieve an issue by ID")
         .RequirePermission(ProductsPermissions.Issues.ViewIssue)
-        .WithDescription("Retrieve an issue by its unique identifier.")
+        .WithDescription("Retrieves a single product issue by its unique identifier. Returns comprehensive issue details including title, description, severity level, status, associated product, and all relevant metadata. Returns 404 if the issue is not found or does not belong to the current tenant.")
         .Produces<IssueDto>(StatusCodes.Status200OK)
         .Produces(StatusCodes.Status404NotFound);
     }

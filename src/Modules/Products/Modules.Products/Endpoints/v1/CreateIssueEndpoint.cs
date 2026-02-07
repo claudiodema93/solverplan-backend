@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace FSH.Modules.Products.Endpoints.v1;
 
+/// <summary>
+/// Endpoint for creating a new product issue.
+/// </summary>
 public static class CreateIssueEndpoint
 {
     public static RouteHandlerBuilder Map(this IEndpointRouteBuilder endpoints)
@@ -22,9 +25,9 @@ public static class CreateIssueEndpoint
             return TypedResults.Created($"/issues/{issueId}", new CreateIssueResponse(issueId));
         })
             .WithName("CreateIssue")
-            .WithSummary("Create issue")
+            .WithSummary("Create a new issue")
             .RequirePermission(ProductsPermissions.Issues.CreateIssue)
-            .WithDescription("Create a new issue for a product.")
+            .WithDescription("Creates a new issue associated with a product within the current tenant. Issues track problems, bugs, or concerns related to products. The issue must be linked to an existing product. Returns the newly created issue ID in the response.")
             .Produces<CreateIssueResponse>(StatusCodes.Status201Created);
     }
 }

@@ -8,6 +8,21 @@ namespace FSH.Modules.Products.Contracts.Application.Features.v1.Queries.SearchP
 /// <summary>
 /// Query to search and filter products with pagination and sorting.
 /// </summary>
+/// <example>
+/// Example of searching for active products in a category:
+/// <code>
+/// var query = new SearchProductsQuery
+/// {
+///     Search = "widget",
+///     CategoryId = 5,
+///     Status = ProductState.Active,
+///     IsLatest = true,
+///     PageNumber = 1,
+///     PageSize = 20,
+///     Sort = "Title,-CreatedOnUtc"
+/// };
+/// </code>
+/// </example>
 public sealed class SearchProductsQuery : IPagedQuery, IQuery<PagedResponse<ProductDto>>
 {
     /// <summary>

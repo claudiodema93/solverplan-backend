@@ -6,4 +6,5 @@ namespace FSH.Modules.Products.Contracts.Application.Features.v1.Queries.GetCate
 /// <summary>
 /// Query to retrieve a category by its unique identifier.
 /// </summary>
+/// <param name="Id">The unique identifier of the category to retrieve.</param>
 public sealed record GetCategoryByIdQuery(int Id) : IQuery<CategoryDto?>;

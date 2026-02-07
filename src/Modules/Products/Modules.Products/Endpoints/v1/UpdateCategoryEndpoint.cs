@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace FSH.Modules.Products.Endpoints.v1;
 
+/// <summary>
+/// Endpoint for updating an existing product category.
+/// </summary>
 public static class UpdateCategoryEndpoint
 {
     public static RouteHandlerBuilder Map(this IEndpointRouteBuilder endpoints)
@@ -27,9 +30,9 @@ public static class UpdateCategoryEndpoint
             return TypedResults.NoContent();
         })
         .WithName("UpdateCategory")
-        .WithSummary("Update category")
+        .WithSummary("Update an existing category")
         .RequirePermission(ProductsPermissions.Categories.UpdateCategory)
-        .WithDescription("Update an existing category.")
+        .WithDescription("Updates an existing product category with new information. The category must exist within the current tenant. Returns 404 if the category is not found.")
         .Produces(StatusCodes.Status204NoContent)
         .Produces(StatusCodes.Status404NotFound);
     }

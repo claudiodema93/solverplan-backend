@@ -8,6 +8,21 @@ namespace FSH.Modules.Products.Contracts.Application.Features.v1.Queries.SearchI
 /// <summary>
 /// Query to search and filter issues with pagination and sorting.
 /// </summary>
+/// <example>
+/// Example of searching for critical issues by product:
+/// <code>
+/// var query = new SearchIssuesQuery
+/// {
+///     Search = "performance",
+///     ProductId = 123,
+///     Severity = IssueSeverity.Critical,
+///     Status = IssueState.Open,
+///     PageNumber = 1,
+///     PageSize = 10,
+///     Sort = "-Severity,CreatedOnUtc"
+/// };
+/// </code>
+/// </example>
 public sealed class SearchIssuesQuery : IPagedQuery, IQuery<PagedResponse<IssueDto>>
 {
     /// <summary>

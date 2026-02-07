@@ -26,9 +26,9 @@ public static class SearchCategoriesEndpoint
             return TypedResults.Ok(result);
         })
         .WithName(nameof(SearchCategoriesQuery))
-        .WithSummary("Search categories with pagination")
+        .WithSummary("Search and filter categories")
         .RequirePermission(ProductsPermissions.Categories.ViewCategory)
-        .WithDescription("Search and filter categories with server-side pagination and sorting by name or creation date.")
+        .WithDescription("Retrieves a paginated list of product categories with optional filtering and sorting. Supports sorting by name or creation date. Returns categories scoped to the current tenant with configurable page size and page number.")
         .Produces<PagedResponse<CategoryDto>>(StatusCodes.Status200OK);
     }
 }

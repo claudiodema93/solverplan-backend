@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace FSH.Modules.Products.Endpoints.v1;
 
+/// <summary>
+/// Endpoint for deleting a product.
+/// </summary>
 public static class DeleteProductEndpoint
 {
     public static RouteHandlerBuilder Map(this IEndpointRouteBuilder endpoints)
@@ -23,9 +26,9 @@ public static class DeleteProductEndpoint
             return TypedResults.NoContent();
         })
         .WithName("DeleteProduct")
-        .WithSummary("Delete product")
+        .WithSummary("Delete a product")
         .RequirePermission(ProductsPermissions.Delete)
-        .WithDescription("Delete an existing product.")
+        .WithDescription("Deletes an existing product from the current tenant. This operation permanently removes the product and all its associated metadata. Returns 404 if the product is not found.")
         .Produces(StatusCodes.Status204NoContent)
         .Produces(StatusCodes.Status404NotFound);
     }

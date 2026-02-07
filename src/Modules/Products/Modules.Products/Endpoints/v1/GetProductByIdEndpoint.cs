@@ -25,9 +25,9 @@ public static class GetProductByIdEndpoint
             return TypedResults.Ok(result);
         })
         .WithName(nameof(GetProductByIdQuery))
-        .WithSummary("Get product by ID")
+        .WithSummary("Retrieve a product by ID")
         .RequirePermission(ProductsPermissions.View)
-        .WithDescription("Retrieve a product by its unique identifier.")
+        .WithDescription("Retrieves a single product by its unique identifier. Returns comprehensive product details including title, description, version information, category, status, characteristics, and all associated metadata. Returns 404 if the product is not found or does not belong to the current tenant.")
         .Produces<ProductDto>(StatusCodes.Status200OK)
         .Produces(StatusCodes.Status404NotFound);
     }

@@ -5,4 +5,6 @@ namespace FSH.Modules.Products.Contracts.Application.Features.v1.Commands.Update
 /// <summary>
 /// Command to update an existing category.
 /// </summary>
+/// <param name="Id">The unique identifier of the category to update</param>
+/// <param name="Name">The new name for the category</param>
 public sealed record UpdateCategoryCommand(int Id, string Name) : ICommand;

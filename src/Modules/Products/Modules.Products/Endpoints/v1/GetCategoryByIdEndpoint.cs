@@ -25,9 +25,9 @@ public static class GetCategoryByIdEndpoint
             return TypedResults.Ok(result);
         })
         .WithName(nameof(GetCategoryByIdQuery))
-        .WithSummary("Get category by ID")
+        .WithSummary("Retrieve a category by ID")
         .RequirePermission(ProductsPermissions.Categories.ViewCategory)
-        .WithDescription("Retrieve a category by its unique identifier.")
+        .WithDescription("Retrieves a single product category by its unique identifier. Returns the category details including name and associated metadata. Returns 404 if the category is not found or does not belong to the current tenant.")
         .Produces<CategoryDto>(StatusCodes.Status200OK)
         .Produces(StatusCodes.Status404NotFound);
     }

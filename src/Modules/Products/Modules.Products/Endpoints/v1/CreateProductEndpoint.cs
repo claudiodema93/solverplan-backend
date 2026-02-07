@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace FSH.Modules.Products.Endpoints.v1;
 
+/// <summary>
+/// Endpoint for creating a new product.
+/// </summary>
 public static class CreateProductEndpoint
 {
     public static RouteHandlerBuilder Map(this IEndpointRouteBuilder endpoints)
@@ -19,9 +22,9 @@ public static class CreateProductEndpoint
             CancellationToken cancellationToken)
             => TypedResults.Ok(await mediator.Send(command, cancellationToken)))
             .WithName("CreateProduct")
-            .WithSummary("Create product")
+            .WithSummary("Create a new product")
             .RequirePermission(ProductsPermissions.Create)
-            .WithDescription("Create a new product.")
+            .WithDescription("Creates a new product within the current tenant. Supports comprehensive product metadata including title, description, version information, category assignment, status tracking, and optional characteristics. Returns the newly created product ID in the response.")
             .Produces<CreateProductResponse>(StatusCodes.Status200OK);
     }
 }

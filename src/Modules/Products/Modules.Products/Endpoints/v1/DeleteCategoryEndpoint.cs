@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace FSH.Modules.Products.Endpoints.v1;
 
+/// <summary>
+/// Endpoint for deleting a product category.
+/// </summary>
 public static class DeleteCategoryEndpoint
 {
     public static RouteHandlerBuilder Map(this IEndpointRouteBuilder endpoints)
@@ -24,9 +27,9 @@ public static class DeleteCategoryEndpoint
             return TypedResults.NoContent();
         })
         .WithName("DeleteCategory")
-        .WithSummary("Delete category")
+        .WithSummary("Delete a category")
         .RequirePermission(ProductsPermissions.Categories.DeleteCategory)
-        .WithDescription("Delete an existing category. Cannot delete if products reference this category.")
+        .WithDescription("Deletes an existing product category from the current tenant. The operation will fail if any products are currently assigned to this category. Returns 404 if the category is not found, or 400 if the category cannot be deleted due to existing references.")
         .Produces(StatusCodes.Status204NoContent)
         .Produces(StatusCodes.Status404NotFound)
         .Produces(StatusCodes.Status400BadRequest);

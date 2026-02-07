@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace FSH.Modules.Products.Endpoints.v1;
 
+/// <summary>
+/// Endpoint for updating an existing product issue.
+/// </summary>
 public static class UpdateIssueEndpoint
 {
     public static RouteHandlerBuilder Map(this IEndpointRouteBuilder endpoints)
@@ -28,9 +31,9 @@ public static class UpdateIssueEndpoint
             return Results.NoContent();
         })
             .WithName("UpdateIssue")
-            .WithSummary("Update issue")
+            .WithSummary("Update an existing issue")
             .RequirePermission(ProductsPermissions.Issues.UpdateIssue)
-            .WithDescription("Update an existing issue.")
+            .WithDescription("Updates an existing product issue with new information. Allows modification of issue details such as title, description, severity, and status. The issue must exist within the current tenant. Returns 400 if the route ID does not match the body ID, or 404 if the issue is not found.")
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status400BadRequest);
     }

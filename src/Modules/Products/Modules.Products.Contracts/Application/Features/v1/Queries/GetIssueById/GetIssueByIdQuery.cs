@@ -6,4 +6,5 @@ namespace FSH.Modules.Products.Contracts.Application.Features.v1.Queries.GetIssu
 /// <summary>
 /// Query to retrieve an issue by its unique identifier.
 /// </summary>
+/// <param name="Id">The unique identifier of the issue to retrieve.</param>
 public sealed record GetIssueByIdQuery(int Id) : IQuery<IssueDto?>;

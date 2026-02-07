@@ -26,9 +26,9 @@ public static class SearchProductsEndpoint
             return TypedResults.Ok(result);
         })
         .WithName(nameof(SearchProductsQuery))
-        .WithSummary("Search products with pagination")
+        .WithSummary("Search and filter products")
         .RequirePermission(ProductsPermissions.View)
-        .WithDescription("Search and filter products with server-side pagination, sorting, and filtering by category, status, and latest version.")
+        .WithDescription("Retrieves a paginated list of products with optional filtering and sorting capabilities. Supports filtering by category, product status (Draft, Published, Archived), and latest version flag. Allows sorting by various product fields. Returns products scoped to the current tenant with configurable page size and page number.")
         .Produces<PagedResponse<ProductDto>>(StatusCodes.Status200OK);
     }
 }

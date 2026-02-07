@@ -26,9 +26,9 @@ public static class SearchIssuesEndpoint
             return TypedResults.Ok(result);
         })
         .WithName(nameof(SearchIssuesQuery))
-        .WithSummary("Search issues with pagination")
+        .WithSummary("Search and filter issues")
         .RequirePermission(ProductsPermissions.Issues.ViewIssue)
-        .WithDescription("Search and filter issues with server-side pagination and sorting. Supports filtering by product, severity, and status.")
+        .WithDescription("Retrieves a paginated list of product issues with optional filtering and sorting capabilities. Supports filtering by associated product, severity level (Low, Medium, High, Critical), and issue status (Open, In Progress, Resolved, Closed). Returns issues scoped to the current tenant with configurable page size and page number.")
         .Produces<PagedResponse<IssueDto>>(StatusCodes.Status200OK);
     }
 }

@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace FSH.Modules.Products.Endpoints.v1;
 
+/// <summary>
+/// Endpoint for creating a new product category.
+/// </summary>
 public static class CreateCategoryEndpoint
 {
     public static RouteHandlerBuilder Map(this IEndpointRouteBuilder endpoints)
@@ -22,9 +25,9 @@ public static class CreateCategoryEndpoint
             return TypedResults.Created($"/categories/{categoryId}", new CreateCategoryResponse(categoryId));
         })
             .WithName("CreateCategory")
-            .WithSummary("Create category")
+            .WithSummary("Create a new category")
             .RequirePermission(ProductsPermissions.Categories.CreateCategory)
-            .WithDescription("Create a new category.")
+            .WithDescription("Creates a new product category within the current tenant. The category name must be unique within the tenant. Returns the newly created category ID in the response.")
             .Produces<CreateCategoryResponse>(StatusCodes.Status201Created);
     }
 }
