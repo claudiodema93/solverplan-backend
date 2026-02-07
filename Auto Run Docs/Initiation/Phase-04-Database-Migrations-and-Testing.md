@@ -105,12 +105,12 @@ Create and apply EF Core migrations for the new CRUD operations, write unit test
   - Run tests and ensure all pass
 
   **Completion Notes:**
-  - ✅ Created CreateCategoryCommandValidatorTests.cs with 12 comprehensive test cases covering:
+  - ✅ Created CreateCategoryCommandValidatorTests.cs with 14 comprehensive test cases covering:
     - Name validation (required, max length 128 characters)
     - Edge cases (empty, whitespace, null, exactly max length)
     - Special characters and Unicode support
     - Overall validation scenarios
-  - ✅ Created CreateIssueCommandValidatorTests.cs with 43 comprehensive test cases covering:
+  - ✅ Created CreateIssueCommandValidatorTests.cs with 41 comprehensive test cases covering:
     - ProductId validation (required, must be > 0)
     - Title validation (required, max length 256 characters)
     - Description validation (required, max length 4000 characters)
@@ -119,7 +119,7 @@ Create and apply EF Core migrations for the new CRUD operations, write unit test
     - Invalid enum value rejection
     - Multiple field validation scenarios
     - Optional field combinations
-  - ✅ All 220 tests passing (165 Product tests + 12 Category tests + 43 Issue tests)
+  - ✅ All 220 tests passing (165 Product tests + 14 Category tests + 41 Issue tests)
   - ✅ Tests follow FSH patterns: use Xunit, Shouldly, proper naming conventions, and [Trait("Category", "Products")] attribute
   - ✅ Test execution completed in 118ms with zero failures
   - ✅ Total test coverage now includes validators for all three entities: Product, Category, and Issue
