@@ -1,4 +1,5 @@
 using FSH.Framework.Core.Context;
+using FSH.Framework.Core.Exceptions;
 using FSH.Modules.Products.Contracts.Application.Features.v1.Commands.UpdateIssue;
 using FSH.Modules.Products.Infrastructure.Data;
 using Mediator;
@@ -21,7 +22,7 @@ public sealed class UpdateIssueCommandHandler(
         // Find issue by Id and tenant
         var issue = await dbContext.Issues
             .FirstOrDefaultAsync(i => i.Id == command.Id && i.TenantId == tenantId, cancellationToken)
-            ?? throw new InvalidOperationException($"Issue with ID {command.Id} not found or does not belong to the current tenant.");
+            ?? throw new NotFoundException($"Issue with ID {command.Id} not found or does not belong to the current tenant.");
 
         // Update properties
         issue.Title = command.Title;

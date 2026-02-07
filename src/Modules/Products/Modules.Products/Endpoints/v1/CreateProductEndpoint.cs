@@ -19,12 +19,15 @@ public static class CreateProductEndpoint
         return endpoints.MapPost("/", async (
             [FromBody] CreateProductCommand command,
             [FromServices] IMediator mediator,
-            CancellationToken cancellationToken)
-            => TypedResults.Ok(await mediator.Send(command, cancellationToken)))
+            CancellationToken cancellationToken) =>
+            {
+                var result = await mediator.Send(command, cancellationToken);
+                return TypedResults.Created($"/api/v1/products/{result.Id}", result);
+            })
             .WithName("CreateProduct")
             .WithSummary("Create a new product")
             .RequirePermission(ProductsPermissions.Create)
             .WithDescription("Creates a new product within the current tenant. Supports comprehensive product metadata including title, description, version information, category assignment, status tracking, and optional characteristics. Returns the newly created product ID in the response.")
-            .Produces<CreateProductResponse>(StatusCodes.Status200OK);
+            .Produces<CreateProductResponse>(StatusCodes.Status201Created);
     }
 }

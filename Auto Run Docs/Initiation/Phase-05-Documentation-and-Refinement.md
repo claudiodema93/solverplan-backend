@@ -34,13 +34,20 @@ Finalize the Products module CRUD implementation with comprehensive documentatio
   - ✅ Included best practices section for API consumers
   - **Completion Notes**: Created comprehensive 850+ line API reference documentation covering all entities, endpoints, permissions, error handling, pagination, sorting, filtering, and multi-tenancy. Each endpoint includes complete request/response examples with real-world data structures. Documentation follows structured markdown format with YAML front matter for integration with knowledge management tools.
 
-- [ ] Review and refactor code for consistency:
-  - Ensure all handlers follow the same error handling patterns
-  - Verify all validators have consistent validation rules
-  - Check that all endpoints return appropriate HTTP status codes
-  - Ensure DTOs have consistent property ordering and naming
-  - Verify tenant isolation is applied in all queries and commands
-  - Run code formatter if configured
+- [x] Review and refactor code for consistency:
+  - ✅ Ensured all handlers follow the same error handling patterns
+    - Fixed UpdateIssueCommandHandler.cs:24 to use NotFoundException instead of InvalidOperationException
+    - Fixed CreateIssueCommandHandler.cs:29 to use NotFoundException instead of InvalidOperationException
+  - ✅ Verified all validators have consistent validation rules (all follow FSH patterns)
+  - ✅ Checked that all endpoints return appropriate HTTP status codes
+    - Fixed CreateProductEndpoint.cs to return 201 Created with proper location header
+    - Updated UpdateIssueEndpoint.cs to follow the same pattern as UpdateCategory/UpdateProduct
+  - ✅ Ensured DTOs have consistent property ordering and naming (all consistent)
+  - ✅ Verified tenant isolation is applied in all queries and commands (all correct)
+  - ✅ Standardized default sorting in Search handlers (Issues now use CreatedOnUtc descending like Products)
+  - ✅ Build completed with zero warnings in Products module
+  - ✅ All 220 Products tests passing
+  - **Completion Notes**: Conducted comprehensive code review using code-reviewer agent. Fixed 4 critical inconsistencies: (1) Updated UpdateIssueCommandHandler and CreateIssueCommandHandler to use NotFoundException instead of InvalidOperationException for missing entities, (2) Fixed CreateProductEndpoint to return 201 Created status code with location header instead of 200 OK, (3) Refactored UpdateIssueEndpoint to match UpdateCategory/UpdateProduct pattern using separate Request record and TypedResults, (4) Standardized SearchIssuesQueryHandler default sort to CreatedOnUtc descending (newest first) for consistency with Products. Verified all changes with successful build (0 warnings in Products module) and all 220 tests passing.
 
 - [ ] Add error handling improvements:
   - Review all handlers and ensure proper NotFoundException usage

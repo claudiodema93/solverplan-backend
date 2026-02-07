@@ -96,7 +96,7 @@ public sealed class SearchIssuesQueryHandler(
     {
         if (string.IsNullOrWhiteSpace(sort))
         {
-            return query.OrderBy(i => i.Title);
+            return query.OrderByDescending(i => i.CreatedOnUtc);
         }
 
         var sortParts = sort.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
@@ -108,13 +108,13 @@ public sealed class SearchIssuesQueryHandler(
 
             if (!SortableFields.TryGetValue(field, out var selector))
             {
-                selector = i => i.Title; // Default fallback
+                selector = i => i.CreatedOnUtc; // Default fallback
             }
 
             orderedQuery = ApplySortExpression(query, orderedQuery, selector, descending);
         }
 
-        return orderedQuery ?? query.OrderBy(i => i.Title);
+        return orderedQuery ?? query.OrderByDescending(i => i.CreatedOnUtc);
     }
 
     private static (string field, bool descending) ParseSortField(string part)

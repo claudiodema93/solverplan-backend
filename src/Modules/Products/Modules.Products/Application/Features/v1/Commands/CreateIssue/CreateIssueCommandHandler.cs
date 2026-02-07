@@ -1,4 +1,5 @@
 using FSH.Framework.Core.Context;
+using FSH.Framework.Core.Exceptions;
 using FSH.Modules.Products.Contracts.Application.Features.v1.Commands.CreateIssue;
 using FSH.Modules.Products.Contracts.Domain.Enums;
 using FSH.Modules.Products.Domain.Entities;
@@ -26,7 +27,7 @@ public sealed class CreateIssueCommandHandler(
 
         if (!productExists)
         {
-            throw new InvalidOperationException($"Product with ID {command.ProductId} not found or does not belong to the current tenant.");
+            throw new NotFoundException($"Product with ID {command.ProductId} not found or does not belong to the current tenant.");
         }
 
         // Create issue entity with default values
