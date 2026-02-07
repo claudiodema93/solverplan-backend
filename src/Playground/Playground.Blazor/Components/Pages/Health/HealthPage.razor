@@ -299,9 +299,9 @@
             "db:auditing" => "Audit Database",
             "db:multitenancy" => "Multitenancy Database",
             "db:tenants-migrations" => "Tenant Migrations",
+            "db:products" => "Products Database",
             _ => name.Replace(":", " - ").Replace("-", " ")
                      .Split(' ')
-                     .Select(w => char.ToUpper(w[0]) + w[1..].ToLower())
                      .Aggregate((a, b) => $"{a} {b}")
         };
     }
