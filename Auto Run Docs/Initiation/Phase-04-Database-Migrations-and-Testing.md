@@ -57,7 +57,7 @@ Create and apply EF Core migrations for the new CRUD operations, write unit test
   - ✅ Verified migration application with `dotnet ef migrations list` showing `20260206191857_Initial_Products` as applied
   - Database connection used dynamic port (54717) from Aspire container orchestration
 
-- [ ] Write unit tests for Product command validators:
+- [x] Write unit tests for Product command validators:
   - Create Tests/Products/Validators/ folder structure
   - Create CreateProductCommandValidatorTests.cs
     - Test required field validation (Title)
@@ -65,6 +65,34 @@ Create and apply EF Core migrations for the new CRUD operations, write unit test
     - Test enum value validation
   - Create UpdateProductCommandValidatorTests.cs with similar tests
   - Run tests with `dotnet test src/FSH.Framework.slnx --filter Category=Products`
+
+  **Completion Notes:**
+  - ✅ Created Products.Tests project with proper structure and dependencies
+  - ✅ Added Products.Tests.csproj to solution file (FSH.Framework.slnx)
+  - ✅ Created GlobalUsings.cs with xUnit and Shouldly global usings
+  - ✅ Created CreateProductCommandValidatorTests.cs with 83 comprehensive test cases covering:
+    - Title validation (required, max length 256 characters)
+    - Description validation (optional, max length 2000 characters)
+    - Revision validation (>= 0)
+    - Version validation (>= 0)
+    - Variant validation (max length 100 characters)
+    - CategoryId validation (> 0 when provided)
+    - Keywords validation (max length 500 characters)
+    - Language validation (max length 50 characters)
+    - Subject validation (max length 200 characters)
+    - Notes validation (max length 2000 characters)
+    - HashSha256 validation (64 hexadecimal characters regex)
+    - CustomerId validation (not empty when provided)
+    - Mirroring validation (SourceProductTitle required when IsMirrored is true)
+    - Combined validation scenarios
+  - ✅ Created UpdateProductCommandValidatorTests.cs with 82 comprehensive test cases covering:
+    - Id validation (> 0)
+    - All the same validations as CreateProduct
+    - Update-specific scenarios
+  - ✅ All 165 tests passing with zero errors and zero warnings
+  - ✅ Tests follow FSH patterns: use Xunit, Shouldly, proper naming conventions, and [Trait("Category", "Products")] attribute
+  - ✅ Build successful: `dotnet build src/Tests/Products.Tests/Products.Tests.csproj` completed with 0 warnings, 0 errors
+  - ✅ Tests verified: All 165 tests pass in 74ms
 
 - [ ] Write unit tests for Category and Issue validators:
   - Create CreateCategoryCommandValidatorTests.cs
