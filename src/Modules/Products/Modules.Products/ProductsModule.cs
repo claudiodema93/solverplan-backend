@@ -58,5 +58,6 @@ public sealed class ProductsModule : IModule
             .WithApiVersionSet(versionSet);
 
         CreateIssueEndpoint.Map(issuesGroup);
+        GetIssueByIdEndpoint.Map(issuesGroup);
     }
 }

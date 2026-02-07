@@ -31,7 +31,7 @@ Implement complete CRUD functionality for Issue entities. Issues are related to 
   - Register endpoint in ProductsModule with issues group
   - **Completed**: All CreateIssue files were already in place. Registered the CreateIssueEndpoint in ProductsModule.cs with a new issues group at `api/v{version:apiVersion}/issues`. Build succeeded with 0 errors and no new warnings introduced.
 
-- [ ] Implement GetIssueById query feature:
+- [x] Implement GetIssueById query feature:
   - Create IssueDto.cs in Contracts/DTOs/
     - Properties: Id, ProductId, ProductTitle, Title, Description, Severity, Status, ResolutionNotes
     - Include audit fields: TenantId, CreatedOnUtc, CreatedBy, LastModifiedOnUtc, LastModifiedBy
@@ -46,6 +46,7 @@ Implement complete CRUD functionality for Issue entities. Issues are related to 
     - MapGet("/issues/{id}") with IMediator
     - Apply RequirePermission(ProductsPermissions.Issues.View)
   - Register endpoint in ProductsModule
+  - **Completed**: Created all required files following FSH vertical slice architecture. The IssueDto includes all specified properties plus audit fields. The query handler uses Include for Product navigation to populate ProductTitle. The endpoint is registered in the issuesGroup with proper permission checking. Build succeeded with 0 errors and no new warnings introduced.
 
 - [ ] Implement SearchIssues query with filtering and pagination:
   - Create SearchIssuesQuery.cs in Contracts/Application/Features/Queries/SearchIssues/
