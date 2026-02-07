@@ -1,7 +1,7 @@
 using FSH.Framework.Shared.Identity.Authorization;
 using FSH.Framework.Shared.Persistence;
 using FSH.Modules.Products.Contracts;
-using FSH.Modules.Products.Contracts.Application.Features.Queries.SearchCategories;
+using FSH.Modules.Products.Contracts.Application.Features.v1.Queries.SearchCategories;
 using FSH.Modules.Products.Contracts.DTOs;
 using Mediator;
 using Microsoft.AspNetCore.Builder;

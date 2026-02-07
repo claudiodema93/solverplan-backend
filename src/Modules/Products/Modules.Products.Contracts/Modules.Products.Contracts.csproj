@@ -13,8 +13,8 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Application\" />
-	  <Folder Include="Application\Features\Commands\" />
-	  <Folder Include="Application\Features\Queries\" />
+	  <Folder Include="Application\Features\v1\Commands\" />
+	  <Folder Include="Application\Features\v1\Queries\" />
 	  <Folder Include="Domain\Events\" />
 	</ItemGroup>
 </Project>

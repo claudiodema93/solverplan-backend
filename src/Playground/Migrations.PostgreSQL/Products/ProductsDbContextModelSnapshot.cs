@@ -230,37 +230,6 @@ namespace FSH.Playground.Migrations.PostgreSQL.Products
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.OwnsOne("FSH.Modules.Products.Domain.ValueObjects.MirroringInfo", "Mirroring", b1 =>
-                        {
-                            b1.Property<int>("ProductId")
-                                .HasColumnType("integer");
-
-                            b1.Property<bool>("CopyProduct")
-                                .HasColumnType("boolean")
-                                .HasColumnName("MirrorCopyProduct");
-
-                            b1.Property<bool>("IsMirrored")
-                                .HasColumnType("boolean")
-                                .HasColumnName("IsMirrored");
-
-                            b1.Property<string>("SourceProductRevision")
-                                .HasMaxLength(64)
-                                .HasColumnType("character varying(64)")
-                                .HasColumnName("MirrorSourceRevision");
-
-                            b1.Property<string>("SourceProductTitle")
-                                .HasMaxLength(256)
-                                .HasColumnType("character varying(256)")
-                                .HasColumnName("MirrorSourceTitle");
-
-                            b1.HasKey("ProductId");
-
-                            b1.ToTable("Products", "products");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ProductId");
-                        });
-
                     b.OwnsOne("FSH.Modules.Products.Domain.ValueObjects.ProductCharacteristics", "Characteristics", b1 =>
                         {
                             b1.Property<int>("ProductId")
@@ -289,6 +258,37 @@ namespace FSH.Playground.Migrations.PostgreSQL.Products
                             b1.Property<bool>("IsSellable")
                                 .HasColumnType("boolean")
                                 .HasColumnName("IsSellable");
+
+                            b1.HasKey("ProductId");
+
+                            b1.ToTable("Products", "products");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProductId");
+                        });
+
+                    b.OwnsOne("FSH.Modules.Products.Domain.ValueObjects.MirroringInfo", "Mirroring", b1 =>
+                        {
+                            b1.Property<int>("ProductId")
+                                .HasColumnType("integer");
+
+                            b1.Property<bool>("CopyProduct")
+                                .HasColumnType("boolean")
+                                .HasColumnName("MirrorCopyProduct");
+
+                            b1.Property<bool>("IsMirrored")
+                                .HasColumnType("boolean")
+                                .HasColumnName("IsMirrored");
+
+                            b1.Property<string>("SourceProductRevision")
+                                .HasMaxLength(64)
+                                .HasColumnType("character varying(64)")
+                                .HasColumnName("MirrorSourceRevision");
+
+                            b1.Property<string>("SourceProductTitle")
+                                .HasMaxLength(256)
+                                .HasColumnType("character varying(256)")
+                                .HasColumnName("MirrorSourceTitle");
 
                             b1.HasKey("ProductId");
 

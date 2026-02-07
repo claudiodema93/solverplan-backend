@@ -1,6 +1,6 @@
 using FSH.Framework.Shared.Identity.Authorization;
 using FSH.Modules.Products.Contracts;
-using FSH.Modules.Products.Contracts.Application.Features.Commands.CreateCategory;
+using FSH.Modules.Products.Contracts.Application.Features.v1.Commands.CreateCategory;
 using Mediator;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;

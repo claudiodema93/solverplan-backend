@@ -1,6 +1,6 @@
 using FSH.Framework.Shared.Identity.Authorization;
 using FSH.Modules.Products.Contracts;
-using FSH.Modules.Products.Contracts.Application.Features.Queries.GetIssueById;
+using FSH.Modules.Products.Contracts.Application.Features.v1.Queries.GetIssueById;
 using FSH.Modules.Products.Contracts.DTOs;
 using Mediator;
 using Microsoft.AspNetCore.Builder;

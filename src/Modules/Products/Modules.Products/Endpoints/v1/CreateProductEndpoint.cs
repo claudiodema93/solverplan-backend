@@ -1,7 +1,6 @@
 using FSH.Framework.Shared.Identity.Authorization;
 using FSH.Modules.Products.Contracts;
-using FSH.Modules.Products.Contracts.Application.Features.Commands.CreateProduct;
-using FSH.Modules.Products.Contracts.v1.CreateProduct;
+using FSH.Modules.Products.Contracts.Application.Features.v1.Commands.CreateProduct;
 using Mediator;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
