@@ -25,7 +25,7 @@ public static class DeleteCategoryEndpoint
         })
         .WithName("DeleteCategory")
         .WithSummary("Delete category")
-        .RequirePermission(ProductsPermissions.Categories.Delete)
+        .RequirePermission(ProductsPermissions.Categories.DeleteCategory)
         .WithDescription("Delete an existing category. Cannot delete if products reference this category.")
         .Produces(StatusCodes.Status204NoContent)
         .Produces(StatusCodes.Status404NotFound)

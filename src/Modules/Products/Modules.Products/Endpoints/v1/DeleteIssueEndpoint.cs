@@ -25,7 +25,7 @@ public static class DeleteIssueEndpoint
         })
         .WithName("DeleteIssue")
         .WithSummary("Delete issue")
-        .RequirePermission(ProductsPermissions.Issues.Delete)
+        .RequirePermission(ProductsPermissions.Issues.DeleteIssue)
         .WithDescription("Delete an existing issue.")
         .Produces(StatusCodes.Status204NoContent)
         .Produces(StatusCodes.Status404NotFound);

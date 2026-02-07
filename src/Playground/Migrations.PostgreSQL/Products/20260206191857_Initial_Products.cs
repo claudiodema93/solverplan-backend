@@ -7,7 +7,9 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FSH.Playground.Migrations.PostgreSQL.Products
 {
     /// <inheritdoc />
+#pragma warning disable CA1707 // Identifiers should not contain underscores
     public partial class Initial_Products : Migration
+#pragma warning restore CA1707
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

@@ -23,7 +23,7 @@ public static class CreateCategoryEndpoint
         })
             .WithName("CreateCategory")
             .WithSummary("Create category")
-            .RequirePermission(ProductsPermissions.Categories.Create)
+            .RequirePermission(ProductsPermissions.Categories.CreateCategory)
             .WithDescription("Create a new category.")
             .Produces<CreateCategoryResponse>(StatusCodes.Status201Created);
     }

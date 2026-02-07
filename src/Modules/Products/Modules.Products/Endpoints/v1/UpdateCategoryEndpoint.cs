@@ -28,7 +28,7 @@ public static class UpdateCategoryEndpoint
         })
         .WithName("UpdateCategory")
         .WithSummary("Update category")
-        .RequirePermission(ProductsPermissions.Categories.Update)
+        .RequirePermission(ProductsPermissions.Categories.UpdateCategory)
         .WithDescription("Update an existing category.")
         .Produces(StatusCodes.Status204NoContent)
         .Produces(StatusCodes.Status404NotFound);

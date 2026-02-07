@@ -74,4 +74,8 @@ app.MapGet("/", () => Results.Ok(new { message = "hello world!" }))
 await app.RunAsync();
 
 // Expose Program class for integration testing
+#pragma warning disable CA1515 // Consider making public types internal
+#pragma warning disable S1118 // Utility classes should not have public constructors
 public partial class Program { }
+#pragma warning restore S1118
+#pragma warning restore CA1515

@@ -29,7 +29,7 @@ public static class UpdateIssueEndpoint
         })
             .WithName("UpdateIssue")
             .WithSummary("Update issue")
-            .RequirePermission(ProductsPermissions.Issues.Update)
+            .RequirePermission(ProductsPermissions.Issues.UpdateIssue)
             .WithDescription("Update an existing issue.")
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status400BadRequest);

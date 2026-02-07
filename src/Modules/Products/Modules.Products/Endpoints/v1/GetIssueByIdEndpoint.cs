@@ -26,7 +26,7 @@ public static class GetIssueByIdEndpoint
         })
         .WithName(nameof(GetIssueByIdQuery))
         .WithSummary("Get issue by ID")
-        .RequirePermission(ProductsPermissions.Issues.View)
+        .RequirePermission(ProductsPermissions.Issues.ViewIssue)
         .WithDescription("Retrieve an issue by its unique identifier.")
         .Produces<IssueDto>(StatusCodes.Status200OK)
         .Produces(StatusCodes.Status404NotFound);

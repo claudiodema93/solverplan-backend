@@ -23,7 +23,7 @@ public static class CreateIssueEndpoint
         })
             .WithName("CreateIssue")
             .WithSummary("Create issue")
-            .RequirePermission(ProductsPermissions.Issues.Create)
+            .RequirePermission(ProductsPermissions.Issues.CreateIssue)
             .WithDescription("Create a new issue for a product.")
             .Produces<CreateIssueResponse>(StatusCodes.Status201Created);
     }

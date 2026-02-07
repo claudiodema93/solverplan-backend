@@ -27,7 +27,7 @@ public static class SearchIssuesEndpoint
         })
         .WithName(nameof(SearchIssuesQuery))
         .WithSummary("Search issues with pagination")
-        .RequirePermission(ProductsPermissions.Issues.View)
+        .RequirePermission(ProductsPermissions.Issues.ViewIssue)
         .WithDescription("Search and filter issues with server-side pagination and sorting. Supports filtering by product, severity, and status.")
         .Produces<PagedResponse<IssueDto>>(StatusCodes.Status200OK);
     }

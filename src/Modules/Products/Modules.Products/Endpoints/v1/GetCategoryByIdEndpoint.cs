@@ -26,7 +26,7 @@ public static class GetCategoryByIdEndpoint
         })
         .WithName(nameof(GetCategoryByIdQuery))
         .WithSummary("Get category by ID")
-        .RequirePermission(ProductsPermissions.Categories.View)
+        .RequirePermission(ProductsPermissions.Categories.ViewCategory)
         .WithDescription("Retrieve a category by its unique identifier.")
         .Produces<CategoryDto>(StatusCodes.Status200OK)
         .Produces(StatusCodes.Status404NotFound);
