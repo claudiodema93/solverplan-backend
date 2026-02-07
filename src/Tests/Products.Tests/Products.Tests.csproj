@@ -5,7 +5,7 @@
     <IsPublishable>false</IsPublishable>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <NoWarn>$(NoWarn);CA1515;CA1861;CA1707</NoWarn>
+    <NoWarn>$(NoWarn);CA1515;CA1861;CA1707;CA2234</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="coverlet.collector">
@@ -21,9 +21,11 @@
     <PackageReference Include="Shouldly" />
     <PackageReference Include="AutoFixture" />
     <PackageReference Include="NSubstitute" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Modules\Products\Modules.Products\Modules.Products.csproj" />
     <ProjectReference Include="..\..\Modules\Products\Modules.Products.Contracts\Modules.Products.Contracts.csproj" />
+    <ProjectReference Include="..\..\Playground\Playground.Api\Playground.Api.csproj" />
   </ItemGroup>
 </Project>
