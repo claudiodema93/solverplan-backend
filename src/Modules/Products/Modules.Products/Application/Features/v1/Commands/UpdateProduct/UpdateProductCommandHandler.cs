@@ -17,13 +17,25 @@ public sealed class UpdateProductCommandHandler(
         ArgumentNullException.ThrowIfNull(command);
 
         var tenantId = currentUser.GetTenant()
-            ?? throw new InvalidOperationException("Tenant not found.");
+            ?? throw new InvalidOperationException("Unable to update product: tenant context is required but not available.");
 
         // Find existing product by Id and tenant
         var product = await dbContext.Products
             .Where(p => p.Id == command.Id && p.TenantId == tenantId)
             .FirstOrDefaultAsync(cancellationToken)
             ?? throw new NotFoundException($"Product with Id {command.Id} not found.");
+
+        // Validate CategoryId exists if provided and different from current
+        if (command.CategoryId.HasValue && command.CategoryId.Value != product.CategoryId)
+        {
+            var categoryExists = await dbContext.Categories
+                .AnyAsync(c => c.Id == command.CategoryId.Value && c.TenantId == tenantId, cancellationToken);
+
+            if (!categoryExists)
+            {
+                throw new NotFoundException($"Category with ID {command.CategoryId.Value} not found. Please provide a valid category ID.");
+            }
+        }
 
         // Update product properties
         product.Title = command.Title;

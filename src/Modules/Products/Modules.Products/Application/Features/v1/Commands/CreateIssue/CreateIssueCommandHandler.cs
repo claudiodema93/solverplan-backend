@@ -19,7 +19,7 @@ public sealed class CreateIssueCommandHandler(
         ArgumentNullException.ThrowIfNull(command);
 
         var tenantId = currentUser.GetTenant()
-            ?? throw new InvalidOperationException("Tenant not found.");
+            ?? throw new InvalidOperationException("Unable to create issue: tenant context is required but not available.");
 
         // Verify ProductId exists and belongs to current tenant
         var productExists = await dbContext.Products

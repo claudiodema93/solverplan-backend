@@ -21,7 +21,7 @@ public sealed class GetIssueByIdQueryHandler(
         ArgumentNullException.ThrowIfNull(query);
 
         var tenantId = currentUser.GetTenant()
-            ?? throw new InvalidOperationException("Tenant not found.");
+            ?? throw new InvalidOperationException("Unable to retrieve issue: tenant context is required but not available.");
 
         var issue = await dbContext.Issues
             .Include(i => i.Product)

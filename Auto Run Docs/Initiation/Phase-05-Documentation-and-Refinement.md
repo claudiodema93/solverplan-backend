@@ -49,12 +49,16 @@ Finalize the Products module CRUD implementation with comprehensive documentatio
   - ✅ All 220 Products tests passing
   - **Completion Notes**: Conducted comprehensive code review using code-reviewer agent. Fixed 4 critical inconsistencies: (1) Updated UpdateIssueCommandHandler and CreateIssueCommandHandler to use NotFoundException instead of InvalidOperationException for missing entities, (2) Fixed CreateProductEndpoint to return 201 Created status code with location header instead of 200 OK, (3) Refactored UpdateIssueEndpoint to match UpdateCategory/UpdateProduct pattern using separate Request record and TypedResults, (4) Standardized SearchIssuesQueryHandler default sort to CreatedOnUtc descending (newest first) for consistency with Products. Verified all changes with successful build (0 warnings in Products module) and all 220 tests passing.
 
-- [ ] Add error handling improvements:
-  - Review all handlers and ensure proper NotFoundException usage
-  - Add specific error messages for common failure scenarios
-  - Ensure DeleteCategory properly explains why deletion failed (products reference it)
-  - Verify all BadRequestException messages are user-friendly
-  - Add error logging where appropriate
+- [x] Add error handling improvements:
+  - ✅ Reviewed all 15 handlers and confirmed proper NotFoundException usage
+  - ✅ Enhanced all tenant validation error messages to be operation-specific (e.g., "Unable to create product: tenant context is required...")
+  - ✅ Added CategoryId validation in CreateProduct and UpdateProduct to throw NotFoundException with helpful messages
+  - ✅ Enhanced DeleteCategory to report exact product count (e.g., "Cannot delete category 'Electronics' because it is currently assigned to 5 products. Please reassign or remove these products before deleting the category.")
+  - ✅ Verified all validator error messages are user-friendly (already using clear, descriptive messages)
+  - ✅ Confirmed error logging is already handled by GlobalExceptionHandler with structured logging via Serilog
+  - ✅ Build completed with 0 errors, 0 warnings in Products module
+  - ✅ All 220 Products tests passing
+  - **Completion Notes**: Enhanced error messages across all 15 handlers (9 commands, 6 queries) for better user experience and debugging. Improved tenant validation messages to be operation-specific. Added foreign key validation for CategoryId in Product creation/update with helpful error messages. Enhanced DeleteCategory to show exact product count and actionable guidance. Verified GlobalExceptionHandler already provides comprehensive error logging with Serilog context properties, stack traces, and structured logging - no additional logging needed for CRUD operations.
 
 - [ ] Performance optimization review:
   - Review all queries for proper .AsNoTracking() usage on read operations

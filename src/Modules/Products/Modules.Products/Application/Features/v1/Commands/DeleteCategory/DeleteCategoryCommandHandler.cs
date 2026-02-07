@@ -18,7 +18,7 @@ public sealed class DeleteCategoryCommandHandler(
         ArgumentNullException.ThrowIfNull(command);
 
         var tenantId = currentUser.GetTenant()
-            ?? throw new InvalidOperationException("Tenant not found.");
+            ?? throw new InvalidOperationException("Unable to delete category: tenant context is required but not available.");
 
         // Find existing category by Id and tenant
         var category = await dbContext.Categories
@@ -27,14 +27,16 @@ public sealed class DeleteCategoryCommandHandler(
             ?? throw new NotFoundException($"Category with Id {command.Id} not found.");
 
         // Check if any products reference this category
-        var hasProducts = await dbContext.Products
+        var productCount = await dbContext.Products
             .Where(p => p.CategoryId == command.Id && p.TenantId == tenantId)
-            .AnyAsync(cancellationToken);
+            .CountAsync(cancellationToken);
 
-        if (hasProducts)
+        if (productCount > 0)
         {
+            var productWord = productCount == 1 ? "product" : "products";
             throw new CustomException(
-                $"Cannot delete category '{category.Name}' because it is referenced by one or more products.",
+                $"Cannot delete category '{category.Name}' because it is currently assigned to {productCount} {productWord}. " +
+                $"Please reassign or remove these products before deleting the category.",
                 Array.Empty<string>(),
                 HttpStatusCode.BadRequest);
         }

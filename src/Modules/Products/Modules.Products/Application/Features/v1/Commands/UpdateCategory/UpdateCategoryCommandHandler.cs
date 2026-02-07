@@ -17,7 +17,7 @@ public sealed class UpdateCategoryCommandHandler(
         ArgumentNullException.ThrowIfNull(command);
 
         var tenantId = currentUser.GetTenant()
-            ?? throw new InvalidOperationException("Tenant not found.");
+            ?? throw new InvalidOperationException("Unable to update category: tenant context is required but not available.");
 
         // Find existing category by Id and tenant
         var category = await dbContext.Categories

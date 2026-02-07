@@ -1,8 +1,10 @@
 using FSH.Framework.Core.Context;
+using FSH.Framework.Core.Exceptions;
 using FSH.Modules.Products.Contracts.Application.Features.v1.Commands.CreateProduct;
 using FSH.Modules.Products.Domain.Entities;
 using FSH.Modules.Products.Infrastructure.Data;
 using Mediator;
+using Microsoft.EntityFrameworkCore;
 
 namespace FSH.Modules.Products.Application.Features.v1.Commands.CreateProduct;
 
@@ -16,7 +18,19 @@ public sealed class CreateProductCommandHandler(
         ArgumentNullException.ThrowIfNull(command);
 
         var tenantId = currentUser.GetTenant()
-            ?? throw new InvalidOperationException("Tenant not found.");
+            ?? throw new InvalidOperationException("Unable to create product: tenant context is required but not available.");
+
+        // Validate CategoryId exists if provided
+        if (command.CategoryId.HasValue)
+        {
+            var categoryExists = await dbContext.Categories
+                .AnyAsync(c => c.Id == command.CategoryId.Value && c.TenantId == tenantId, cancellationToken);
+
+            if (!categoryExists)
+            {
+                throw new NotFoundException($"Category with ID {command.CategoryId.Value} not found. Please create the category first or provide a valid category ID.");
+            }
+        }
 
         // Create product characteristics
         var characteristics = command.Characteristics is not null

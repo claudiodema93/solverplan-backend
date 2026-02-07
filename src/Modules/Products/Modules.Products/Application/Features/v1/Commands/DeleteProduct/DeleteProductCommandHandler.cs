@@ -17,7 +17,7 @@ public sealed class DeleteProductCommandHandler(
         ArgumentNullException.ThrowIfNull(command);
 
         var tenantId = currentUser.GetTenant()
-            ?? throw new InvalidOperationException("Tenant not found.");
+            ?? throw new InvalidOperationException("Unable to delete product: tenant context is required but not available.");
 
         // Find existing product by Id and tenant
         var product = await dbContext.Products

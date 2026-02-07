@@ -24,7 +24,7 @@ public sealed class SearchIssuesQueryHandler(
         ArgumentNullException.ThrowIfNull(query);
 
         var tenantId = currentUser.GetTenant()
-            ?? throw new InvalidOperationException("Tenant not found.");
+            ?? throw new InvalidOperationException("Unable to search issues: tenant context is required but not available.");
 
         IQueryable<Issue> issues = dbContext.Issues
             .Include(i => i.Product)

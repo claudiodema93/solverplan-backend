@@ -16,7 +16,7 @@ public sealed class CreateCategoryCommandHandler(
         ArgumentNullException.ThrowIfNull(command);
 
         var tenantId = currentUser.GetTenant()
-            ?? throw new InvalidOperationException("Tenant not found.");
+            ?? throw new InvalidOperationException("Unable to create category: tenant context is required but not available.");
 
         // Create category entity
         var category = new Category

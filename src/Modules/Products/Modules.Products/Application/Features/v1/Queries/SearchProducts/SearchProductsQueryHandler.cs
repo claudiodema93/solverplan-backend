@@ -24,7 +24,7 @@ public sealed class SearchProductsQueryHandler(
         ArgumentNullException.ThrowIfNull(query);
 
         var tenantId = currentUser.GetTenant()
-            ?? throw new InvalidOperationException("Tenant not found.");
+            ?? throw new InvalidOperationException("Unable to search products: tenant context is required but not available.");
 
         IQueryable<Product> products = dbContext.Products
             .Include(p => p.Category)

@@ -24,7 +24,7 @@ public sealed class SearchCategoriesQueryHandler(
         ArgumentNullException.ThrowIfNull(query);
 
         var tenantId = currentUser.GetTenant()
-            ?? throw new InvalidOperationException("Tenant not found.");
+            ?? throw new InvalidOperationException("Unable to search categories: tenant context is required but not available.");
 
         IQueryable<Category> categories = dbContext.Categories
             .Where(c => c.TenantId == tenantId)

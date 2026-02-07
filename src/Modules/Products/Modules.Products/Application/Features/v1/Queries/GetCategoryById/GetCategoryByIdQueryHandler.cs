@@ -21,7 +21,7 @@ public sealed class GetCategoryByIdQueryHandler(
         ArgumentNullException.ThrowIfNull(query);
 
         var tenantId = currentUser.GetTenant()
-            ?? throw new InvalidOperationException("Tenant not found.");
+            ?? throw new InvalidOperationException("Unable to retrieve category: tenant context is required but not available.");
 
         var category = await dbContext.Categories
             .Where(c => c.Id == query.Id && c.TenantId == tenantId)

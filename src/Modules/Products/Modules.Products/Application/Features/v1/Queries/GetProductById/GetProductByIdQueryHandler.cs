@@ -21,7 +21,7 @@ public sealed class GetProductByIdQueryHandler(
         ArgumentNullException.ThrowIfNull(query);
 
         var tenantId = currentUser.GetTenant()
-            ?? throw new InvalidOperationException("Tenant not found.");
+            ?? throw new InvalidOperationException("Unable to retrieve product: tenant context is required but not available.");
 
         var product = await dbContext.Products
             .Include(p => p.Category)

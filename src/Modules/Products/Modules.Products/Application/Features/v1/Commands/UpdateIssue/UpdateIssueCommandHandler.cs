@@ -17,7 +17,7 @@ public sealed class UpdateIssueCommandHandler(
         ArgumentNullException.ThrowIfNull(command);
 
         var tenantId = currentUser.GetTenant()
-            ?? throw new InvalidOperationException("Tenant not found.");
+            ?? throw new InvalidOperationException("Unable to update issue: tenant context is required but not available.");
 
         // Find issue by Id and tenant
         var issue = await dbContext.Issues
