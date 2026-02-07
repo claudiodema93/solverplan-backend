@@ -94,7 +94,7 @@ Create and apply EF Core migrations for the new CRUD operations, write unit test
   - ✅ Build successful: `dotnet build src/Tests/Products.Tests/Products.Tests.csproj` completed with 0 warnings, 0 errors
   - ✅ Tests verified: All 165 tests pass in 74ms
 
-- [ ] Write unit tests for Category and Issue validators:
+- [x] Write unit tests for Category and Issue validators:
   - Create CreateCategoryCommandValidatorTests.cs
     - Test Name is required
     - Test Name max length
@@ -103,6 +103,26 @@ Create and apply EF Core migrations for the new CRUD operations, write unit test
     - Test Title and Description are required
     - Test enum validations for Severity and Status
   - Run tests and ensure all pass
+
+  **Completion Notes:**
+  - ✅ Created CreateCategoryCommandValidatorTests.cs with 12 comprehensive test cases covering:
+    - Name validation (required, max length 128 characters)
+    - Edge cases (empty, whitespace, null, exactly max length)
+    - Special characters and Unicode support
+    - Overall validation scenarios
+  - ✅ Created CreateIssueCommandValidatorTests.cs with 43 comprehensive test cases covering:
+    - ProductId validation (required, must be > 0)
+    - Title validation (required, max length 256 characters)
+    - Description validation (required, max length 4000 characters)
+    - Severity enum validation (Low, Medium, High, Critical) with null support
+    - Status enum validation (Open, Close, Cancelled, Resolved) with null support
+    - Invalid enum value rejection
+    - Multiple field validation scenarios
+    - Optional field combinations
+  - ✅ All 220 tests passing (165 Product tests + 12 Category tests + 43 Issue tests)
+  - ✅ Tests follow FSH patterns: use Xunit, Shouldly, proper naming conventions, and [Trait("Category", "Products")] attribute
+  - ✅ Test execution completed in 118ms with zero failures
+  - ✅ Total test coverage now includes validators for all three entities: Product, Category, and Issue
 
 - [ ] Write integration tests for Product CRUD workflow:
   - Create Tests/Products/Integration/ProductCrudTests.cs
