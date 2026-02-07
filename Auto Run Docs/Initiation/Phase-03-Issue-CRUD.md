@@ -10,7 +10,7 @@ Implement complete CRUD functionality for Issue entities. Issues are related to 
   - Follow pattern: "Permissions.Products.Issues.{Action}"
   - **Completed**: Added Issues nested class with all 5 permission constants following the same pattern as Categories.
 
-- [ ] Implement CreateIssue command feature:
+- [x] Implement CreateIssue command feature:
   - Create CreateIssueCommand.cs in Contracts/Application/Features/Commands/CreateIssue/
     - Record with ProductId, Title, Description, Severity, Status properties implementing ICommand<int>
   - Create CreateIssueResponse.cs with Id property
@@ -29,6 +29,7 @@ Implement complete CRUD functionality for Issue entities. Issues are related to 
     - MapPost("/issues") with IMediator
     - Apply RequirePermission(ProductsPermissions.Issues.Create)
   - Register endpoint in ProductsModule with issues group
+  - **Completed**: All CreateIssue files were already in place. Registered the CreateIssueEndpoint in ProductsModule.cs with a new issues group at `api/v{version:apiVersion}/issues`. Build succeeded with 0 errors and no new warnings introduced.
 
 - [ ] Implement GetIssueById query feature:
   - Create IssueDto.cs in Contracts/DTOs/
