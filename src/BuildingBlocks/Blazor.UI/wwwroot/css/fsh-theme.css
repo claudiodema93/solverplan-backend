@@ -21,6 +21,12 @@
   --fsh-text-primary: #1a1a2e;
   --fsh-text-secondary: #64748b;
 
+  /* Focus Indicators (WCAG 2.1 AA Compliance) */
+  --fsh-focus-ring-color: rgba(var(--mud-palette-primary-rgb), 0.6);
+  --fsh-focus-ring-width: 3px;
+  --fsh-focus-ring-offset: 2px;
+  --fsh-focus-ring-style: solid;
+
   /* Transitions */
   --fsh-transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -382,3 +388,145 @@
 }
 
 /* FshStatCard styles are in the component's scoped CSS */
+
+/* ===== FshResponsiveTable - Mobile Card View ===== */
+.fsh-mobile-cards {
+  padding: 0;
+}
+
+.fsh-mobile-card {
+  border-radius: var(--fsh-radius) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+}
+
+.fsh-mobile-card:hover {
+  box-shadow: var(--fsh-shadow-md);
+  transform: translateY(-2px);
+}
+
+.fsh-mobile-card .mud-card-content {
+  padding: 16px !important;
+}
+
+.fsh-mobile-card-actions {
+  padding: 8px 16px 16px 16px !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.fsh-mobile-card-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.fsh-mobile-card-field:last-child {
+  border-bottom: none;
+}
+
+.fsh-mobile-card-label {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--mud-palette-text-secondary);
+  flex-shrink: 0;
+  margin-right: 12px;
+}
+
+.fsh-mobile-card-value {
+  font-size: 14px;
+  color: var(--mud-palette-text-primary);
+  text-align: right;
+  word-break: break-word;
+}
+
+.fsh-mobile-pagination {
+  display: flex;
+  justify-content: center;
+  padding: 16px 0;
+}
+
+.fsh-mobile-empty,
+.fsh-mobile-empty-default {
+  margin-top: 24px;
+}
+
+/* ===== WCAG 2.1 Accessibility - Skip Link ===== */
+.fsh-skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--mud-palette-primary);
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  border-radius: 0 0 4px 0;
+  z-index: 9999;
+  font-weight: 600;
+  font-size: 14px;
+  transition: top 0.2s ease;
+}
+
+.fsh-skip-link:focus {
+  top: 0;
+  outline: 3px solid var(--fsh-focus-ring-color);
+  outline-offset: 2px;
+}
+
+/* ===== WCAG 2.1 Accessibility - Focus Indicators ===== */
+/* Remove default outline and use custom focus ring */
+*:focus {
+  outline: none;
+}
+
+/* Apply focus ring only when using keyboard (not mouse clicks) */
+*:focus-visible {
+  outline: var(--fsh-focus-ring-width) var(--fsh-focus-ring-style) var(--fsh-focus-ring-color);
+  outline-offset: var(--fsh-focus-ring-offset);
+  border-radius: var(--fsh-radius-sm);
+}
+
+/* Buttons with custom focus styles */
+.mud-button:focus-visible,
+.mud-icon-button:focus-visible,
+.fsh-account-trigger:focus-visible {
+  outline: var(--fsh-focus-ring-width) var(--fsh-focus-ring-style) var(--fsh-focus-ring-color);
+  outline-offset: var(--fsh-focus-ring-offset);
+}
+
+/* Menu items focus */
+.fsh-menu-item:focus-visible,
+.fsh-nav-item:focus-visible {
+  outline: var(--fsh-focus-ring-width) var(--fsh-focus-ring-style) var(--fsh-focus-ring-color);
+  outline-offset: 1px;
+}
+
+/* Form inputs focus */
+.mud-input-root:focus-within {
+  outline: var(--fsh-focus-ring-width) var(--fsh-focus-ring-style) var(--fsh-focus-ring-color);
+  outline-offset: 1px;
+  border-radius: var(--fsh-radius-sm);
+}
+
+/* Links focus */
+a:focus-visible {
+  outline: var(--fsh-focus-ring-width) var(--fsh-focus-ring-style) var(--fsh-focus-ring-color);
+  outline-offset: var(--fsh-focus-ring-offset);
+  border-radius: 2px;
+}
+
+/* DataGrid rows focus */
+.mud-table-row:focus-visible {
+  outline: 2px solid var(--fsh-focus-ring-color);
+  outline-offset: -2px;
+}
+
+/* Cards focus */
+.mud-card:focus-visible {
+  outline: var(--fsh-focus-ring-width) var(--fsh-focus-ring-style) var(--fsh-focus-ring-color);
+  outline-offset: 2px;
+}

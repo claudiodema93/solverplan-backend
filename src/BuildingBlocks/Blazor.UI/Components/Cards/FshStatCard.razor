@@ -1,17 +1,20 @@
 @namespace FSH.Framework.Blazor.UI.Components.Cards
 
 <div class="fsh-stat-card-wrapper">
-    <MudCard Class="fsh-stat-card" Elevation="2">
+    <MudCard Class="fsh-stat-card"
+             Elevation="2"
+             role="region"
+             aria-label="@($"{Label}: {Value}")">
         <MudCardContent Class="pa-4">
             <MudStack Spacing="2">
                 <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Start">
-                    <MudIcon Icon="@Icon" Color="@IconColor" Size="Size.Large" />
+                    <MudIcon Icon="@Icon" Color="@IconColor" Size="Size.Large" aria-hidden="true" />
                     @if (!string.IsNullOrEmpty(Badge))
                     {
-                        <MudChip T="string" Size="Size.Small" Color="@EffectiveBadgeColor" Variant="Variant.Text">@Badge</MudChip>
+                        <MudChip T="string" Size="Size.Small" Color="@EffectiveBadgeColor" Variant="Variant.Text" aria-label="@($"Status: {Badge}")">@Badge</MudChip>
                     }
                 </MudStack>
-                <MudText Typo="Typo.h4" Class="fw-700">@Value</MudText>
+                <MudText Typo="Typo.h4" Class="fw-700" aria-live="polite">@Value</MudText>
                 <MudText Typo="Typo.body2" Class="text-muted">@Label</MudText>
             </MudStack>
         </MudCardContent>

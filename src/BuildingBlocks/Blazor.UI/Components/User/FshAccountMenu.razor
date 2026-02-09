@@ -1,34 +1,38 @@
 @namespace FSH.Framework.Blazor.UI.Components.User
 @inherits FSH.Framework.Blazor.UI.Components.Base.FshComponentBase
 
-<div class="fsh-account-menu">
+<div class="fsh-account-menu" role="navigation" aria-label="User account navigation">
     <MudMenu AnchorOrigin="Origin.BottomRight"
              TransformOrigin="Origin.TopRight"
              PopoverClass="fsh-account-popover"
              Dense="false">
         <ActivatorContent>
-            <MudButton Class="fsh-account-trigger" Variant="Variant.Text" Color="Color.Inherit">
-                <MudAvatar Size="Size.Small" Class="fsh-trigger-avatar">
+            <MudButton Class="fsh-account-trigger"
+                       Variant="Variant.Text"
+                       Color="Color.Inherit"
+                       aria-label="@($"Open user account menu for {UserName}")"
+                       aria-haspopup="true">
+                <MudAvatar Size="Size.Small" Class="fsh-trigger-avatar" aria-hidden="true">
                     @if (!string.IsNullOrEmpty(AvatarUrl))
                     {
-                        <MudImage Src="@AvatarUrl" Alt="@UserName" />
+                        <MudImage Src="@AvatarUrl" Alt="" />
                     }
                     else
                     {
                         @GetInitials(UserName)
                     }
                 </MudAvatar>
-                <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowDown" Size="Size.Small" Class="fsh-trigger-arrow" />
+                <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowDown" Size="Size.Small" Class="fsh-trigger-arrow" aria-hidden="true" />
             </MudButton>
         </ActivatorContent>
         <ChildContent>
-            <div class="fsh-account-dropdown">
+            <div class="fsh-account-dropdown" role="menu" aria-label="User account options">
                 <!-- User profile header -->
-                <div class="fsh-dropdown-header">
-                    <MudAvatar Size="Size.Large" Class="fsh-header-avatar">
+                <div class="fsh-dropdown-header" role="banner" aria-label="User profile information">
+                    <MudAvatar Size="Size.Large" Class="fsh-header-avatar" aria-hidden="true">
                         @if (!string.IsNullOrEmpty(AvatarUrl))
                         {
-                            <MudImage Src="@AvatarUrl" Alt="@UserName" />
+                            <MudImage Src="@AvatarUrl" Alt="" />
                         }
                         else
                         {
@@ -36,38 +40,50 @@
                         }
                     </MudAvatar>
                     <div class="fsh-header-info">
-                        <span class="fsh-header-name">@UserName</span>
-                        <span class="fsh-header-email">@UserEmail</span>
+                        <span class="fsh-header-name" aria-label="User name">@UserName</span>
+                        <span class="fsh-header-email" aria-label="User email">@UserEmail</span>
                         @if (!string.IsNullOrEmpty(UserRole))
                         {
-                            <MudChip T="string" Size="Size.Small" Color="Color.Primary" Variant="Variant.Outlined" Class="fsh-header-role">@UserRole</MudChip>
+                            <MudChip T="string" Size="Size.Small" Color="Color.Primary" Variant="Variant.Outlined" Class="fsh-header-role" aria-label="@($"User role: {UserRole}")">@UserRole</MudChip>
                         }
                     </div>
                 </div>
 
-                <MudDivider Class="my-0" />
+                <MudDivider Class="my-0" role="separator" />
 
                 <!-- Menu items -->
                 <div class="fsh-dropdown-menu">
-                    <MudMenuItem Icon="@Icons.Material.Outlined.Person" OnClick="@HandleProfileClick" Class="fsh-menu-item">
+                    <MudMenuItem Icon="@Icons.Material.Outlined.Person"
+                                 OnClick="@HandleProfileClick"
+                                 Class="fsh-menu-item"
+                                 role="menuitem"
+                                 aria-label="Go to profile settings">
                         <div class="fsh-menu-item-content">
                             <span class="fsh-menu-item-text">Profile</span>
-                            <span class="fsh-menu-item-desc">View and edit your profile</span>
+                            <span class="fsh-menu-item-desc" aria-hidden="true">View and edit your profile</span>
                         </div>
                     </MudMenuItem>
-                    <MudMenuItem Icon="@Icons.Material.Outlined.History" OnClick="@HandleAuditingClick" Class="fsh-menu-item">
+                    <MudMenuItem Icon="@Icons.Material.Outlined.History"
+                                 OnClick="@HandleAuditingClick"
+                                 Class="fsh-menu-item"
+                                 role="menuitem"
+                                 aria-label="View activity log">
                         <div class="fsh-menu-item-content">
                             <span class="fsh-menu-item-text">Activity Log</span>
-                            <span class="fsh-menu-item-desc">View your recent activity</span>
+                            <span class="fsh-menu-item-desc" aria-hidden="true">View your recent activity</span>
                         </div>
                     </MudMenuItem>
                 </div>
 
-                <MudDivider Class="my-0" />
+                <MudDivider Class="my-0" role="separator" />
 
                 <!-- Sign out -->
                 <div class="fsh-dropdown-footer">
-                    <MudMenuItem Icon="@Icons.Material.Outlined.Logout" OnClick="@HandleLogoutClick" Class="fsh-menu-item fsh-menu-item-danger">
+                    <MudMenuItem Icon="@Icons.Material.Outlined.Logout"
+                                 OnClick="@HandleLogoutClick"
+                                 Class="fsh-menu-item fsh-menu-item-danger"
+                                 role="menuitem"
+                                 aria-label="Sign out of your account">
                         Sign out
                     </MudMenuItem>
                 </div>

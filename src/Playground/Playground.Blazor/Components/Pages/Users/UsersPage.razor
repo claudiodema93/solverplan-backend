@@ -18,27 +18,31 @@
     <ActionContent>
         @if (_selectedUsers.Any())
         {
-            <MudButtonGroup Variant="Variant.Outlined" Color="Color.Default" Size="Size.Small" Class="mr-2">
+            <MudButtonGroup Variant="Variant.Outlined" Color="Color.Default" Size="Size.Small" Class="mr-2" role="group" aria-label="Bulk actions for selected users">
                 <MudButton StartIcon="@Icons.Material.Filled.CheckCircle"
                            Color="Color.Success"
                            OnClick="BulkActivate"
-                           Disabled="_bulkBusy">
+                           Disabled="_bulkBusy"
+                           aria-label="@($"Activate {_selectedUsers.Count} selected users")">
                     Activate (@_selectedUsers.Count)
                 </MudButton>
                 <MudButton StartIcon="@Icons.Material.Filled.Cancel"
                            Color="Color.Warning"
                            OnClick="BulkDeactivate"
-                           Disabled="_bulkBusy">
+                           Disabled="_bulkBusy"
+                           aria-label="@($"Deactivate {_selectedUsers.Count} selected users")">
                     Deactivate
                 </MudButton>
                 <MudButton StartIcon="@Icons.Material.Filled.Delete"
                            Color="Color.Error"
                            OnClick="BulkDelete"
-                           Disabled="_bulkBusy">
+                           Disabled="_bulkBusy"
+                           aria-label="@($"Delete {_selectedUsers.Count} selected users")">
                     Delete
                 </MudButton>
                 <MudButton StartIcon="@Icons.Material.Filled.Clear"
-                           OnClick="ClearSelection">
+                           OnClick="ClearSelection"
+                           aria-label="Clear user selection">
                     Clear
                 </MudButton>
             </MudButtonGroup>
@@ -46,7 +50,8 @@
         <MudButton Variant="Variant.Filled"
                    Color="Color.Primary"
                    StartIcon="@Icons.Material.Filled.Add"
-                   OnClick="ShowCreate">
+                   OnClick="ShowCreate"
+                   aria-label="Create new user">
             New User
         </MudButton>
     </ActionContent>

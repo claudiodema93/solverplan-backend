@@ -1,0 +1,186 @@
+@namespace FSH.Framework.Blazor.UI.Components.Data
+@using Microsoft.JSInterop
+@typeparam TItem
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+
+@* Desktop View - DataGrid *@
+<div class="fsh-responsive-table" style="@(IsMobile ? "display:none" : "display:block")">
+    @DesktopContent
+</div>
+
+@* Mobile View - Card Layout *@
+<div class="fsh-mobile-cards" style="@(IsMobile ? "display:block" : "display:none")">
+    @if (Items != null && Items.Any())
+    {
+        @foreach (var item in Items)
+        {
+            <MudCard Class="fsh-mobile-card mb-3" Elevation="2">
+                <MudCardContent>
+                    @MobileCardContent(item)
+                </MudCardContent>
+                @if (CardActions != null)
+                {
+                    <MudCardActions Class="fsh-mobile-card-actions">
+                        @CardActions(item)
+                    </MudCardActions>
+                }
+            </MudCard>
+        }
+
+        @if (ShowPagination && TotalItems > 0)
+        {
+            <div class="fsh-mobile-pagination mt-4">
+                <MudPagination Count="@TotalPages"
+                               Selected="@CurrentPage"
+                               SelectedChanged="@OnPageChanged"
+                               Size="Size.Small"
+                               ShowFirstButton="true"
+                               ShowLastButton="true"
+                               BoundaryCount="1"
+                               MiddleCount="1" />
+            </div>
+        }
+    }
+    else if (EmptyContent != null)
+    {
+        <div class="fsh-mobile-empty">
+            @EmptyContent
+        </div>
+    }
+    else
+    {
+        <MudCard Class="fsh-mobile-empty-default" Elevation="0">
+            <MudCardContent Class="text-center pa-8">
+                <MudIcon Icon="@Icons.Material.Outlined.Inbox" Size="Size.Large" Class="mb-4" Style="font-size: 4rem; opacity: 0.3;" />
+                <MudText Typo="Typo.h6" Color="Color.Default">No data available</MudText>
+                <MudText Typo="Typo.body2" Color="Color.Default" Class="mt-2">There are no items to display</MudText>
+            </MudCardContent>
+        </MudCard>
+    }
+</div>
+
+@code {
+    /// <summary>
+    /// Desktop content - typically a MudDataGrid or MudTable
+    /// </summary>
+    [Parameter, EditorRequired]
+    public RenderFragment DesktopContent { get; set; } = default!;
+
+    /// <summary>
+    /// Mobile card content template for each item
+    /// </summary>
+    [Parameter, EditorRequired]
+    public RenderFragment<TItem> MobileCardContent { get; set; } = default!;
+
+    /// <summary>
+    /// Optional action buttons for mobile cards
+    /// </summary>
+    [Parameter]
+    public RenderFragment<TItem>? CardActions { get; set; }
+
+    /// <summary>
+    /// The collection of items to display in mobile view
+    /// </summary>
+    [Parameter, EditorRequired]
+    public IEnumerable<TItem> Items { get; set; } = Enumerable.Empty<TItem>();
+
+    /// <summary>
+    /// Empty state content when no items are available
+    /// </summary>
+    [Parameter]
+    public RenderFragment? EmptyContent { get; set; }
+
+    /// <summary>
+    /// Show pagination controls in mobile view
+    /// </summary>
+    [Parameter]
+    public bool ShowPagination { get; set; } = false;
+
+    /// <summary>
+    /// Total number of items (for pagination)
+    /// </summary>
+    [Parameter]
+    public int TotalItems { get; set; }
+
+    /// <summary>
+    /// Items per page (for pagination)
+    /// </summary>
+    [Parameter]
+    public int PageSize { get; set; } = 10;
+
+    /// <summary>
+    /// Current page number (for pagination)
+    /// </summary>
+    [Parameter]
+    public int CurrentPage { get; set; } = 1;
+
+    /// <summary>
+    /// Page changed event callback
+    /// </summary>
+    [Parameter]
+    public EventCallback<int> OnPageChanged { get; set; }
+
+    /// <summary>
+    /// Mobile breakpoint in pixels (default: 768px)
+    /// </summary>
+    [Parameter]
+    public int MobileBreakpoint { get; set; } = 768;
+
+    private bool IsMobile { get; set; }
+    private DotNetObjectReference<FshResponsiveTable<TItem>>? _dotNetHelper;
+    private int TotalPages => TotalItems > 0 ? (int)Math.Ceiling((double)TotalItems / PageSize) : 1;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                _dotNetHelper = DotNetObjectReference.Create(this);
+
+                // Register listener for viewport changes
+                await JS.InvokeVoidAsync("FshResponsive.addListener", _dotNetHelper, nameof(OnViewportChanged));
+
+                // Get initial viewport state
+                IsMobile = await JS.InvokeAsync<bool>("FshResponsive.checkIsMobile");
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[FshResponsiveTable] Failed to initialize: {ex.Message}");
+                // Fallback to desktop view if JS interop fails
+                IsMobile = false;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Called by JavaScript when viewport changes
+    /// </summary>
+    [JSInvokable]
+    public void OnViewportChanged(bool isMobile)
+    {
+        if (IsMobile != isMobile)
+        {
+            IsMobile = isMobile;
+            InvokeAsync(StateHasChanged);
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            if (_dotNetHelper != null)
+            {
+                await JS.InvokeVoidAsync("FshResponsive.removeListener", _dotNetHelper);
+                _dotNetHelper.Dispose();
+            }
+        }
+        catch
+        {
+            // Ignore errors during disposal
+        }
+    }
+}

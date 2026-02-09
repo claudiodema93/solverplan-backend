@@ -10,6 +10,7 @@
 @using FSH.Playground.Blazor.Services
 @using Microsoft.AspNetCore.Components.Authorization
 @using System.Security.Claims
+@using Microsoft.JSInterop
 @inject IHttpContextAccessor HttpContextAccessor
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IHttpClientFactory HttpClientFactory
@@ -43,11 +44,21 @@ else if (!_isAuthenticated)
 }
 else
 {
+    <!-- Skip Link for Accessibility (WCAG 2.1) -->
+    <a href="#main-content" class="fsh-skip-link">Skip to main content</a>
+
     <MudLayout>
         <MudAppBar Elevation="0">
-            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+            <MudIconButton Icon="@Icons.Material.Filled.Menu"
+                           Color="Color.Inherit"
+                           Edge="Edge.Start"
+                           OnClick="@((e) => DrawerToggle())"
+                           aria-label="Toggle navigation menu" />
             <MudSpacer />
-            <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle" />
+            <MudIconButton Icon="@(DarkLightModeButtonIcon)"
+                           Color="Color.Inherit"
+                           OnClick="@DarkModeToggle"
+                           aria-label="@(_isDarkMode ? "Switch to light mode" : "Switch to dark mode")" />
             <FshAccountMenu UserName="@_userName"
                             UserEmail="@_userEmail"
                             UserRole="@_userRole"
@@ -56,14 +67,19 @@ else
                             OnAuditingClick="NavigateToAuditing"
                             OnLogoutClick="ConfirmAndLogoutAsync" />
         </MudAppBar>
-        <MudDrawer id="nav-drawer" @bind-Open="_drawerOpen" Elevation="0">
+        <MudDrawer id="nav-drawer"
+                   @bind-Open="_drawerOpen"
+                   Elevation="0"
+                   Variant="@_drawerVariant"
+                   ClipMode="@(_isMobileView ? DrawerClipMode.Always : DrawerClipMode.Never)"
+                   aria-label="Main navigation">
             <MudDrawerHeader>
                 <FshDrawerHeader Title="FSH Playground" />
             </MudDrawerHeader>
             <NavMenu />
         </MudDrawer>
         <MudMainContent Class="pt-20" Style="padding-left:0;padding-right:0;">
-            <MudContainer Class="fsh-section page-shell" MaxWidth="MaxWidth.False">
+            <MudContainer id="main-content" Class="fsh-section page-shell" MaxWidth="MaxWidth.False" role="main">
                 @Body
             </MudContainer>
         </MudMainContent>
@@ -87,6 +103,9 @@ else
     private string? _userRole;
     private string? _avatarUrl;
     private string? _logoUrl;
+    private bool _isMobileView = false;
+    private DrawerVariant _drawerVariant = DrawerVariant.Persistent;
+    private DotNetObjectReference<PlaygroundLayout>? _dotNetHelper;
 
     protected override async Task OnInitializedAsync()
     {
@@ -196,12 +215,83 @@ else
         }
     }
 
+    private async Task InitializeResponsiveDrawerAsync()
+    {
+        try
+        {
+            _dotNetHelper = DotNetObjectReference.Create(this);
+
+            // Register listener for viewport changes
+            await JS.InvokeVoidAsync("FshResponsive.addListener", _dotNetHelper, nameof(OnViewportChanged));
+
+            // Get initial viewport state
+            _isMobileView = await JS.InvokeAsync<bool>("FshResponsive.checkIsMobile");
+
+            // Set drawer state based on viewport
+            UpdateDrawerForViewport();
+
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[PlaygroundLayout] Failed to initialize responsive drawer: {ex.Message}");
+            // Fallback to desktop behavior
+            _isMobileView = false;
+            _drawerOpen = true;
+            _drawerVariant = DrawerVariant.Persistent;
+        }
+    }
+
+    /// <summary>
+    /// Called by JavaScript when viewport changes
+    /// </summary>
+    [JSInvokable]
+    public void OnViewportChanged(bool isMobile)
+    {
+        if (_isMobileView != isMobile)
+        {
+            _isMobileView = isMobile;
+            UpdateDrawerForViewport();
+            InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private void UpdateDrawerForViewport()
+    {
+        if (_isMobileView)
+        {
+            // Mobile: Temporary drawer (overlay), closed by default
+            _drawerVariant = DrawerVariant.Temporary;
+            _drawerOpen = false;
+        }
+        else
+        {
+            // Desktop: Persistent drawer (push content), open by default
+            _drawerVariant = DrawerVariant.Persistent;
+            _drawerOpen = true;
+        }
+    }
+
     public void Dispose()
     {
         TenantThemeState.OnThemeChanged -= HandleThemeChanged;
         UserProfileState.OnProfileChanged -= HandleProfileChanged;
         AuthStateNotifier.SessionExpired -= HandleSessionExpired;
         AuthenticationStateProvider.AuthenticationStateChanged -= OnAuthenticationStateChanged;
+
+        // Cleanup responsive drawer
+        if (_dotNetHelper != null)
+        {
+            try
+            {
+                JS.InvokeVoidAsync("FshResponsive.removeListener", _dotNetHelper);
+            }
+            catch
+            {
+                // Ignore errors during disposal
+            }
+            _dotNetHelper.Dispose();
+        }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -215,6 +305,9 @@ else
 
             if (firstRender)
             {
+                // Initialize responsive drawer behavior
+                await InitializeResponsiveDrawerAsync();
+
                 // Load full profile in Interactive mode
                 await LoadUserProfileAsync();
 

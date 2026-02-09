@@ -13,15 +13,17 @@
     <ActionContent>
         @if (_selectedRoles.Any())
         {
-            <MudButtonGroup Variant="Variant.Outlined" Color="Color.Default" Size="Size.Small" Class="mr-2">
+            <MudButtonGroup Variant="Variant.Outlined" Color="Color.Default" Size="Size.Small" Class="mr-2" role="group" aria-label="Bulk actions for selected roles">
                 <MudButton StartIcon="@Icons.Material.Filled.Delete"
                            Color="Color.Error"
                            OnClick="BulkDelete"
-                           Disabled="_bulkBusy">
+                           Disabled="_bulkBusy"
+                           aria-label="@($"Delete {_selectedRoles.Count} selected roles")">
                     Delete (@_selectedRoles.Count)
                 </MudButton>
                 <MudButton StartIcon="@Icons.Material.Filled.Clear"
-                           OnClick="ClearSelection">
+                           OnClick="ClearSelection"
+                           aria-label="Clear role selection">
                     Clear
                 </MudButton>
             </MudButtonGroup>
@@ -29,7 +31,8 @@
         <MudButton Variant="Variant.Filled"
                    Color="Color.Primary"
                    StartIcon="@Icons.Material.Filled.Add"
-                   OnClick="ShowCreate">
+                   OnClick="ShowCreate"
+                   aria-label="Create new role">
             New Role
         </MudButton>
     </ActionContent>
