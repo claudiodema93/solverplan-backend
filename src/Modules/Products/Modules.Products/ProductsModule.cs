@@ -62,5 +62,15 @@ public sealed class ProductsModule : IModule
         SearchIssuesEndpoint.Map(issuesGroup);
         UpdateIssueEndpoint.Map(issuesGroup);
         DeleteIssueEndpoint.Map(issuesGroup);
+
+        var qualityChecksGroup = endpoints.MapGroup("api/v{version:apiVersion}/qualitychecks")
+            .WithTags("QualityChecks")
+            .WithApiVersionSet(versionSet);
+
+        CreateQualityCheckEndpoint.Map(qualityChecksGroup);
+        GetQualityCheckByIdEndpoint.Map(qualityChecksGroup);
+        SearchQualityChecksEndpoint.Map(qualityChecksGroup);
+        UpdateQualityCheckEndpoint.Map(qualityChecksGroup);
+        DeleteQualityCheckEndpoint.Map(qualityChecksGroup);
     }
 }

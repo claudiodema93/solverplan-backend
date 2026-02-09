@@ -42,7 +42,7 @@ public class QualityCheck : BaseEntity<int>, IHasTenant, IAuditableEntity, ISoft
     /// The display order for presenting quality checks in a consistent sequence.
     /// Lower values appear first. Defaults to 0.
     /// </summary>
-    public int DisplayOrder { get; set; } = 0;
+    public int DisplayOrder { get; set; }
 
     /// <summary>
     /// Information about the tenant.

@@ -24,4 +24,13 @@ public static class ProductsPermissions
         public const string DeleteIssue = "Permissions.Products.Issues.Delete";
         public const string List = "Permissions.Products.Issues.List";
     }
+
+    public static class QualityChecks
+    {
+        public const string CreateQualityCheck = "Permissions.Products.QualityChecks.Create";
+        public const string ViewQualityCheck = "Permissions.Products.QualityChecks.View";
+        public const string UpdateQualityCheck = "Permissions.Products.QualityChecks.Update";
+        public const string DeleteQualityCheck = "Permissions.Products.QualityChecks.Delete";
+        public const string List = "Permissions.Products.QualityChecks.List";
+    }
 }

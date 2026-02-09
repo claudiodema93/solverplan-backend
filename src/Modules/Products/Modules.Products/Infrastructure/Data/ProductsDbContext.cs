@@ -23,6 +23,7 @@ public sealed class ProductsDbContext : BaseDbContext
     public DbSet<Product> Products => Set<Product>();
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<Issue> Issues => Set<Issue>();
+    public DbSet<QualityCheck> QualityChecks => Set<QualityCheck>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
