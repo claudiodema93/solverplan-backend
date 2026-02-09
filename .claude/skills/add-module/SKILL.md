@@ -18,20 +18,34 @@ If it's just a feature in an existing domain, use `add-feature` instead.
 
 ## Project Structure
 
+
 ```
 src/Modules/{Name}/
 ├── Modules.{Name}/
 │   ├── Modules.{Name}.csproj
 │   ├── {Name}Module.cs
 │   ├── {Name}PermissionConstants.cs
-│   ├── {Name}DbContext.cs
+│   ├── Application/
+│   ├── Application/Features
+│   ├── Application/Features/v1
+│   ├── Application/v1/Commands/
+│   ├── Application/v1/Queries/
 │   ├── Domain/
-│   │   └── {Entity}.cs
-│   └── Features/v1/
-│       └── {Feature}/
+│   ├── Domain/Entities
+│   ├── Domain/ValueObjects
+│   ├── Enpoints/
+│   ├── Enpoints/v1/
+│   └── Infrastructure/
+│   ├── Infrastructure/{Name}DbContext.cs
 └── Modules.{Name}.Contracts/
     ├── Modules.{Name}.Contracts.csproj
-    └── DTOs/
+│   ├── Application/
+│   ├── Domain/
+│   ├── Domain/DTOs/
+│   └── Infrastructure/
+src/Tests/{Name}.Tests/
+├── {Name}.Tests.csproj
+├── Modules.{Name}/
 ```
 
 ## Step 1: Create Projects
@@ -107,7 +121,7 @@ public static class {Name}PermissionConstants
 ## Step 4: Create DbContext
 
 ```csharp
-public sealed class {Name}DbContext : DbContext
+public sealed class {Name}DbContext : BaseDbContext
 {
     public {Name}DbContext(DbContextOptions<{Name}DbContext> options) : base(options) { }
 

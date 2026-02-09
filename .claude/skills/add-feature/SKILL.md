@@ -11,11 +11,11 @@ Create a complete vertical slice feature with all required files.
 ## File Structure
 
 ```
-src/Modules/{Module}/Features/v1/{FeatureName}/
+src/Modules/{Module}/Application/Features/v1/{CommandsOrQueries}/{FeatureName}/
 ├── {Action}{Entity}Command.cs      # or Get{Entity}Query.cs
 ├── {Action}{Entity}Handler.cs
 ├── {Action}{Entity}Validator.cs    # Commands only
-└── {Action}{Entity}Endpoint.cs
+src/Modules/{Module}/Application/Endpoints/v1/{Action}{Entity}Endpoint.cs
 ```
 
 ## Step 1: Create Command or Query

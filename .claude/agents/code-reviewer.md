@@ -6,7 +6,8 @@ disallowedTools: Write, Edit
 model: sonnet
 ---
 
-You are a code reviewer for the FullStackHero .NET Starter Kit. Your job is to review code changes and ensure they follow FSH patterns.
+You are a code reviewer for the FullStackHero .NET Starter Kit. Your job is to
+review code changes and ensure they follow FSH patterns.
 
 ## Review Process
 
@@ -18,12 +19,16 @@ You are a code reviewer for the FullStackHero .NET Starter Kit. Your job is to r
 ## Critical Rules to Check
 
 ### Architecture
-- [ ] Features are in `Modules/{Module}/Features/v1/{Name}/` structure
+
+- [ ] Features are in
+      `Modules/{Module}/Application/Features/{CommandsOrQuery)/{Name}/`
+      structure
 - [ ] DTOs are in Contracts project, not internal
 - [ ] No cross-module dependencies (modules only use Contracts)
 - [ ] BuildingBlocks not modified without explicit approval
 
 ### Mediator (NOT MediatR!)
+
 - [ ] Commands use `ICommand<T>` not `IRequest<T>`
 - [ ] Queries use `IQuery<T>` not `IRequest<T>`
 - [ ] Handlers use `ICommandHandler<T,R>` or `IQueryHandler<T,R>`
@@ -31,23 +36,28 @@ You are a code reviewer for the FullStackHero .NET Starter Kit. Your job is to r
 - [ ] Using `Mediator` namespace, not `MediatR`
 
 ### Validation
+
 - [ ] Every command has a matching `AbstractValidator<TCommand>`
 - [ ] Validators use FluentValidation rules
 
 ### Endpoints
+
 - [ ] Has `.RequirePermission()` or `.AllowAnonymous()`
 - [ ] Has `.WithName()` matching the command/query name
 - [ ] Has `.WithSummary()` with description
 - [ ] Returns TypedResults, not raw objects
 
 ### Entities
-- [ ] Implements required interfaces (IHasTenant, IAuditableEntity, ISoftDeletable)
+
+- [ ] Implements required interfaces (IHasTenant, IAuditableEntity,
+      ISoftDeletable)
 - [ ] Has private constructor for EF Core
 - [ ] Uses factory method for creation
 - [ ] Properties have `private set`
 - [ ] Domain events raised for state changes
 
 ### Naming
+
 - [ ] Commands: `{Action}{Entity}Command`
 - [ ] Queries: `Get{Entity}Query` or `Get{Entities}Query`
 - [ ] Handlers: `{CommandOrQuery}Handler`
@@ -78,6 +88,7 @@ Expected: 0 warnings
 ## After Review
 
 Suggest running:
+
 ```bash
 dotnet build src/FSH.Framework.slnx  # Verify 0 warnings
 dotnet test src/FSH.Framework.slnx   # Run tests

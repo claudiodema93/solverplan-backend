@@ -5,7 +5,7 @@ namespace FSH.Modules.Products.Domain.Entities;
 /// <summary>
 /// Represents an quality check required for a product. Quality checks are used to ensure that products meet certain standards before they can be released or sold.
 /// </summary>
-public class QualityCheck : BaseEntity<int>, IHasTenant, IAuditableEntity
+public class QualityCheck : BaseEntity<int>, IHasTenant, IAuditableEntity, ISoftDeletable
 {
     /// <summary>
     /// Foreign key to the associated product.
@@ -28,8 +28,13 @@ public class QualityCheck : BaseEntity<int>, IHasTenant, IAuditableEntity
     public required string Description { get; set; }
 
     /// <summary>
+    /// The Department of the quality check.
+    /// </summary>
+    public required string Department { get; set; }
+
+    /// <summary>
     /// Indicates whether this quality check is mandatory.
-    /// Required checks must be completed before the product can proceed.
+    /// Required checks must be completed before the quality check can proceed.
     /// </summary>
     public bool IsRequired { get; set; }
 
@@ -45,22 +50,38 @@ public class QualityCheck : BaseEntity<int>, IHasTenant, IAuditableEntity
     public string TenantId { get; set; } = default!;
 
     /// <summary>
-    /// The date and time when the product was created in UTC.
+    /// The date and time when the quality check was created in UTC.
     /// </summary>
     public DateTimeOffset CreatedOnUtc { get; set; } = DateTimeOffset.UtcNow;
 
     /// <summary>
-    /// The identifier of the user who created the product.
+    /// The identifier of the user who created the quality check.
     /// </summary>
     public string? CreatedBy { get; set; }
 
     /// <summary>
-    /// The date and time when the product was last modified in UTC.
+    /// The date and time when the quality check was last modified in UTC.
     /// </summary>
     public DateTimeOffset? LastModifiedOnUtc { get; set; }
 
     /// <summary>
-    /// The identifier of the user who last modified the product.
+    /// The identifier of the user who last modified the quality check.
     ///  </summary>
     public string? LastModifiedBy { get; set; }
+
+    /// <summary>
+    /// The identifier of the user who last modified the product.
+    ///  </summary>
+    public bool IsDeleted { get; set; }
+
+    /// <summary>
+    /// The date and time when the quality check was deleted in UTC.
+    /// </summary>
+    public DateTimeOffset? DeletedOnUtc { get; set; }
+
+    /// <summary>
+    /// The identifier of the user who deleted the quality check.
+    /// </summary>
+    public string? DeletedBy { get; set; }
+
 }

@@ -5,11 +5,13 @@ tools: Read, Write, Glob, Grep, Bash
 model: inherit
 ---
 
-You are a module creator for FullStackHero .NET Starter Kit. Your job is to scaffold complete new modules.
+You are a module creator for FullStackHero .NET Starter Kit. Your job is to
+scaffold complete new modules.
 
 ## When to Create a New Module
 
 Ask these questions:
+
 - Does it have its own domain entities? → Yes = new module
 - Could it be deployed independently? → Yes = new module
 - Is it just a feature in an existing domain? → No = use existing module
@@ -17,6 +19,7 @@ Ask these questions:
 ## Required Information
 
 Before generating, confirm:
+
 1. **Module name** - PascalCase (e.g., Catalog, Inventory, Billing)
 2. **Initial entities** - What domain entities?
 3. **Permissions** - What operations need permissions?
@@ -31,17 +34,30 @@ src/Modules/{Name}/
 │   ├── Modules.{Name}.csproj
 │   ├── {Name}Module.cs
 │   ├── {Name}PermissionConstants.cs
-│   ├── {Name}DbContext.cs
+│   ├── Application/
+│   ├── Application/Features
+│   ├── Application/Features/v1
+│   ├── Application/v1/Commands/
+│   ├── Application/v1/Queries/
 │   ├── Domain/
-│   └── Features/v1/
+│   ├── Domain/Entities
+│   ├── Domain/ValueObjects
+│   ├── Enpoints/
+│   ├── Enpoints/v1/
+│   └── Infrastructure/
+│   ├── Infrastructure/{Name}DbContext.cs
 └── Modules.{Name}.Contracts/
     ├── Modules.{Name}.Contracts.csproj
-    └── DTOs/
+│   ├── Application/
+│   ├── Domain/
+│   ├── Domain/DTOs/
+│   └── Infrastructure/
 ```
 
 ### Step 2: Generate Core Files
 
 **Modules.{Name}.csproj:**
+
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
@@ -57,6 +73,7 @@ src/Modules/{Name}/
 ```
 
 **{Name}Module.cs:**
+
 ```csharp
 public sealed class {Name}Module : IModule
 {
@@ -74,6 +91,7 @@ public sealed class {Name}Module : IModule
 ```
 
 **{Name}PermissionConstants.cs:**
+
 ```csharp
 public static class {Name}PermissionConstants
 {
@@ -82,9 +100,23 @@ public static class {Name}PermissionConstants
 ```
 
 **{Name}DbContext.cs:**
+
 ```csharp
-public sealed class {Name}DbContext : DbContext
+public sealed class {Name}DbContext : BaseDbContext
 {
+    public {Name}DbContext(
+        IMultiTenantContextAccessor<AppTenantInfo> multiTenantContextAccessor,
+        DbContextOptions<{Name}DbContext> options,
+        IOptions<DatabaseOptions> settings,
+        IHostEnvironment environment) : base(multiTenantContextAccessor, options, settings, environment)
+    {
+    }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        ArgumentNullException.ThrowIfNull(modelBuilder);
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof({Name}DbContext).Assembly);
+    }
     // Entity sets and configuration
 }
 ```
@@ -92,6 +124,7 @@ public sealed class {Name}DbContext : DbContext
 ### Step 3: Create Contracts Project
 
 **Modules.{Name}.Contracts.csproj:**
+
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
@@ -103,6 +136,7 @@ public sealed class {Name}DbContext : DbContext
 ### Step 4: Register Module
 
 Show changes needed in:
+
 1. `src/Playground/Playground.Api/Program.cs` - Add to moduleAssemblies
 2. `src/Playground/Playground.Api/Playground.Api.csproj` - Add ProjectReference
 3. Solution file - Add both projects
