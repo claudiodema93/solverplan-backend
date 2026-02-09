@@ -500,6 +500,10 @@ tmpclaude**
 # Auto Claude data directory
 .auto-claude/
 
+#Claude Code settings
+.claude/settings.*.json
+
 # Cross-platform build artifacts (backslash in directory names)
 **/bin\\*
 **/obj\\*
+
