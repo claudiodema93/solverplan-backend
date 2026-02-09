@@ -1,0 +1,214 @@
+@namespace FSH.Framework.Blazor.UI.Components.Data
+@using FSH.Framework.Blazor.UI.Services
+@using FSH.Framework.Blazor.UI.Components.Dialogs
+@using MudBlazor
+@typeparam TFilter
+@inject IFilterPresetService PresetService
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+
+<div class="fsh-filter-presets @Class">
+    <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center" Class="fsh-filter-presets-toolbar">
+        @* Preset Selector *@
+        <MudSelect T="string"
+                   Value="@_selectedPresetId"
+                   ValueChanged="@OnPresetSelected"
+                   Label="Saved Filters"
+                   Variant="Variant.Outlined"
+                   Dense="true"
+                   Clearable="true"
+                   Class="fsh-filter-preset-select"
+                   aria-label="Select saved filter preset">
+            @foreach (var preset in _presets)
+            {
+                <MudSelectItem Value="@preset.Id">
+                    @preset.Name
+                </MudSelectItem>
+            }
+        </MudSelect>
+
+        @* Save Button *@
+        <MudTooltip Text="Save current filter">
+            <MudIconButton Icon="@Icons.Material.Outlined.BookmarkAdd"
+                           Color="Color.Default"
+                           OnClick="@ShowSaveDialog"
+                           aria-label="Save current filter as preset" />
+        </MudTooltip>
+
+        @* Delete Button (shown when preset is selected) *@
+        @if (!string.IsNullOrEmpty(_selectedPresetId))
+        {
+            <MudTooltip Text="Delete selected filter">
+                <MudIconButton Icon="@Icons.Material.Outlined.Delete"
+                               Color="Color.Error"
+                               OnClick="@DeleteSelectedPreset"
+                               aria-label="Delete selected filter preset" />
+            </MudTooltip>
+        }
+    </MudStack>
+</div>
+
+@code {
+    /// <summary>
+    /// Unique key for storing presets (e.g., "users-page")
+    /// </summary>
+    [Parameter, EditorRequired]
+    public string PageKey { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Current filter state
+    /// </summary>
+    [Parameter, EditorRequired]
+    public TFilter CurrentFilter { get; set; } = default!;
+
+    /// <summary>
+    /// Callback when a preset is applied
+    /// </summary>
+    [Parameter]
+    public EventCallback<TFilter> OnFilterApplied { get; set; }
+
+    /// <summary>
+    /// Additional CSS classes
+    /// </summary>
+    [Parameter]
+    public string? Class { get; set; }
+
+    private List<FilterPreset<TFilter>> _presets = new();
+    private string? _selectedPresetId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPresetsAsync();
+    }
+
+    private async Task LoadPresetsAsync()
+    {
+        _presets = await PresetService.GetPresetsAsync<TFilter>(PageKey);
+        StateHasChanged();
+    }
+
+    private async Task OnPresetSelected(string? presetId)
+    {
+        _selectedPresetId = presetId;
+
+        if (string.IsNullOrEmpty(presetId))
+        {
+            // Cleared selection - no action needed
+            return;
+        }
+
+        var preset = _presets.FirstOrDefault(p => p.Id == presetId);
+        if (preset != null && OnFilterApplied.HasDelegate)
+        {
+            await OnFilterApplied.InvokeAsync(preset.Filter);
+            Snackbar.Add($"Filter '{preset.Name}' applied", Severity.Success);
+        }
+    }
+
+    private async Task ShowSaveDialog()
+    {
+        var parameters = new DialogParameters
+        {
+            { "PresetName", "" }
+        };
+
+        var options = new DialogOptions
+        {
+            MaxWidth = MaxWidth.Small,
+            FullWidth = true
+        };
+
+        var dialog = DialogService.Show<SavePresetDialog>("Save Filter Preset", parameters, options);
+        var result = await dialog.Result;
+
+        if (!result.Canceled && result.Data is string presetName && !string.IsNullOrWhiteSpace(presetName))
+        {
+            var preset = new FilterPreset<TFilter>
+            {
+                Name = presetName,
+                Filter = CurrentFilter
+            };
+
+            await PresetService.SavePresetAsync(PageKey, preset);
+            await LoadPresetsAsync();
+
+            _selectedPresetId = preset.Id;
+            Snackbar.Add($"Filter '{presetName}' saved", Severity.Success);
+        }
+    }
+
+    private async Task DeleteSelectedPreset()
+    {
+        if (string.IsNullOrEmpty(_selectedPresetId))
+            return;
+
+        var preset = _presets.FirstOrDefault(p => p.Id == _selectedPresetId);
+        if (preset == null)
+            return;
+
+        var confirmed = await DialogService.ShowDeleteConfirmAsync($"filter preset '{preset.Name}'");
+
+        if (confirmed)
+        {
+            await PresetService.DeletePresetAsync(PageKey, _selectedPresetId);
+            await LoadPresetsAsync();
+
+            _selectedPresetId = null;
+            Snackbar.Add($"Filter '{preset.Name}' deleted", Severity.Success);
+        }
+    }
+}
+
+@* Simple dialog for entering preset name *@
+@code {
+    private class SavePresetDialog : ComponentBase
+    {
+        [CascadingParameter]
+        private IMudDialogInstance? MudDialog { get; set; }
+
+        [Parameter]
+        public string PresetName { get; set; } = string.Empty;
+
+        private void Save()
+        {
+            MudDialog?.Close(DialogResult.Ok(PresetName));
+        }
+
+        private void Cancel()
+        {
+            MudDialog?.Cancel();
+        }
+
+        protected override void BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder builder)
+        {
+            builder.OpenComponent<MudDialog>(0);
+            builder.AddAttribute(1, "DialogContent", (RenderFragment)(contentBuilder =>
+            {
+                contentBuilder.OpenComponent<MudTextField<string>>(0);
+                contentBuilder.AddAttribute(1, "Label", "Preset Name");
+                contentBuilder.AddAttribute(2, "Value", PresetName);
+                contentBuilder.AddAttribute(3, "ValueChanged", EventCallback.Factory.Create<string>(this, value => PresetName = value));
+                contentBuilder.AddAttribute(4, "Variant", Variant.Outlined);
+                contentBuilder.AddAttribute(5, "Immediate", true);
+                contentBuilder.AddAttribute(6, "AutoFocus", true);
+                contentBuilder.CloseComponent();
+            }));
+            builder.AddAttribute(2, "DialogActions", (RenderFragment)(actionsBuilder =>
+            {
+                actionsBuilder.OpenComponent<MudButton>(0);
+                actionsBuilder.AddAttribute(1, "OnClick", EventCallback.Factory.Create(this, Cancel));
+                actionsBuilder.AddAttribute(2, "ChildContent", (RenderFragment)(b => b.AddContent(0, "Cancel")));
+                actionsBuilder.CloseComponent();
+
+                actionsBuilder.OpenComponent<MudButton>(1);
+                actionsBuilder.AddAttribute(1, "Color", Color.Primary);
+                actionsBuilder.AddAttribute(2, "Variant", Variant.Filled);
+                actionsBuilder.AddAttribute(3, "OnClick", EventCallback.Factory.Create(this, Save));
+                actionsBuilder.AddAttribute(4, "Disabled", string.IsNullOrWhiteSpace(PresetName));
+                actionsBuilder.AddAttribute(5, "ChildContent", (RenderFragment)(b => b.AddContent(0, "Save")));
+                actionsBuilder.CloseComponent();
+            }));
+            builder.CloseComponent();
+        }
+    }
+}

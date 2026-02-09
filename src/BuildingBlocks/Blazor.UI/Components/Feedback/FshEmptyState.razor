@@ -1,0 +1,163 @@
+@namespace FSH.Framework.Blazor.UI.Components.Feedback
+
+<div class="fsh-empty-state @Class">
+    <MudCard Elevation="0" Class="fsh-empty-state-card">
+        <MudCardContent Class="text-center pa-8">
+            @* Icon or Illustration *@
+            @if (!string.IsNullOrEmpty(IllustrationUrl))
+            {
+                <img src="@IllustrationUrl" alt="@Title" class="fsh-empty-state-illustration" />
+            }
+            else
+            {
+                <div class="fsh-empty-state-icon-wrapper">
+                    <MudIcon Icon="@Icon"
+                             Color="@IconColor"
+                             Class="fsh-empty-state-icon"
+                             aria-hidden="true" />
+                </div>
+            }
+
+            @* Title *@
+            <MudText Typo="Typo.h5" Class="fsh-empty-state-title mt-4">
+                @Title
+            </MudText>
+
+            @* Description *@
+            @if (!string.IsNullOrEmpty(Description))
+            {
+                <MudText Typo="Typo.body1" Color="Color.Default" Class="fsh-empty-state-description mt-2">
+                    @Description
+                </MudText>
+            }
+
+            @* Custom Content *@
+            @if (ChildContent != null)
+            {
+                <div class="fsh-empty-state-content mt-3">
+                    @ChildContent
+                </div>
+            }
+
+            @* Primary Action *@
+            @if (!string.IsNullOrEmpty(PrimaryActionText))
+            {
+                <div class="fsh-empty-state-actions mt-6">
+                    <MudButton Variant="Variant.Filled"
+                               Color="@PrimaryActionColor"
+                               StartIcon="@PrimaryActionIcon"
+                               OnClick="@OnPrimaryAction"
+                               Size="Size.Large"
+                               aria-label="@PrimaryActionText">
+                        @PrimaryActionText
+                    </MudButton>
+
+                    @if (!string.IsNullOrEmpty(SecondaryActionText))
+                    {
+                        <MudButton Variant="Variant.Text"
+                                   Color="Color.Default"
+                                   OnClick="@OnSecondaryAction"
+                                   Class="ml-2"
+                                   aria-label="@SecondaryActionText">
+                            @SecondaryActionText
+                        </MudButton>
+                    }
+                </div>
+            }
+
+            @* Action Content (for custom action buttons) *@
+            @if (ActionContent != null)
+            {
+                <div class="fsh-empty-state-actions mt-6">
+                    @ActionContent
+                </div>
+            }
+        </MudCardContent>
+    </MudCard>
+</div>
+
+@code {
+    /// <summary>
+    /// Title of the empty state
+    /// </summary>
+    [Parameter, EditorRequired]
+    public string Title { get; set; } = "No data available";
+
+    /// <summary>
+    /// Description text
+    /// </summary>
+    [Parameter]
+    public string? Description { get; set; }
+
+    /// <summary>
+    /// MudBlazor icon to display
+    /// </summary>
+    [Parameter]
+    public string Icon { get; set; } = Icons.Material.Outlined.Inbox;
+
+    /// <summary>
+    /// Icon color
+    /// </summary>
+    [Parameter]
+    public Color IconColor { get; set; } = Color.Default;
+
+    /// <summary>
+    /// URL to illustration image (overrides Icon)
+    /// </summary>
+    [Parameter]
+    public string? IllustrationUrl { get; set; }
+
+    /// <summary>
+    /// Primary action button text
+    /// </summary>
+    [Parameter]
+    public string? PrimaryActionText { get; set; }
+
+    /// <summary>
+    /// Primary action button icon
+    /// </summary>
+    [Parameter]
+    public string? PrimaryActionIcon { get; set; }
+
+    /// <summary>
+    /// Primary action button color
+    /// </summary>
+    [Parameter]
+    public Color PrimaryActionColor { get; set; } = Color.Primary;
+
+    /// <summary>
+    /// Primary action callback
+    /// </summary>
+    [Parameter]
+    public EventCallback OnPrimaryAction { get; set; }
+
+    /// <summary>
+    /// Secondary action button text
+    /// </summary>
+    [Parameter]
+    public string? SecondaryActionText { get; set; }
+
+    /// <summary>
+    /// Secondary action callback
+    /// </summary>
+    [Parameter]
+    public EventCallback OnSecondaryAction { get; set; }
+
+    /// <summary>
+    /// Custom content area
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Custom action buttons area
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ActionContent { get; set; }
+
+    /// <summary>
+    /// Additional CSS classes
+    /// </summary>
+    [Parameter]
+    public string? Class { get; set; }
+}

@@ -1,0 +1,243 @@
+@namespace FSH.Framework.Blazor.UI.Components.Dialogs
+@using MudBlazor
+
+<MudDialog ClassActions="pa-0" DisableSidePadding="true" Class="fsh-progress-dialog">
+    <DialogContent>
+        <div class="fsh-progress-content pa-6">
+            @* Header *@
+            <div class="fsh-progress-header mb-4">
+                <MudIcon Icon="@Icon"
+                         Color="@IconColor"
+                         Size="Size.Large"
+                         Class="fsh-progress-icon" />
+                <div class="fsh-progress-title-section">
+                    <MudText Typo="Typo.h6" Class="fsh-progress-title">
+                        @Title
+                    </MudText>
+                    @if (!string.IsNullOrEmpty(Description))
+                    {
+                        <MudText Typo="Typo.body2" Color="Color.Default" Class="fsh-progress-description">
+                            @Description
+                        </MudText>
+                    }
+                </div>
+            </div>
+
+            @* Progress Bar *@
+            <div class="fsh-progress-bar-section mb-4">
+                <MudProgressLinear Color="@ProgressColor"
+                                   Value="@ProgressPercentage"
+                                   Size="Size.Large"
+                                   Class="fsh-progress-bar"
+                                   Striped="@IsInProgress"
+                                   Indeterminate="@(IsInProgress && TotalItems == 0)" />
+
+                @* Counter *@
+                <div class="fsh-progress-counter mt-2">
+                    <MudText Typo="Typo.body2" Color="Color.Default">
+                        @if (TotalItems > 0)
+                        {
+                            <strong>@CompletedItems</strong>
+                            <span> of </span>
+                            <strong>@TotalItems</strong>
+                            <span> @ItemLabel</span>
+                        }
+                        else
+                        {
+                            <span>Processing...</span>
+                        }
+                    </MudText>
+                    <MudText Typo="Typo.caption" Color="Color.Default">
+                        @ProgressPercentage%
+                    </MudText>
+                </div>
+            </div>
+
+            @* Status Message *@
+            @if (!string.IsNullOrEmpty(StatusMessage))
+            {
+                <div class="fsh-progress-status mb-3">
+                    <MudText Typo="Typo.body2" Color="Color.Default">
+                        @StatusMessage
+                    </MudText>
+                </div>
+            }
+
+            @* Errors Section *@
+            @if (Errors.Any())
+            {
+                <div class="fsh-progress-errors mt-4">
+                    <MudAlert Severity="Severity.Error" Variant="Variant.Outlined" Dense="true">
+                        <MudText Typo="Typo.subtitle2" Class="mb-2">
+                            @Errors.Count error(s) occurred:
+                        </MudText>
+                        <ul class="fsh-progress-error-list">
+                            @foreach (var error in Errors.Take(5))
+                            {
+                                <li>@error</li>
+                            }
+                            @if (Errors.Count > 5)
+                            {
+                                <li><em>... and @(Errors.Count - 5) more</em></li>
+                            }
+                        </ul>
+                    </MudAlert>
+                </div>
+            }
+
+            @* Success Message *@
+            @if (IsCompleted && !Errors.Any())
+            {
+                <div class="fsh-progress-success mt-4">
+                    <MudAlert Severity="Severity.Success" Variant="Variant.Outlined" Dense="true">
+                        <MudText Typo="Typo.body2">
+                            @SuccessMessage
+                        </MudText>
+                    </MudAlert>
+                </div>
+            }
+        </div>
+    </DialogContent>
+
+    <DialogActions>
+        <div class="fsh-progress-actions pa-4 d-flex justify-end" style="width: 100%;">
+            @if (IsCompleted)
+            {
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           OnClick="@Close"
+                           aria-label="Close dialog">
+                    Close
+                </MudButton>
+            }
+            else if (AllowCancel)
+            {
+                <MudButton Variant="Variant.Text"
+                           Color="Color.Default"
+                           OnClick="@Cancel"
+                           Disabled="@IsCancelling"
+                           aria-label="Cancel operation">
+                    @(IsCancelling ? "Cancelling..." : "Cancel")
+                </MudButton>
+            }
+        </div>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance? MudDialog { get; set; }
+
+    /// <summary>
+    /// Dialog title
+    /// </summary>
+    [Parameter]
+    public string Title { get; set; } = "Processing";
+
+    /// <summary>
+    /// Dialog description
+    /// </summary>
+    [Parameter]
+    public string? Description { get; set; }
+
+    /// <summary>
+    /// Icon to display
+    /// </summary>
+    [Parameter]
+    public string Icon { get; set; } = Icons.Material.Outlined.HourglassEmpty;
+
+    /// <summary>
+    /// Icon color
+    /// </summary>
+    [Parameter]
+    public Color IconColor { get; set; } = Color.Primary;
+
+    /// <summary>
+    /// Total number of items to process
+    /// </summary>
+    [Parameter]
+    public int TotalItems { get; set; }
+
+    /// <summary>
+    /// Number of completed items
+    /// </summary>
+    [Parameter]
+    public int CompletedItems { get; set; }
+
+    /// <summary>
+    /// Label for items (e.g., "users", "items")
+    /// </summary>
+    [Parameter]
+    public string ItemLabel { get; set; } = "items";
+
+    /// <summary>
+    /// Current status message
+    /// </summary>
+    [Parameter]
+    public string? StatusMessage { get; set; }
+
+    /// <summary>
+    /// List of errors that occurred
+    /// </summary>
+    [Parameter]
+    public List<string> Errors { get; set; } = new();
+
+    /// <summary>
+    /// Success message when completed
+    /// </summary>
+    [Parameter]
+    public string SuccessMessage { get; set; } = "Operation completed successfully!";
+
+    /// <summary>
+    /// Whether the operation is in progress
+    /// </summary>
+    [Parameter]
+    public bool IsInProgress { get; set; } = true;
+
+    /// <summary>
+    /// Whether the operation is completed
+    /// </summary>
+    [Parameter]
+    public bool IsCompleted { get; set; }
+
+    /// <summary>
+    /// Whether cancellation is allowed
+    /// </summary>
+    [Parameter]
+    public bool AllowCancel { get; set; } = true;
+
+    /// <summary>
+    /// Whether cancellation is in progress
+    /// </summary>
+    [Parameter]
+    public bool IsCancelling { get; set; }
+
+    /// <summary>
+    /// Progress color
+    /// </summary>
+    [Parameter]
+    public Color ProgressColor { get; set; } = Color.Primary;
+
+    /// <summary>
+    /// Cancel callback
+    /// </summary>
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+
+    private int ProgressPercentage => TotalItems > 0
+        ? (int)((double)CompletedItems / TotalItems * 100)
+        : 0;
+
+    private void Close()
+    {
+        MudDialog?.Close(DialogResult.Ok(true));
+    }
+
+    private async Task Cancel()
+    {
+        if (OnCancel.HasDelegate)
+        {
+            await OnCancel.InvokeAsync();
+        }
+    }
+}

@@ -1,0 +1,113 @@
+@namespace FSH.Framework.Blazor.UI.Components.Feedback
+
+<div class="fsh-skeleton fsh-skeleton-@Variant.ToString().ToLowerInvariant() @(Animation == SkeletonAnimation.Wave ? "fsh-skeleton-wave" : "fsh-skeleton-pulse") @Class"
+     style="@GetSkeletonStyle()">
+    @if (Variant == SkeletonVariant.Text && Count > 1)
+    {
+        @for (int i = 0; i < Count; i++)
+        {
+            <div class="fsh-skeleton-line" style="@(i == Count - 1 ? "width: 80%;" : "")"></div>
+        }
+    }
+</div>
+
+@code {
+    /// <summary>
+    /// The skeleton variant - determines the shape
+    /// </summary>
+    [Parameter]
+    public SkeletonVariant Variant { get; set; } = SkeletonVariant.Text;
+
+    /// <summary>
+    /// The animation style
+    /// </summary>
+    [Parameter]
+    public SkeletonAnimation Animation { get; set; } = SkeletonAnimation.Pulse;
+
+    /// <summary>
+    /// Width of the skeleton (CSS value like "100%", "200px")
+    /// </summary>
+    [Parameter]
+    public string? Width { get; set; }
+
+    /// <summary>
+    /// Height of the skeleton (CSS value like "20px", "2rem")
+    /// </summary>
+    [Parameter]
+    public string? Height { get; set; }
+
+    /// <summary>
+    /// Number of text lines for Text variant
+    /// </summary>
+    [Parameter]
+    public int Count { get; set; } = 1;
+
+    /// <summary>
+    /// Additional CSS classes
+    /// </summary>
+    [Parameter]
+    public string? Class { get; set; }
+
+    /// <summary>
+    /// Border radius (CSS value)
+    /// </summary>
+    [Parameter]
+    public string? BorderRadius { get; set; }
+
+    private string GetSkeletonStyle()
+    {
+        var styles = new List<string>();
+
+        if (!string.IsNullOrEmpty(Width))
+            styles.Add($"width: {Width}");
+
+        if (!string.IsNullOrEmpty(Height))
+            styles.Add($"height: {Height}");
+
+        if (!string.IsNullOrEmpty(BorderRadius))
+            styles.Add($"border-radius: {BorderRadius}");
+
+        return string.Join("; ", styles);
+    }
+
+    public enum SkeletonVariant
+    {
+        /// <summary>
+        /// Text line skeleton (default)
+        /// </summary>
+        Text,
+
+        /// <summary>
+        /// Circular skeleton (for avatars)
+        /// </summary>
+        Circle,
+
+        /// <summary>
+        /// Rectangular skeleton
+        /// </summary>
+        Rectangle,
+
+        /// <summary>
+        /// Card-shaped skeleton
+        /// </summary>
+        Card
+    }
+
+    public enum SkeletonAnimation
+    {
+        /// <summary>
+        /// Pulsing animation
+        /// </summary>
+        Pulse,
+
+        /// <summary>
+        /// Wave/shimmer animation
+        /// </summary>
+        Wave,
+
+        /// <summary>
+        /// No animation
+        /// </summary>
+        None
+    }
+}

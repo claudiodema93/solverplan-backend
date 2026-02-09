@@ -17,15 +17,32 @@
   --fsh-card-border: rgba(0, 0, 0, 0.08);
   --fsh-card-shadow: var(--fsh-shadow-md);
 
-  /* Text Colors */
-  --fsh-text-primary: #1a1a2e;
-  --fsh-text-secondary: #64748b;
+  /* Text Colors (WCAG AA Compliant - 4.5:1 minimum contrast) */
+  --fsh-text-primary: #1a1a2e;        /* Contrast: 15.8:1 on white */
+  --fsh-text-secondary: #52606d;      /* Contrast: 5.5:1 on white (improved from #64748b) */
+  --fsh-text-disabled: #9ca3af;       /* Contrast: 2.8:1 on white (decorative only) */
+  --fsh-text-muted: #6b7280;          /* Contrast: 4.6:1 on white */
 
   /* Focus Indicators (WCAG 2.1 AA Compliance) */
   --fsh-focus-ring-color: rgba(var(--mud-palette-primary-rgb), 0.6);
   --fsh-focus-ring-width: 3px;
   --fsh-focus-ring-offset: 2px;
   --fsh-focus-ring-style: solid;
+
+  /* Spacing System (4px base scale) */
+  --fsh-spacing-1: 4px;
+  --fsh-spacing-2: 8px;
+  --fsh-spacing-3: 12px;
+  --fsh-spacing-4: 16px;
+  --fsh-spacing-5: 20px;
+  --fsh-spacing-6: 24px;
+  --fsh-spacing-7: 28px;
+  --fsh-spacing-8: 32px;
+  --fsh-spacing-10: 40px;
+  --fsh-spacing-12: 48px;
+  --fsh-spacing-16: 64px;
+  --fsh-spacing-20: 80px;
+  --fsh-spacing-24: 96px;
 
   /* Transitions */
   --fsh-transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -257,6 +274,105 @@
   color: var(--mud-palette-error) !important;
 }
 
+/* ===== FshProgressDialog Styles ===== */
+.fsh-progress-dialog {
+  min-width: 500px;
+}
+
+.fsh-progress-dialog .mud-dialog-content {
+  padding: 0;
+}
+
+.fsh-progress-content {
+  min-height: 200px;
+}
+
+.fsh-progress-header {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.fsh-progress-icon {
+  flex-shrink: 0;
+}
+
+.fsh-progress-title-section {
+  flex: 1;
+}
+
+.fsh-progress-title {
+  font-weight: 600;
+  color: var(--mud-palette-text-primary);
+  margin-bottom: 4px;
+}
+
+.fsh-progress-description {
+  color: var(--fsh-text-muted);
+  line-height: 1.5;
+}
+
+.fsh-progress-bar-section {
+  width: 100%;
+}
+
+.fsh-progress-bar {
+  border-radius: 8px;
+  height: 8px;
+}
+
+.fsh-progress-counter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--fsh-text-muted);
+}
+
+.fsh-progress-status {
+  padding: 12px;
+  background: rgba(var(--mud-palette-info-rgb), 0.08);
+  border-radius: var(--fsh-radius-sm);
+  border-left: 3px solid var(--mud-palette-info);
+}
+
+.fsh-progress-errors .mud-alert {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.fsh-progress-error-list {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.fsh-progress-error-list li {
+  margin-bottom: 4px;
+}
+
+.fsh-progress-success .mud-alert {
+  border-left-width: 3px;
+}
+
+.fsh-progress-actions {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .fsh-progress-dialog {
+    min-width: auto;
+    width: 100%;
+  }
+
+  .fsh-progress-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
+
 /* ===== FshConfirmDialog Styles ===== */
 .fsh-confirm-dialog {
   border-radius: 16px !important;
@@ -389,6 +505,202 @@
 
 /* FshStatCard styles are in the component's scoped CSS */
 
+/* ===== FshSkeleton - Loading States ===== */
+.fsh-skeleton {
+  background-color: rgba(0, 0, 0, 0.11);
+  border-radius: var(--fsh-radius-sm);
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+
+.mud-theme-dark .fsh-skeleton {
+  background-color: rgba(255, 255, 255, 0.13);
+}
+
+/* Text variant */
+.fsh-skeleton-text {
+  height: 1em;
+  margin-bottom: 0.5em;
+  transform: scale(1, 0.6);
+  border-radius: 4px;
+}
+
+.fsh-skeleton-text .fsh-skeleton-line {
+  height: 1em;
+  margin-bottom: 0.5em;
+  background-color: inherit;
+  border-radius: inherit;
+}
+
+/* Circle variant */
+.fsh-skeleton-circle {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
+
+/* Rectangle variant */
+.fsh-skeleton-rectangle {
+  border-radius: var(--fsh-radius-sm);
+}
+
+/* Card variant */
+.fsh-skeleton-card {
+  border-radius: var(--fsh-radius);
+  height: 200px;
+}
+
+/* Pulse animation */
+@keyframes fsh-skeleton-pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.fsh-skeleton-pulse {
+  animation: fsh-skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+/* Wave/shimmer animation */
+@keyframes fsh-skeleton-wave {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.fsh-skeleton-wave::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: fsh-skeleton-wave 1.5s linear infinite;
+}
+
+.mud-theme-dark .fsh-skeleton-wave::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+}
+
+/* Skeleton layouts */
+.fsh-skeleton-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fsh-skeleton-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* ===== FshEmptyState - Empty State Component ===== */
+.fsh-empty-state {
+  width: 100%;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.fsh-empty-state-card {
+  background: transparent !important;
+  max-width: 500px;
+  width: 100%;
+}
+
+.fsh-empty-state-icon-wrapper {
+  display: inline-flex;
+  padding: 24px;
+  border-radius: 50%;
+  background: rgba(var(--mud-palette-primary-rgb), 0.08);
+  margin-bottom: 8px;
+}
+
+.fsh-empty-state-icon {
+  font-size: 4rem !important;
+  opacity: 0.4;
+}
+
+.fsh-empty-state-illustration {
+  max-width: 240px;
+  height: auto;
+  margin: 0 auto;
+  display: block;
+  opacity: 0.9;
+}
+
+.fsh-empty-state-title {
+  font-weight: 600;
+  color: var(--mud-palette-text-primary);
+}
+
+.fsh-empty-state-description {
+  color: var(--fsh-text-muted);
+  line-height: 1.6;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.fsh-empty-state-content {
+  color: var(--fsh-text-muted);
+}
+
+.fsh-empty-state-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .fsh-empty-state {
+    padding: 24px 16px;
+    min-height: 240px;
+  }
+
+  .fsh-empty-state-icon {
+    font-size: 3rem !important;
+  }
+
+  .fsh-empty-state-illustration {
+    max-width: 180px;
+  }
+
+  .fsh-empty-state-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .fsh-empty-state-actions .mud-button-root {
+    width: 100%;
+  }
+}
+
 /* ===== FshResponsiveTable - Mobile Card View ===== */
 .fsh-mobile-cards {
   padding: 0;
@@ -453,6 +765,44 @@
 .fsh-mobile-empty,
 .fsh-mobile-empty-default {
   margin-top: 24px;
+}
+
+/* ===== WCAG 2.1 Accessibility - Color Contrast ===== */
+/* Ensure text muted uses the WCAG compliant color */
+.text-muted,
+.mud-text-secondary {
+  color: var(--fsh-text-muted) !important;
+}
+
+/* Ensure chip text has sufficient contrast */
+.mud-chip .mud-chip-content {
+  font-weight: 500;
+}
+
+/* Badge and chip variant improvements */
+.fsh-header-role,
+.mud-chip-text {
+  font-weight: 500;
+  color: var(--fsh-text-primary);
+}
+
+/* Menu item descriptions */
+.fsh-menu-item-desc {
+  color: var(--fsh-text-muted);
+}
+
+/* Nav section titles */
+.fsh-nav-section-title {
+  color: var(--fsh-text-muted);
+  opacity: 1; /* Remove opacity, rely on color only */
+}
+
+/* Dark mode adjustments for contrast */
+.mud-theme-dark {
+  --fsh-text-primary: #f9fafb;
+  --fsh-text-secondary: #d1d5db;
+  --fsh-text-disabled: #6b7280;
+  --fsh-text-muted: #9ca3af;
 }
 
 /* ===== WCAG 2.1 Accessibility - Skip Link ===== */
@@ -529,4 +879,273 @@ a:focus-visible {
 .mud-card:focus-visible {
   outline: var(--fsh-focus-ring-width) var(--fsh-focus-ring-style) var(--fsh-focus-ring-color);
   outline-offset: 2px;
+}
+
+/* ===== Mobile Touch Targets (44x44px minimum) ===== */
+@media (max-width: 768px) {
+  /* Buttons */
+  .mud-button-root {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 8px 16px;
+  }
+
+  /* Icon buttons */
+  .mud-icon-button {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 10px;
+  }
+
+  /* Account menu trigger */
+  .fsh-account-trigger {
+    min-height: 44px;
+    padding: 6px 12px !important;
+  }
+
+  /* Nav menu items */
+  .fsh-nav-item {
+    min-height: 44px;
+    padding: 12px 16px !important;
+  }
+
+  /* Menu items in dropdowns */
+  .fsh-menu-item,
+  .mud-menu-item {
+    min-height: 44px;
+    padding: 12px 16px !important;
+  }
+
+  /* Button groups - increase spacing */
+  .mud-button-group .mud-button-root {
+    margin: 4px;
+  }
+
+  /* Mobile card actions */
+  .fsh-mobile-card-actions .mud-button-root {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Pagination buttons */
+  .mud-pagination-item {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Checkbox and radio */
+  .mud-checkbox-root,
+  .mud-radio-root {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 10px;
+  }
+
+  /* Links with small text */
+  a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 0;
+  }
+
+  /* Chips (for actions) */
+  .mud-chip.mud-clickable {
+    min-height: 44px;
+    padding: 8px 12px;
+  }
+}
+
+/* ===== Mobile Spacing Improvements ===== */
+@media (max-width: 768px) {
+  /* Increase spacing between stacked buttons */
+  .mud-button-group-vertical .mud-button-root {
+    margin: 8px 0;
+  }
+
+  /* Action button groups */
+  .fsh-page-header .mud-button-group .mud-button-root {
+    margin: 4px 2px;
+  }
+
+  /* Form spacing */
+  .mud-input-root {
+    margin-bottom: 16px;
+  }
+
+  /* Mobile card spacing */
+  .fsh-mobile-card {
+    margin-bottom: 16px;
+  }
+}
+
+/* ===== Spacing Utility Classes ===== */
+/* Padding utilities */
+.fsh-p-0 { padding: 0 !important; }
+.fsh-p-1 { padding: var(--fsh-spacing-1) !important; }
+.fsh-p-2 { padding: var(--fsh-spacing-2) !important; }
+.fsh-p-3 { padding: var(--fsh-spacing-3) !important; }
+.fsh-p-4 { padding: var(--fsh-spacing-4) !important; }
+.fsh-p-5 { padding: var(--fsh-spacing-5) !important; }
+.fsh-p-6 { padding: var(--fsh-spacing-6) !important; }
+.fsh-p-8 { padding: var(--fsh-spacing-8) !important; }
+
+/* Padding-top */
+.fsh-pt-0 { padding-top: 0 !important; }
+.fsh-pt-1 { padding-top: var(--fsh-spacing-1) !important; }
+.fsh-pt-2 { padding-top: var(--fsh-spacing-2) !important; }
+.fsh-pt-3 { padding-top: var(--fsh-spacing-3) !important; }
+.fsh-pt-4 { padding-top: var(--fsh-spacing-4) !important; }
+.fsh-pt-5 { padding-top: var(--fsh-spacing-5) !important; }
+.fsh-pt-6 { padding-top: var(--fsh-spacing-6) !important; }
+.fsh-pt-8 { padding-top: var(--fsh-spacing-8) !important; }
+
+/* Padding-bottom */
+.fsh-pb-0 { padding-bottom: 0 !important; }
+.fsh-pb-1 { padding-bottom: var(--fsh-spacing-1) !important; }
+.fsh-pb-2 { padding-bottom: var(--fsh-spacing-2) !important; }
+.fsh-pb-3 { padding-bottom: var(--fsh-spacing-3) !important; }
+.fsh-pb-4 { padding-bottom: var(--fsh-spacing-4) !important; }
+.fsh-pb-5 { padding-bottom: var(--fsh-spacing-5) !important; }
+.fsh-pb-6 { padding-bottom: var(--fsh-spacing-6) !important; }
+.fsh-pb-8 { padding-bottom: var(--fsh-spacing-8) !important; }
+
+/* Padding-left */
+.fsh-pl-0 { padding-left: 0 !important; }
+.fsh-pl-1 { padding-left: var(--fsh-spacing-1) !important; }
+.fsh-pl-2 { padding-left: var(--fsh-spacing-2) !important; }
+.fsh-pl-3 { padding-left: var(--fsh-spacing-3) !important; }
+.fsh-pl-4 { padding-left: var(--fsh-spacing-4) !important; }
+.fsh-pl-5 { padding-left: var(--fsh-spacing-5) !important; }
+.fsh-pl-6 { padding-left: var(--fsh-spacing-6) !important; }
+.fsh-pl-8 { padding-left: var(--fsh-spacing-8) !important; }
+
+/* Padding-right */
+.fsh-pr-0 { padding-right: 0 !important; }
+.fsh-pr-1 { padding-right: var(--fsh-spacing-1) !important; }
+.fsh-pr-2 { padding-right: var(--fsh-spacing-2) !important; }
+.fsh-pr-3 { padding-right: var(--fsh-spacing-3) !important; }
+.fsh-pr-4 { padding-right: var(--fsh-spacing-4) !important; }
+.fsh-pr-5 { padding-right: var(--fsh-spacing-5) !important; }
+.fsh-pr-6 { padding-right: var(--fsh-spacing-6) !important; }
+.fsh-pr-8 { padding-right: var(--fsh-spacing-8) !important; }
+
+/* Padding-horizontal */
+.fsh-px-0 { padding-left: 0 !important; padding-right: 0 !important; }
+.fsh-px-1 { padding-left: var(--fsh-spacing-1) !important; padding-right: var(--fsh-spacing-1) !important; }
+.fsh-px-2 { padding-left: var(--fsh-spacing-2) !important; padding-right: var(--fsh-spacing-2) !important; }
+.fsh-px-3 { padding-left: var(--fsh-spacing-3) !important; padding-right: var(--fsh-spacing-3) !important; }
+.fsh-px-4 { padding-left: var(--fsh-spacing-4) !important; padding-right: var(--fsh-spacing-4) !important; }
+.fsh-px-5 { padding-left: var(--fsh-spacing-5) !important; padding-right: var(--fsh-spacing-5) !important; }
+.fsh-px-6 { padding-left: var(--fsh-spacing-6) !important; padding-right: var(--fsh-spacing-6) !important; }
+.fsh-px-8 { padding-left: var(--fsh-spacing-8) !important; padding-right: var(--fsh-spacing-8) !important; }
+
+/* Padding-vertical */
+.fsh-py-0 { padding-top: 0 !important; padding-bottom: 0 !important; }
+.fsh-py-1 { padding-top: var(--fsh-spacing-1) !important; padding-bottom: var(--fsh-spacing-1) !important; }
+.fsh-py-2 { padding-top: var(--fsh-spacing-2) !important; padding-bottom: var(--fsh-spacing-2) !important; }
+.fsh-py-3 { padding-top: var(--fsh-spacing-3) !important; padding-bottom: var(--fsh-spacing-3) !important; }
+.fsh-py-4 { padding-top: var(--fsh-spacing-4) !important; padding-bottom: var(--fsh-spacing-4) !important; }
+.fsh-py-5 { padding-top: var(--fsh-spacing-5) !important; padding-bottom: var(--fsh-spacing-5) !important; }
+.fsh-py-6 { padding-top: var(--fsh-spacing-6) !important; padding-bottom: var(--fsh-spacing-6) !important; }
+.fsh-py-8 { padding-top: var(--fsh-spacing-8) !important; padding-bottom: var(--fsh-spacing-8) !important; }
+
+/* Margin utilities */
+.fsh-m-0 { margin: 0 !important; }
+.fsh-m-1 { margin: var(--fsh-spacing-1) !important; }
+.fsh-m-2 { margin: var(--fsh-spacing-2) !important; }
+.fsh-m-3 { margin: var(--fsh-spacing-3) !important; }
+.fsh-m-4 { margin: var(--fsh-spacing-4) !important; }
+.fsh-m-5 { margin: var(--fsh-spacing-5) !important; }
+.fsh-m-6 { margin: var(--fsh-spacing-6) !important; }
+.fsh-m-8 { margin: var(--fsh-spacing-8) !important; }
+
+/* Margin-top */
+.fsh-mt-0 { margin-top: 0 !important; }
+.fsh-mt-1 { margin-top: var(--fsh-spacing-1) !important; }
+.fsh-mt-2 { margin-top: var(--fsh-spacing-2) !important; }
+.fsh-mt-3 { margin-top: var(--fsh-spacing-3) !important; }
+.fsh-mt-4 { margin-top: var(--fsh-spacing-4) !important; }
+.fsh-mt-5 { margin-top: var(--fsh-spacing-5) !important; }
+.fsh-mt-6 { margin-top: var(--fsh-spacing-6) !important; }
+.fsh-mt-8 { margin-top: var(--fsh-spacing-8) !important; }
+
+/* Margin-bottom */
+.fsh-mb-0 { margin-bottom: 0 !important; }
+.fsh-mb-1 { margin-bottom: var(--fsh-spacing-1) !important; }
+.fsh-mb-2 { margin-bottom: var(--fsh-spacing-2) !important; }
+.fsh-mb-3 { margin-bottom: var(--fsh-spacing-3) !important; }
+.fsh-mb-4 { margin-bottom: var(--fsh-spacing-4) !important; }
+.fsh-mb-5 { margin-bottom: var(--fsh-spacing-5) !important; }
+.fsh-mb-6 { margin-bottom: var(--fsh-spacing-6) !important; }
+.fsh-mb-8 { margin-bottom: var(--fsh-spacing-8) !important; }
+
+/* Margin-left */
+.fsh-ml-0 { margin-left: 0 !important; }
+.fsh-ml-1 { margin-left: var(--fsh-spacing-1) !important; }
+.fsh-ml-2 { margin-left: var(--fsh-spacing-2) !important; }
+.fsh-ml-3 { margin-left: var(--fsh-spacing-3) !important; }
+.fsh-ml-4 { margin-left: var(--fsh-spacing-4) !important; }
+.fsh-ml-5 { margin-left: var(--fsh-spacing-5) !important; }
+.fsh-ml-6 { margin-left: var(--fsh-spacing-6) !important; }
+.fsh-ml-8 { margin-left: var(--fsh-spacing-8) !important; }
+
+/* Margin-right */
+.fsh-mr-0 { margin-right: 0 !important; }
+.fsh-mr-1 { margin-right: var(--fsh-spacing-1) !important; }
+.fsh-mr-2 { margin-right: var(--fsh-spacing-2) !important; }
+.fsh-mr-3 { margin-right: var(--fsh-spacing-3) !important; }
+.fsh-mr-4 { margin-right: var(--fsh-spacing-4) !important; }
+.fsh-mr-5 { margin-right: var(--fsh-spacing-5) !important; }
+.fsh-mr-6 { margin-right: var(--fsh-spacing-6) !important; }
+.fsh-mr-8 { margin-right: var(--fsh-spacing-8) !important; }
+
+/* Margin-horizontal */
+.fsh-mx-0 { margin-left: 0 !important; margin-right: 0 !important; }
+.fsh-mx-1 { margin-left: var(--fsh-spacing-1) !important; margin-right: var(--fsh-spacing-1) !important; }
+.fsh-mx-2 { margin-left: var(--fsh-spacing-2) !important; margin-right: var(--fsh-spacing-2) !important; }
+.fsh-mx-3 { margin-left: var(--fsh-spacing-3) !important; margin-right: var(--fsh-spacing-3) !important; }
+.fsh-mx-4 { margin-left: var(--fsh-spacing-4) !important; margin-right: var(--fsh-spacing-4) !important; }
+.fsh-mx-auto { margin-left: auto !important; margin-right: auto !important; }
+
+/* Margin-vertical */
+.fsh-my-0 { margin-top: 0 !important; margin-bottom: 0 !important; }
+.fsh-my-1 { margin-top: var(--fsh-spacing-1) !important; margin-bottom: var(--fsh-spacing-1) !important; }
+.fsh-my-2 { margin-top: var(--fsh-spacing-2) !important; margin-bottom: var(--fsh-spacing-2) !important; }
+.fsh-my-3 { margin-top: var(--fsh-spacing-3) !important; margin-bottom: var(--fsh-spacing-3) !important; }
+.fsh-my-4 { margin-top: var(--fsh-spacing-4) !important; margin-bottom: var(--fsh-spacing-4) !important; }
+.fsh-my-5 { margin-top: var(--fsh-spacing-5) !important; margin-bottom: var(--fsh-spacing-5) !important; }
+.fsh-my-6 { margin-top: var(--fsh-spacing-6) !important; margin-bottom: var(--fsh-spacing-6) !important; }
+
+/* Gap utilities for flexbox/grid */
+.fsh-gap-0 { gap: 0 !important; }
+.fsh-gap-1 { gap: var(--fsh-spacing-1) !important; }
+.fsh-gap-2 { gap: var(--fsh-spacing-2) !important; }
+.fsh-gap-3 { gap: var(--fsh-spacing-3) !important; }
+.fsh-gap-4 { gap: var(--fsh-spacing-4) !important; }
+.fsh-gap-5 { gap: var(--fsh-spacing-5) !important; }
+.fsh-gap-6 { gap: var(--fsh-spacing-6) !important; }
+.fsh-gap-8 { gap: var(--fsh-spacing-8) !important; }
+
+/* ===== FshFilterPresets - Saved Filter Presets ===== */
+.fsh-filter-presets {
+  width: 100%;
+}
+
+.fsh-filter-presets-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--fsh-spacing-2);
+}
+
+.fsh-filter-preset-select {
+  min-width: 200px;
+  max-width: 300px;
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  .fsh-filter-preset-select {
+    min-width: 150px;
+  }
 }
