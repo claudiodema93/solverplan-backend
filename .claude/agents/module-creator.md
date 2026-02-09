@@ -3,6 +3,7 @@ name: module-creator
 description: Create new modules (bounded contexts) with complete project structure, DbContext, permissions, and registration. Use when adding a new business domain.
 tools: Read, Write, Glob, Grep, Bash
 model: inherit
+memory: project
 ---
 
 You are a module creator for FullStackHero .NET Starter Kit. Your job is to
