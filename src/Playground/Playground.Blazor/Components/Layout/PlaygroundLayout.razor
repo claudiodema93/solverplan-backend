@@ -32,9 +32,7 @@
 
 @if (!_authStatusLoaded)
 {
-    <MudContainer MaxWidth="MaxWidth.False"
-                  Class="d-flex justify-center align-center"
-                  Style="min-height:100vh;">
+    <MudContainer MaxWidth="MaxWidth.False"                  Class="d-flex justify-center align-center"                  Style="min-height:100vh;">
         <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
     </MudContainer>
 }
@@ -45,34 +43,21 @@ else if (!_isAuthenticated)
 else
 {
     <!-- Skip Link for Accessibility (WCAG 2.1) -->
-    <a href="#main-content" class="fsh-skip-link">Skip to main content</a>
+    <a href="#main-content" class="fsh-skip-link"></a>
 
     <MudLayout>
         <MudAppBar Elevation="0">
-            <MudIconButton Icon="@Icons.Material.Filled.Menu"
-                           Color="Color.Inherit"
-                           Edge="Edge.Start"
-                           OnClick="@((e) => DrawerToggle())"
-                           aria-label="Toggle navigation menu" />
+            <MudIconButton Icon="@Icons.Material.Filled.Menu"                           Color="Color.Inherit"                           Edge="Edge.Start"
+                           OnClick="@((e) => DrawerToggle())"                           aria-label="Toggle navigation menu" />
             <MudSpacer />
-            <MudIconButton Icon="@(DarkLightModeButtonIcon)"
-                           Color="Color.Inherit"
-                           OnClick="@DarkModeToggle"
+            <MudIconButton Icon="@(DarkLightModeButtonIcon)"                           Color="Color.Inherit"                           OnClick="@DarkModeToggle"
                            aria-label="@(_isDarkMode ? "Switch to light mode" : "Switch to dark mode")" />
-            <FshAccountMenu UserName="@_userName"
-                            UserEmail="@_userEmail"
-                            UserRole="@_userRole"
-                            AvatarUrl="@_avatarUrl"
-                            OnProfileClick="NavigateToProfile"
-                            OnAuditingClick="NavigateToAuditing"
+            <FshAccountMenu UserName="@_userName"                            UserEmail="@_userEmail"                            UserRole="@_userRole"                            AvatarUrl="@_avatarUrl"
+                            OnProfileClick="NavigateToProfile"                            OnAuditingClick="NavigateToAuditing"
                             OnLogoutClick="ConfirmAndLogoutAsync" />
         </MudAppBar>
-        <MudDrawer id="nav-drawer"
-                   @bind-Open="_drawerOpen"
-                   Elevation="0"
-                   Variant="@_drawerVariant"
-                   ClipMode="@(_isMobileView ? DrawerClipMode.Always : DrawerClipMode.Never)"
-                   aria-label="Main navigation">
+        <MudDrawer id="nav-drawer"                   @bind-Open="_drawerOpen"                   Elevation="0"                   Variant="@_drawerVariant"
+                   ClipMode="@(_isMobileView ? DrawerClipMode.Always : DrawerClipMode.Never)"                   aria-label="Main navigation">
             <MudDrawerHeader>
                 <FshDrawerHeader Title="FSH Playground" />
             </MudDrawerHeader>
@@ -169,7 +154,8 @@ else
     {
         _theme = TenantThemeState.Theme;
         _isDarkMode = TenantThemeState.IsDarkMode;
-        _logoUrl = _isDarkMode ? TenantThemeState.Current.BrandAssets.LogoDarkUrl : TenantThemeState.Current.BrandAssets.LogoUrl;
+        _logoUrl = _isDarkMode ? TenantThemeState.Current.BrandAssets.LogoDarkUrl :
+TenantThemeState.Current.BrandAssets.LogoUrl;
         InvokeAsync(StateHasChanged);
     }
 
@@ -199,7 +185,8 @@ else
             await TenantThemeState.LoadThemeAsync();
             _theme = TenantThemeState.Theme;
             _isDarkMode = TenantThemeState.IsDarkMode;
-            _logoUrl = _isDarkMode ? TenantThemeState.Current.BrandAssets.LogoDarkUrl : TenantThemeState.Current.BrandAssets.LogoUrl;
+            _logoUrl = _isDarkMode ? TenantThemeState.Current.BrandAssets.LogoDarkUrl :
+TenantThemeState.Current.BrandAssets.LogoUrl;
 
             await InvokeAsync(StateHasChanged);
         }
