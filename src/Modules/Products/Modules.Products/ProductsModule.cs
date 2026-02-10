@@ -43,7 +43,7 @@ public sealed class ProductsModule : IModule
         UpdateProductEndpoint.Map(group);
         DeleteProductEndpoint.Map(group);
 
-        var categoriesGroup = endpoints.MapGroup("api/v{version:apiVersion}/categories")
+        var categoriesGroup = endpoints.MapGroup("api/v{version:apiVersion}/products/categories")
             .WithTags("Categories")
             .WithApiVersionSet(versionSet);
 
@@ -53,7 +53,7 @@ public sealed class ProductsModule : IModule
         UpdateCategoryEndpoint.Map(categoriesGroup);
         DeleteCategoryEndpoint.Map(categoriesGroup);
 
-        var issuesGroup = endpoints.MapGroup("api/v{version:apiVersion}/issues")
+        var issuesGroup = endpoints.MapGroup("api/v{version:apiVersion}/products/issues")
             .WithTags("Issues")
             .WithApiVersionSet(versionSet);
 
@@ -63,7 +63,7 @@ public sealed class ProductsModule : IModule
         UpdateIssueEndpoint.Map(issuesGroup);
         DeleteIssueEndpoint.Map(issuesGroup);
 
-        var qualityChecksGroup = endpoints.MapGroup("api/v{version:apiVersion}/qualitychecks")
+        var qualityChecksGroup = endpoints.MapGroup("api/v{version:apiVersion}/products/qualitychecks")
             .WithTags("QualityChecks")
             .WithApiVersionSet(versionSet);
 
@@ -73,7 +73,7 @@ public sealed class ProductsModule : IModule
         UpdateQualityCheckEndpoint.Map(qualityChecksGroup);
         DeleteQualityCheckEndpoint.Map(qualityChecksGroup);
 
-        var bomItemsGroup = endpoints.MapGroup("api/v{version:apiVersion}/bomitems")
+        var bomItemsGroup = endpoints.MapGroup("api/v{version:apiVersion}/products/bomitems")
             .WithTags("BomItems")
             .WithApiVersionSet(versionSet);
 

@@ -1,10 +1,8 @@
 using FSH.Framework.Core.Domain;
-using FSH.Modules.Products.Contracts.Domain.Enums;
-using System;
 
 namespace FSH.Modules.Products.Domain.Entities;
 
-public class BomItem : BaseEntity<int>, IHasTenant, IAuditableEntity
+public class AccountingCode : BaseEntity<int>, IHasTenant, IAuditableEntity
 {
     /// <summary>
     /// Foreign key to the associated product.
@@ -17,34 +15,15 @@ public class BomItem : BaseEntity<int>, IHasTenant, IAuditableEntity
     public Product? Product { get; set; }
 
     /// <summary>
-    /// Foreign key to the Child Product entity
+    /// Accounting code (e.g., "MAT-100", "LABOR-001")
+    /// Must be unique per product
     /// </summary>
-    public int ChildProductId { get; set; }
+    public required string Code { get; set; }
 
     /// <summary>
-    /// Navigation property to the child Product entity
+    /// Optional description of the accounting code purpose
     /// </summary>
-    public Product? ChildProduct { get; set; }
-
-    /// <summary>
-    /// Quantity necessary of child product
-    /// </summary>
-    public double Quantity { get; set; } = 1.0;
-
-    /// <summary>
-    /// Unit of measurement
-    /// </summary>
-    public UnitOfMeasurement Unit { get; set; } = UnitOfMeasurement.Pcs;
-
-    /// <summary>
-    /// The user entered manually
-    /// </summary>
-    public bool IsManual { get; set; }
-
-    /// <summary>
-    /// Optional notes of the bom item
-    /// </summary>
-    public string? Notes { get; set; }
+    public string? Description { get; set; }
 
     /// <summary>
     /// Information about the tenant.
