@@ -2,16 +2,19 @@
 type: reference
 title: Products Module API Documentation
 created: 2026-02-07
+updated: 2026-02-10
 tags:
   - api
   - products
   - crud
   - categories
   - issues
+  - bom
 related:
   - "[[Category]]"
   - "[[Product]]"
   - "[[Issue]]"
+  - "[[BomItem]]"
   - "[[FSH-Patterns]]"
 ---
 
@@ -19,11 +22,12 @@ related:
 
 ## Overview
 
-The Products module provides comprehensive CRUD operations for managing products, categories, and issues in a multi-tenant environment. It follows the FullStackHero (FSH) Vertical Slice Architecture pattern with Mediator-based command/query handling.
+The Products module provides comprehensive CRUD operations for managing products, categories, issues, and Bill of Materials (BOM) in a multi-tenant environment. It follows the FullStackHero (FSH) Vertical Slice Architecture pattern with Mediator-based command/query handling.
 
 **Key Features:**
 - Multi-tenant isolation with automatic tenant scoping
-- Full CRUD operations for Categories, Products, and Issues
+- Full CRUD operations for Categories, Products, Issues, and BOM Items
+- BOM (Bill of Materials) management with parent-child product relationships
 - Advanced search and filtering with pagination
 - Audit tracking (created/modified timestamps and users)
 - Soft delete support with optimistic concurrency
@@ -33,6 +37,7 @@ The Products module provides comprehensive CRUD operations for managing products
 - Categories: `/api/v1/categories`
 - Products: `/api/v1/products`
 - Issues: `/api/v1/issues`
+- BOM Items: `/api/v1/bomitems`
 
 ## Authentication & Permissions
 
@@ -60,6 +65,13 @@ All endpoints require authentication via JWT bearer token and specific permissio
 - `Permissions.Products.Issues.Update` - Update existing issues
 - `Permissions.Products.Issues.Delete` - Delete issues
 - `Permissions.Products.Issues.List` - Search and list issues
+
+**BOM Item Permissions:**
+- `Permissions.Products.BomItems.Create` - Create new BOM items
+- `Permissions.Products.BomItems.View` - View individual BOM items and search
+- `Permissions.Products.BomItems.Update` - Update existing BOM items
+- `Permissions.Products.BomItems.Delete` - Delete BOM items
+- `Permissions.Products.BomItems.List` - Search and list BOM items
 
 ## Entities
 
@@ -208,6 +220,51 @@ Represents a product issue or defect with severity and status tracking.
 - `createdBy` (string, nullable): User who created the issue
 - `lastModifiedOnUtc` (datetime, nullable): Last modification timestamp
 - `lastModifiedBy` (string, nullable): User who last modified the issue
+
+### BomItem
+
+Represents a Bill of Materials entry linking a parent product to a child component product, with quantity and unit information.
+
+**Schema:**
+```json
+{
+  "id": 301,
+  "productId": 101,
+  "productTitle": "Widget Pro 2000",
+  "childProductId": 55,
+  "childProductTitle": "Bolt M6x10",
+  "quantity": 4.0,
+  "unit": 0,
+  "isManual": false,
+  "notes": "Standard assembly bolt",
+  "tenantId": "tenant-abc-123",
+  "createdOnUtc": "2026-02-10T09:00:00Z",
+  "createdBy": "user-123",
+  "lastModifiedOnUtc": null,
+  "lastModifiedBy": null
+}
+```
+
+**Properties:**
+- `id` (integer): Unique identifier
+- `productId` (integer, required): Parent product ID (immutable after creation)
+- `productTitle` (string): Parent product title
+- `childProductId` (integer, required): Child component product ID
+- `childProductTitle` (string): Child component product title
+- `quantity` (double, required): Quantity of the child product needed (must be > 0)
+- `unit` (enum): Unit of measurement — `0` (Pcs), `1` (Inches), `3` (Millimeters), `4` (Liters)
+- `isManual` (boolean): Whether this item was entered manually by the user
+- `notes` (string, nullable): Optional notes (max 2000 chars)
+- `tenantId` (string): Tenant identifier (automatically set)
+- `createdOnUtc` (datetime): Creation timestamp
+- `createdBy` (string, nullable): User who created the BOM item
+- `lastModifiedOnUtc` (datetime, nullable): Last modification timestamp
+- `lastModifiedBy` (string, nullable): User who last modified the BOM item
+
+**Constraints:**
+- `childProductId` must differ from `productId` (no self-references)
+- On parent product deletion, all its BOM items are cascade deleted
+- Child product deletion is restricted if it appears in any BOM item
 
 ## Endpoints
 
@@ -819,6 +876,193 @@ GET /api/v1/issues?search=performance&productId=101&severity=2&status=0&pageNumb
 
 ---
 
+### BOM Item Endpoints
+
+#### 16. Create BOM Item
+
+Creates a new BOM item linking a parent product to a child component product.
+
+**Endpoint:** `POST /api/v1/bomitems`
+**Permission:** `Permissions.Products.BomItems.Create`
+
+**Request Body:**
+```json
+{
+  "productId": 101,
+  "childProductId": 55,
+  "quantity": 4.0,
+  "unit": 0,
+  "isManual": false,
+  "notes": "Standard assembly bolt"
+}
+```
+
+**Response:** `201 Created`
+```json
+301
+```
+
+**Validation Rules:**
+- `productId` is required and must reference an existing product in the current tenant
+- `childProductId` is required, must reference an existing product, and must differ from `productId`
+- `quantity` must be > 0
+- `notes` max length is 2000 characters
+
+**Error Responses:**
+- `404 Not Found`: Parent product or child product not found
+
+---
+
+#### 17. Get BOM Item by ID
+
+Retrieves a single BOM item by its identifier.
+
+**Endpoint:** `GET /api/v1/bomitems/{id}`
+**Permission:** `Permissions.Products.BomItems.View`
+
+**Path Parameters:**
+- `id` (integer, required): BOM item identifier
+
+**Response:** `200 OK`
+```json
+{
+  "id": 301,
+  "productId": 101,
+  "productTitle": "Widget Pro 2000",
+  "childProductId": 55,
+  "childProductTitle": "Bolt M6x10",
+  "quantity": 4.0,
+  "unit": 0,
+  "isManual": false,
+  "notes": "Standard assembly bolt",
+  "tenantId": "tenant-abc-123",
+  "createdOnUtc": "2026-02-10T09:00:00Z",
+  "createdBy": "user-123",
+  "lastModifiedOnUtc": null,
+  "lastModifiedBy": null
+}
+```
+
+**Error Responses:**
+- `404 Not Found`: BOM item not found or does not belong to current tenant
+
+---
+
+#### 18. Update BOM Item
+
+Updates an existing BOM item. The parent product (`productId`) cannot be changed.
+
+**Endpoint:** `PUT /api/v1/bomitems/{id}`
+**Permission:** `Permissions.Products.BomItems.Update`
+
+**Path Parameters:**
+- `id` (integer, required): BOM item identifier
+
+**Request Body:**
+```json
+{
+  "childProductId": 55,
+  "quantity": 8.0,
+  "unit": 0,
+  "isManual": true,
+  "notes": "Updated quantity for revision 2"
+}
+```
+
+**Response:** `204 No Content`
+
+**Validation Rules:**
+- `childProductId` must reference an existing product in the current tenant
+- `quantity` must be > 0
+- `notes` max length is 2000 characters
+
+**Error Responses:**
+- `404 Not Found`: BOM item or child product not found
+
+---
+
+#### 19. Delete BOM Item
+
+Permanently deletes a BOM item.
+
+**Endpoint:** `DELETE /api/v1/bomitems/{id}`
+**Permission:** `Permissions.Products.BomItems.Delete`
+
+**Path Parameters:**
+- `id` (integer, required): BOM item identifier
+
+**Response:** `204 No Content`
+
+**Error Responses:**
+- `404 Not Found`: BOM item not found or does not belong to current tenant
+
+---
+
+#### 20. Search BOM Items
+
+Retrieves a paginated list of BOM items with optional filtering and sorting.
+
+**Endpoint:** `GET /api/v1/bomitems`
+**Permission:** `Permissions.Products.BomItems.View`
+
+**Query Parameters:**
+- `pageNumber` (integer, optional, default: 1): 1-based page number
+- `pageSize` (integer, optional, default: 10, max: 200): Number of items per page
+- `sort` (string, optional): Multi-column sort expression (e.g., `"Quantity,-CreatedOnUtc"`)
+  - Prefix with `-` for descending order
+  - Multiple columns separated by comma
+- `search` (string, optional): Search term to filter by notes
+- `productId` (integer, optional): Filter by parent product ID
+- `childProductId` (integer, optional): Filter by child product ID
+- `unit` (integer, optional): Filter by unit of measurement (0=Pcs, 1=Inches, 3=Millimeters, 4=Liters)
+- `isManual` (boolean, optional): Filter by manual entry flag
+
+**Example Request:**
+```
+GET /api/v1/bomitems?productId=101&unit=0&pageNumber=1&pageSize=20&sort=Quantity
+```
+
+**Response:** `200 OK`
+```json
+{
+  "data": [
+    {
+      "id": 301,
+      "productId": 101,
+      "productTitle": "Widget Pro 2000",
+      "childProductId": 55,
+      "childProductTitle": "Bolt M6x10",
+      "quantity": 4.0,
+      "unit": 0,
+      "isManual": false,
+      "notes": "Standard assembly bolt",
+      "tenantId": "tenant-abc-123",
+      "createdOnUtc": "2026-02-10T09:00:00Z",
+      "createdBy": "user-123",
+      "lastModifiedOnUtc": null,
+      "lastModifiedBy": null
+    }
+  ],
+  "pageNumber": 1,
+  "pageSize": 20,
+  "totalCount": 1,
+  "totalPages": 1,
+  "hasPreviousPage": false,
+  "hasNextPage": false
+}
+```
+
+**Filtering Behavior:**
+- `search`: Performs case-insensitive partial match on the `notes` field
+- `productId`: Exact match filter on parent product
+- `childProductId`: Exact match filter on child product
+- `unit`: Exact match filter on unit of measurement
+- `isManual`: Exact match filter on manual entry flag
+- All filters are combined with AND logic
+- All results are automatically scoped to the current tenant
+
+---
+
 ## Pagination
 
 All search endpoints return paginated results using the `PagedResponse<T>` wrapper.
@@ -853,6 +1097,7 @@ All search endpoints support multi-column sorting via the `sort` query parameter
 - **Categories**: `Name`, `CreatedOnUtc`
 - **Products**: `Title`, `Status`, `CreatedOnUtc`, `Revision`, `Version`
 - **Issues**: `Title`, `Severity`, `Status`, `CreatedOnUtc`
+- **BOM Items**: `Quantity`, `Unit`, `IsManual`, `CreatedOnUtc`
 
 ## Error Responses
 
