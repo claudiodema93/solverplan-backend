@@ -82,5 +82,15 @@ public sealed class ProductsModule : IModule
         SearchBomItemsEndpoint.Map(bomItemsGroup);
         UpdateBomItemEndpoint.Map(bomItemsGroup);
         DeleteBomItemEndpoint.Map(bomItemsGroup);
+
+        var accountingCodesGroup = endpoints.MapGroup("api/v{version:apiVersion}/products/accountingcodes")
+            .WithTags("AccountingCodes")
+            .WithApiVersionSet(versionSet);
+
+        CreateAccountingCodeEndpoint.Map(accountingCodesGroup);
+        GetAccountingCodeByIdEndpoint.Map(accountingCodesGroup);
+        SearchAccountingCodesEndpoint.Map(accountingCodesGroup);
+        UpdateAccountingCodeEndpoint.Map(accountingCodesGroup);
+        DeleteAccountingCodeEndpoint.Map(accountingCodesGroup);
     }
 }

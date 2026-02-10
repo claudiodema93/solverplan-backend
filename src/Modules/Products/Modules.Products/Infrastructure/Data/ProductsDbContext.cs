@@ -25,6 +25,7 @@ public sealed class ProductsDbContext : BaseDbContext
     public DbSet<Issue> Issues => Set<Issue>();
     public DbSet<QualityCheck> QualityChecks => Set<QualityCheck>();
     public DbSet<BomItem> BomItems => Set<BomItem>();
+    public DbSet<AccountingCode> AccountingCodes => Set<AccountingCode>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

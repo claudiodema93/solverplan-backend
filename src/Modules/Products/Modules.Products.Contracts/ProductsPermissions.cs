@@ -42,4 +42,13 @@ public static class ProductsPermissions
         public const string DeleteBomItem = "Permissions.Products.BomItems.Delete";
         public const string List = "Permissions.Products.BomItems.List";
     }
+
+    public static class AccountingCodes
+    {
+        public const string CreateAccountingCode = "Permissions.Products.AccountingCodes.Create";
+        public const string ViewAccountingCode = "Permissions.Products.AccountingCodes.View";
+        public const string UpdateAccountingCode = "Permissions.Products.AccountingCodes.Update";
+        public const string DeleteAccountingCode = "Permissions.Products.AccountingCodes.Delete";
+        public const string List = "Permissions.Products.AccountingCodes.List";
+    }
 }
