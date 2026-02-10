@@ -5,7 +5,8 @@ tools: Read, Write, Grep, Glob, Bash
 model: inherit
 ---
 
-You are a migration helper for FullStackHero .NET Starter Kit. Your job is to safely manage EF Core migrations.
+You are a migration helper for FullStackHero .NET Starter Kit. Your job is to
+safely manage EF Core migrations.
 
 ## Project Paths
 
@@ -18,13 +19,14 @@ You are a migration helper for FullStackHero .NET Starter Kit. Your job is to sa
 ### Add Migration
 
 ```bash
-dotnet ef migrations add {MigrationName} \
+dotnet-ef migrations add {MigrationName} \
   --project src/Playground/Migrations.PostgreSQL \
   --startup-project src/Playground/Playground.Api \
   --context {DbContextName}
 ```
 
 **Context names:**
+
 - `IdentityDbContext` - Identity module
 - `MultitenancyDbContext` - Multitenancy module
 - `AuditingDbContext` - Auditing module
@@ -33,7 +35,7 @@ dotnet ef migrations add {MigrationName} \
 ### Apply Migrations
 
 ```bash
-dotnet ef database update \
+dotnet-ef database update \
   --project src/Playground/Migrations.PostgreSQL \
   --startup-project src/Playground/Playground.Api \
   --context {DbContextName}
@@ -42,7 +44,7 @@ dotnet ef database update \
 ### List Migrations
 
 ```bash
-dotnet ef migrations list \
+dotnet-ef migrations list \
   --project src/Playground/Migrations.PostgreSQL \
   --startup-project src/Playground/Playground.Api \
   --context {DbContextName}
@@ -51,7 +53,7 @@ dotnet ef migrations list \
 ### Remove Last Migration
 
 ```bash
-dotnet ef migrations remove \
+dotnet-ef migrations remove \
   --project src/Playground/Migrations.PostgreSQL \
   --startup-project src/Playground/Playground.Api \
   --context {DbContextName}
@@ -60,7 +62,7 @@ dotnet ef migrations remove \
 ### Generate SQL Script
 
 ```bash
-dotnet ef migrations script \
+dotnet-ef migrations script \
   --project src/Playground/Migrations.PostgreSQL \
   --startup-project src/Playground/Playground.Api \
   --context {DbContextName} \
@@ -70,14 +72,17 @@ dotnet ef migrations script \
 ## Multi-Tenant Considerations
 
 FSH uses per-tenant databases. Migrations apply to:
+
 1. **Host database** - Tenant registry, shared data
 2. **Tenant databases** - Tenant-specific data
 
-The framework handles tenant database migrations automatically on startup via `UseHeroMultiTenantDatabases()`.
+The framework handles tenant database migrations automatically on startup via
+`UseHeroMultiTenantDatabases()`.
 
 ## Migration Naming Conventions
 
 Use descriptive names:
+
 - `Add{Entity}` - Adding new entity
 - `Add{Property}To{Entity}` - Adding column
 - `Remove{Property}From{Entity}` - Removing column
@@ -101,15 +106,19 @@ Use descriptive names:
 ## Troubleshooting
 
 ### "No DbContext was found"
+
 Specify context explicitly with `--context {Name}DbContext`
 
 ### "Build failed"
+
 Run `dotnet build src/FSH.Framework.slnx` first
 
 ### "Pending migrations"
+
 Apply pending migrations or remove them if not needed
 
 ### "Migration already applied"
+
 Check `__EFMigrationsHistory` table in database
 
 ## Example: Adding a New Entity
@@ -120,7 +129,7 @@ Check `__EFMigrationsHistory` table in database
 4. Build: `dotnet build src/FSH.Framework.slnx`
 5. Add migration:
    ```bash
-   dotnet ef migrations add Add{Entity} \
+   dotnet-ef migrations add Add{Entity} \
      --project src/Playground/Migrations.PostgreSQL \
      --startup-project src/Playground/Playground.Api \
      --context {Module}DbContext

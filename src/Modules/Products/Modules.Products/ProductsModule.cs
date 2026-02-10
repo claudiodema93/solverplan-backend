@@ -72,5 +72,15 @@ public sealed class ProductsModule : IModule
         SearchQualityChecksEndpoint.Map(qualityChecksGroup);
         UpdateQualityCheckEndpoint.Map(qualityChecksGroup);
         DeleteQualityCheckEndpoint.Map(qualityChecksGroup);
+
+        var bomItemsGroup = endpoints.MapGroup("api/v{version:apiVersion}/bomitems")
+            .WithTags("BomItems")
+            .WithApiVersionSet(versionSet);
+
+        CreateBomItemEndpoint.Map(bomItemsGroup);
+        GetBomItemByIdEndpoint.Map(bomItemsGroup);
+        SearchBomItemsEndpoint.Map(bomItemsGroup);
+        UpdateBomItemEndpoint.Map(bomItemsGroup);
+        DeleteBomItemEndpoint.Map(bomItemsGroup);
     }
 }

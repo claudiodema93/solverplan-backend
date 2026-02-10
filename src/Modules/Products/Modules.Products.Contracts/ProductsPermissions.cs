@@ -33,4 +33,13 @@ public static class ProductsPermissions
         public const string DeleteQualityCheck = "Permissions.Products.QualityChecks.Delete";
         public const string List = "Permissions.Products.QualityChecks.List";
     }
+
+    public static class BomItems
+    {
+        public const string CreateBomItem = "Permissions.Products.BomItems.Create";
+        public const string ViewBomItem = "Permissions.Products.BomItems.View";
+        public const string UpdateBomItem = "Permissions.Products.BomItems.Update";
+        public const string DeleteBomItem = "Permissions.Products.BomItems.Delete";
+        public const string List = "Permissions.Products.BomItems.List";
+    }
 }
