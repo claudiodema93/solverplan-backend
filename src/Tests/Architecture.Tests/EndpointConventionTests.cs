@@ -1,6 +1,7 @@
 using FSH.Modules.Auditing;
 using FSH.Modules.Identity;
 using FSH.Modules.Multitenancy;
+using FSH.Modules.Products;
 using NetArchTest.Rules;
 using Shouldly;
 using System.Reflection;
@@ -17,7 +18,8 @@ public class EndpointConventionTests
     [
         typeof(AuditingModule).Assembly,
         typeof(IdentityModule).Assembly,
-        typeof(MultitenancyModule).Assembly
+        typeof(MultitenancyModule).Assembly,
+        typeof(ProductsModule).Assembly
     ];
 
     [Fact]

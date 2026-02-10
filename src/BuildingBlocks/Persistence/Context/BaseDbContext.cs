@@ -27,6 +27,9 @@ public class BaseDbContext(IMultiTenantContextAccessor<AppTenantInfo> multiTenan
     {
         ArgumentNullException.ThrowIfNull(optionsBuilder);
 
+        if (_settings.Provider.Equals(DbProviders.InMemory, StringComparison.OrdinalIgnoreCase))
+            return;
+
         if (!string.IsNullOrWhiteSpace(multiTenantContextAccessor?.MultiTenantContext.TenantInfo?.ConnectionString))
         {
             optionsBuilder.ConfigureHeroDatabase(

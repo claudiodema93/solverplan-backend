@@ -1,6 +1,7 @@
 using FSH.Modules.Auditing;
 using FSH.Modules.Identity;
 using FSH.Modules.Multitenancy;
+using FSH.Modules.Products;
 using Mediator;
 using Shouldly;
 using System.Globalization;
@@ -20,7 +21,8 @@ public class HandlerValidatorPairingTests
     [
         typeof(AuditingModule).Assembly,
         typeof(IdentityModule).Assembly,
-        typeof(MultitenancyModule).Assembly
+        typeof(MultitenancyModule).Assembly,
+        typeof(ProductsModule).Assembly
     ];
 
     [Fact]

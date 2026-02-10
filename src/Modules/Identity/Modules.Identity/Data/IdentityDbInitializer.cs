@@ -22,6 +22,12 @@ internal sealed class IdentityDbInitializer(
 {
     public async Task MigrateAsync(CancellationToken cancellationToken)
     {
+        if (!context.Database.IsRelational())
+        {
+            await context.Database.EnsureCreatedAsync(cancellationToken).ConfigureAwait(false);
+            return;
+        }
+
         if ((await context.Database.GetPendingMigrationsAsync(cancellationToken).ConfigureAwait(false)).Any())
         {
             await context.Database.MigrateAsync(cancellationToken).ConfigureAwait(false);

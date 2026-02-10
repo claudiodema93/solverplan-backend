@@ -37,7 +37,9 @@ public class BuildingBlocksIndependenceTests
                 .HaveDependencyOnAny(
                     "FSH.Modules.Auditing",
                     "FSH.Modules.Identity",
-                    "FSH.Modules.Multitenancy")
+                    "FSH.Modules.Multitenancy",
+                    "FSH.Modules.Products"
+                    )
                 .GetResult();
 
             var failingTypes = result.FailingTypeNames ?? [];
@@ -224,7 +226,7 @@ public class BuildingBlocksIndependenceTests
         var projectReferences = document
             .Descendants("ProjectReference")
             .Select(x => (string?)x.Attribute("Include") ?? string.Empty)
-            .Select(p => Path.GetFileNameWithoutExtension(p))
+            .Select(p => Path.GetFileNameWithoutExtension(p.Replace('\\', '/')))
             .Where(p => !string.IsNullOrEmpty(p))
             .ToArray();
 

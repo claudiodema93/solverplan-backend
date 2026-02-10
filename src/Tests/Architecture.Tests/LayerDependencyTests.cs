@@ -2,6 +2,7 @@ using FSH.Framework.Core;
 using FSH.Modules.Auditing;
 using FSH.Modules.Identity;
 using FSH.Modules.Multitenancy;
+using FSH.Modules.Products;
 using NetArchTest.Rules;
 using Shouldly;
 using System.Reflection;
@@ -19,7 +20,8 @@ public class LayerDependencyTests
     [
         typeof(AuditingModule).Assembly,
         typeof(IdentityModule).Assembly,
-        typeof(MultitenancyModule).Assembly
+        typeof(MultitenancyModule).Assembly,
+        typeof(ProductsModule).Assembly
     ];
 
     private static readonly Assembly CoreAssembly = typeof(IFshCore).Assembly;

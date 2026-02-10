@@ -8,7 +8,7 @@ namespace FSH.Framework.Shared.Persistence;
 public class DatabaseOptions : IValidatableObject
 {
     /// <summary>
-    /// The database provider to use. Valid values are <see cref="DbProviders.PostgreSQL"/> or <see cref="DbProviders.MSSQL"/>.
+    /// The database provider to use. Valid values are <see cref="DbProviders.PostgreSQL"/>, <see cref="DbProviders.MSSQL"/>, or <see cref="DbProviders.InMemory"/>.
     /// Defaults to PostgreSQL.
     /// </summary>
     public string Provider { get; set; } = DbProviders.PostgreSQL;
@@ -25,7 +25,8 @@ public class DatabaseOptions : IValidatableObject
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
-        if (string.IsNullOrEmpty(ConnectionString))
+        if (string.IsNullOrEmpty(ConnectionString) &&
+            !Provider.Equals(DbProviders.InMemory, StringComparison.OrdinalIgnoreCase))
         {
             yield return new ValidationResult("connection string cannot be empty.", new[] { nameof(ConnectionString) });
         }

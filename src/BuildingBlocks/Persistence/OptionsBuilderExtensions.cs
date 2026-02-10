@@ -16,12 +16,11 @@ public static class OptionsBuilderExtensions
         ArgumentNullException.ThrowIfNull(builder);
         ArgumentNullException.ThrowIfNullOrWhiteSpace(dbProvider);
 
-        builder.ConfigureWarnings(warnings =>
-            warnings.Log(RelationalEventId.PendingModelChangesWarning));
-
         switch (dbProvider.ToUpperInvariant())
         {
             case DbProviders.PostgreSQL:
+                builder.ConfigureWarnings(warnings =>
+                    warnings.Log(RelationalEventId.PendingModelChangesWarning));
                 builder.UseNpgsql(connectionString, e =>
                 {
                     e.MigrationsAssembly(migrationsAssembly);
@@ -29,11 +28,17 @@ public static class OptionsBuilderExtensions
                 break;
 
             case DbProviders.MSSQL:
+                builder.ConfigureWarnings(warnings =>
+                    warnings.Log(RelationalEventId.PendingModelChangesWarning));
                 builder.UseSqlServer(connectionString, e =>
                 {
                     e.MigrationsAssembly(migrationsAssembly);
                     e.EnableRetryOnFailure();
                 });
+                break;
+
+            case DbProviders.InMemory:
+                builder.UseInMemoryDatabase(string.IsNullOrEmpty(connectionString) ? "fsh" : connectionString);
                 break;
 
             default:
