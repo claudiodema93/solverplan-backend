@@ -7,7 +7,9 @@ namespace FSH.Modules.Multitenancy.Contracts;
 
 public interface ITenantService
 {
-    Task<PagedResponse<TenantDto>> GetAllAsync(GetTenantsQuery query, CancellationToken cancellationToken);
+    Task<PagedResponse<TenantDto>> GetAllAsync(GetTenantsQuery query, IReadOnlyCollection<string>? accessibleTenantIds, CancellationToken cancellationToken);
+
+    Task<List<string>> GetAccessibleTenantIdsAsync(string email, CancellationToken cancellationToken);
 
     Task<bool> ExistsWithIdAsync(string id, CancellationToken cancellationToken = default);
 

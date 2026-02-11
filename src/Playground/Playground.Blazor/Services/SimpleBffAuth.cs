@@ -1,3 +1,4 @@
+using FSH.Framework.Shared.Constants;
 using FSH.Playground.Blazor.ApiClient;
 using Microsoft.AspNetCore.Authentication;
 using System.IdentityModel.Tokens.Jwt;
@@ -52,7 +53,7 @@ internal static class SimpleBffAuth
                     new(ClaimTypes.Email, email),
                     new("access_token", token.AccessToken), // Store JWT for API calls
                     new("refresh_token", token.RefreshToken), // Store refresh token for token renewal
-                    new("tenant", tenant ?? "root"), // Store tenant for token refresh
+                    new(CustomClaims.ActiveTenant, tenant ?? "root"), // Store tenant for token refresh
                 };
 
                 // Add name claim

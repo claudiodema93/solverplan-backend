@@ -186,7 +186,7 @@ public sealed class IdentityService : IIdentityService
         new(ClaimTypes.MobilePhone, user.PhoneNumber ?? string.Empty),
         new(ClaimConstants.Fullname, $"{user.FirstName} {user.LastName}"),
         new(ClaimTypes.Surname, user.LastName ?? string.Empty),
-        new(ClaimConstants.Tenant, tenantId),
+        new(ClaimConstants.ActiveTenant, tenantId),
         new(ClaimConstants.ImageUrl, user.ImageUrl?.ToString() ?? string.Empty)
     ];
 

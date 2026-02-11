@@ -68,7 +68,7 @@ public sealed class MultitenancyModule : IModule
                     await Task.CompletedTask;
                 };
             })
-            .WithClaimStrategy(ClaimConstants.Tenant)
+            .WithClaimStrategy(ClaimConstants.ActiveTenant)
             .WithHeaderStrategy(MultitenancyConstants.Identifier)
             .WithDelegateStrategy(async context =>
             {

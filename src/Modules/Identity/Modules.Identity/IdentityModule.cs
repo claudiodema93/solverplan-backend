@@ -51,6 +51,7 @@ using FSH.Modules.Identity.Features.v1.Groups.GetGroupMembers;
 using FSH.Modules.Identity.Features.v1.Groups.AddUsersToGroup;
 using FSH.Modules.Identity.Features.v1.Groups.RemoveUserFromGroup;
 using FSH.Modules.Identity.Features.v1.Users.GetUserGroups;
+using FSH.Framework.Shared.Multitenancy;
 using FSH.Modules.Identity.Services;
 using Hangfire;
 using Hangfire.Common;
@@ -119,6 +120,9 @@ public class IdentityModule : IModule
 
         // Register group role service for group-derived permissions
         services.AddScoped<IGroupRoleService, GroupRoleService>();
+
+        // Register user tenant resolver for cross-tenant email lookup
+        services.AddScoped<IUserTenantResolver, UserTenantResolver>();
 
         services.AddIdentity<FshUser, FshRole>(options =>
         {
