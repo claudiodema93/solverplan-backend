@@ -20,8 +20,7 @@ review code changes and ensure they follow FSH patterns.
 
 ### Architecture
 
-- [ ] Features are in
-      `Modules/{Module}/Application/Features/{CommandsOrQuery)/{Name}/`
+- [ ] Features are in `Modules/{Module}/Features/{CommandsOrQuery)/{Name}/`
       structure
 - [ ] DTOs are in Contracts project, not internal
 - [ ] No cross-module dependencies (modules only use Contracts)

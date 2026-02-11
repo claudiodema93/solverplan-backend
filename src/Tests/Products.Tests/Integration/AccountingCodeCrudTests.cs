@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
-using FSH.Modules.Products.Contracts.Application.Features.v1.Commands.CreateAccountingCode;
-using FSH.Modules.Products.Contracts.Application.Features.v1.Commands.UpdateAccountingCode;
+using FSH.Modules.Products.Contracts.Features.v1.Commands.CreateAccountingCode;
+using FSH.Modules.Products.Contracts.Features.v1.Commands.UpdateAccountingCode;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Shouldly;
 using Xunit;

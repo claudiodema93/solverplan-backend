@@ -1,8 +1,8 @@
 using System.Net;
 using System.Net.Http.Json;
-using FSH.Modules.Products.Contracts.Application.Features.v1.Commands.CreateProduct;
-using FSH.Modules.Products.Contracts.Application.Features.v1.Commands.UpdateProduct;
+using FSH.Modules.Products.Contracts.Features.v1.Commands.UpdateProduct;
 using FSH.Modules.Products.Contracts.Domain.Enums;
+using FSH.Modules.Products.Contracts.Features.v1.Commands.CreateProduct;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Shouldly;
 using Xunit;

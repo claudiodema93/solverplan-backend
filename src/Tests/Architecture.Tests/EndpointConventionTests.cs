@@ -18,7 +18,8 @@ public class EndpointConventionTests
     [
         typeof(AuditingModule).Assembly,
         typeof(IdentityModule).Assembly,
-        typeof(MultitenancyModule).Assembly
+        typeof(MultitenancyModule).Assembly,
+        typeof(ProductsModule).Assembly
     ];
 
     [Fact]

@@ -1,6 +1,6 @@
-using FSH.Modules.Products.Application.Features.v1.Commands.CreateBomItem;
-using FSH.Modules.Products.Contracts.Application.Features.v1.Commands.CreateBomItem;
+using FSH.Modules.Products.Contracts.Features.v1.Commands.CreateBomItem;
 using FSH.Modules.Products.Contracts.Domain.Enums;
+using FSH.Modules.Products.Features.v1.Commands.CreateBomItem;
 
 namespace Products.Tests.Validators;
 

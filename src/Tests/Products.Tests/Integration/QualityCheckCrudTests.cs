@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
-using FSH.Modules.Products.Contracts.Application.Features.v1.Commands.CreateQualityCheck;
-using FSH.Modules.Products.Contracts.Application.Features.v1.Commands.UpdateQualityCheck;
+using FSH.Modules.Products.Contracts.Features.v1.Commands.UpdateQualityCheck;
+using FSH.Modules.Products.Contracts.Features.v1.Commands.CreateQualityCheck;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Shouldly;
 using Xunit;

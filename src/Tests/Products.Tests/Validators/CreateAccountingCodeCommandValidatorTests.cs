@@ -1,5 +1,5 @@
-using FSH.Modules.Products.Application.Features.v1.Commands.CreateAccountingCode;
-using FSH.Modules.Products.Contracts.Application.Features.v1.Commands.CreateAccountingCode;
+using FSH.Modules.Products.Contracts.Features.v1.Commands.CreateAccountingCode;
+using FSH.Modules.Products.Features.v1.Commands.CreateAccountingCode;
 
 namespace Products.Tests.Validators;
 

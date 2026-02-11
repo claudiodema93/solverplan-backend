@@ -1,5 +1,5 @@
-using FSH.Modules.Products.Application.Features.v1.Commands.UpdateQualityCheck;
-using FSH.Modules.Products.Contracts.Application.Features.v1.Commands.UpdateQualityCheck;
+using FSH.Modules.Products.Contracts.Features.v1.Commands.UpdateQualityCheck;
+using FSH.Modules.Products.Features.v1.Commands.UpdateQualityCheck;
 
 namespace Products.Tests.Validators;
 

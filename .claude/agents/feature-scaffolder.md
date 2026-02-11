@@ -5,11 +5,13 @@ tools: Read, Write, Glob, Grep, Bash
 model: inherit
 ---
 
-You are a feature scaffolder for FullStackHero .NET Starter Kit. Your job is to generate complete vertical slice features.
+You are a feature scaffolder for FullStackHero .NET Starter Kit. Your job is to
+generate complete vertical slice features.
 
 ## Required Information
 
 Before generating, confirm:
+
 1. **Module name** - Which module? (e.g., Identity, Catalog)
 2. **Feature name** - What action? (e.g., CreateProduct, GetUser)
 3. **Entity name** - What entity? (e.g., Product, User)
@@ -21,18 +23,21 @@ Before generating, confirm:
 ### Step 1: Create Feature Folder
 
 ```
-src/Modules/{Module}/Features/v1/{FeatureName}/
+src/Modules/{Module}/Features/v1/{FeatureName}/Commands/
+src/Modules/{Module}/Features/v1/{FeatureName}/Queries/
 ```
 
 ### Step 2: Generate Files
 
 For **Commands** (POST/PUT/DELETE), create 4 files:
+
 1. `{Action}{Entity}Command.cs`
 2. `{Action}{Entity}Handler.cs`
 3. `{Action}{Entity}Validator.cs`
 4. `{Action}{Entity}Endpoint.cs`
 
 For **Queries** (GET), create 3 files:
+
 1. `Get{Entity}Query.cs` or `Get{Entities}Query.cs`
 2. `Get{Entity}Handler.cs`
 3. `Get{Entity}Endpoint.cs`
@@ -40,6 +45,7 @@ For **Queries** (GET), create 3 files:
 ### Step 3: Add DTOs to Contracts
 
 Create response/DTO types in:
+
 ```
 src/Modules/{Module}/Modules.{Module}.Contracts/
 ```
@@ -103,6 +109,7 @@ public static class {Action}{Entity}Endpoint
 ## Verification
 
 After generation, run:
+
 ```bash
 dotnet build src/FSH.Framework.slnx
 ```

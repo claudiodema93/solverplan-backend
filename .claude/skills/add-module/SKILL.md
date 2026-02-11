@@ -25,23 +25,23 @@ src/Modules/{Name}/
 │   ├── Modules.{Name}.csproj
 │   ├── {Name}Module.cs
 │   ├── {Name}PermissionConstants.cs
-│   ├── Application/
-│   ├── Application/Features
-│   ├── Application/Features/v1
-│   ├── Application/v1/Commands/
-│   ├── Application/v1/Queries/
+│   ├── Features/
+│   ├── ├── v1/
+│   ├── ├── ├── Commands/
+│   ├── ├── ├── Queries/
 │   ├── Domain/
-│   ├── Domain/Entities
-│   ├── Domain/ValueObjects
-│   ├── Enpoints/
-│   ├── Enpoints/v1/
+│   ├── ├── Entities
+│   ├── ├── ValueObjects
 │   └── Infrastructure/
 │   ├── Infrastructure/{Name}DbContext.cs
 └── Modules.{Name}.Contracts/
     ├── Modules.{Name}.Contracts.csproj
-│   ├── Application/
+│   ├── Features/
+│   ├── ├── v1/
+│   ├── ├── ├── Commands/
+│   ├── ├── ├── Queries/
 │   ├── Domain/
-│   ├── Domain/DTOs/
+│   ├── ├── DTOs/
 │   └── Infrastructure/
 src/Tests/{Name}.Tests/
 ├── {Name}.Tests.csproj

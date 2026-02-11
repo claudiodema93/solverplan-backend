@@ -1,6 +1,6 @@
-using FSH.Modules.Products.Application.Features.v1.Commands.CreateIssue;
-using FSH.Modules.Products.Contracts.Application.Features.v1.Commands.CreateIssue;
+using FSH.Modules.Products.Contracts.Features.v1.Commands.CreateIssue;
 using FSH.Modules.Products.Contracts.Domain.Enums;
+using FSH.Modules.Products.Features.v1.Commands.CreateIssue;
 
 namespace Products.Tests.Validators;
 

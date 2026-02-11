@@ -1,10 +1,10 @@
 using System.Net;
 using System.Net.Http.Json;
-using FSH.Modules.Products.Contracts.Application.Features.v1.Commands.CreateCategory;
-using FSH.Modules.Products.Contracts.Application.Features.v1.Commands.CreateProduct;
-using FSH.Modules.Products.Contracts.Application.Features.v1.Commands.DeleteCategory;
-using FSH.Modules.Products.Contracts.Application.Features.v1.Commands.UpdateCategory;
+using FSH.Modules.Products.Contracts.Features.v1.Commands.CreateProduct;
+using FSH.Modules.Products.Contracts.Features.v1.Commands.DeleteCategory;
+using FSH.Modules.Products.Contracts.Features.v1.Commands.UpdateCategory;
 using FSH.Modules.Products.Contracts.Domain.Enums;
+using FSH.Modules.Products.Contracts.Features.v1.Commands.CreateCategory;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Shouldly;
 using Xunit;

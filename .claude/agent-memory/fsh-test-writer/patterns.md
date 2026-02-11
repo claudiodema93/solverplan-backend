@@ -1,6 +1,7 @@
 # FSH Test Patterns — Detailed Reference
 
 ## File Placement
+
 ```
 src/Tests/Products.Tests/
 ├── GlobalUsings.cs                         # global using Xunit; global using Shouldly;
@@ -13,16 +14,20 @@ src/Tests/Products.Tests/
 ```
 
 ## GlobalUsings Pattern
+
 ```csharp
 global using Xunit;
 global using Shouldly;
 ```
-NSubstitute is added per-file with `using NSubstitute;` when needed for handler tests.
+
+NSubstitute is added per-file with `using NSubstitute;` when needed for handler
+tests.
 
 ## Validator Test Template
+
 ```csharp
-using FSH.Modules.Products.Application.Features.v1.Commands.CreateXxx;
-using FSH.Modules.Products.Contracts.Application.Features.v1.Commands.CreateXxx;
+using FSH.Modules.Products.Features.v1.Commands.CreateXxx;
+using FSH.Modules.Products.Contracts.Features.v1.Commands.CreateXxx;
 
 namespace Products.Tests.Validators;
 
@@ -80,6 +85,7 @@ public sealed class CreateXxxCommandValidatorTests
 ```
 
 ## Handler Test Template (using NSubstitute, from Multitenancy pattern)
+
 ```csharp
 using NSubstitute;
 namespace Products.Tests.Handlers;
@@ -119,10 +125,12 @@ public sealed class CreateXxxCommandHandlerTests
 }
 ```
 
-NOTE: BomItem handlers use ProductsDbContext directly (EF Core), not a repository interface.
-Unit testing them requires an in-memory DbContext setup — currently only integration tests (skipped) cover these.
+NOTE: BomItem handlers use ProductsDbContext directly (EF Core), not a
+repository interface. Unit testing them requires an in-memory DbContext setup —
+currently only integration tests (skipped) cover these.
 
 ## Integration Test Template
+
 ```csharp
 [Trait("Category", "Products")]
 [Trait("Type", "Integration")]
@@ -148,14 +156,19 @@ public class XxxCrudTests : IClassFixture<WebApplicationFactory<Program>>
 ```
 
 ## BomItem-Specific Notes
-- `CreateBomItemCommand`: ProductId, ChildProductId (must differ!), Quantity (>0), Unit, IsManual, Notes
-- `UpdateBomItemCommand`: Id (>0), ChildProductId (>0), Quantity (>0), Unit, IsManual, Notes
+
+- `CreateBomItemCommand`: ProductId, ChildProductId (must differ!), Quantity
+  (>0), Unit, IsManual, Notes
+- `UpdateBomItemCommand`: Id (>0), ChildProductId (>0), Quantity (>0), Unit,
+  IsManual, Notes
 - `DeleteBomItemCommand`: Id (>0) — no validator class exists
-- `SearchBomItemsQuery`: PageNumber, PageSize, Sort, Search, ProductId, ChildProductId, Unit, IsManual
+- `SearchBomItemsQuery`: PageNumber, PageSize, Sort, Search, ProductId,
+  ChildProductId, Unit, IsManual
 - Handlers verify tenant isolation via `ICurrentUser.GetTenant()`
 - `NotFoundException` thrown when entity not found
 
 ## Products Test csproj Project References
+
 ```xml
 <ProjectReference Include="..\..\Modules\Products\Modules.Products\Modules.Products.csproj" />
 <ProjectReference Include="..\..\Modules\Products\Modules.Products.Contracts\Modules.Products.Contracts.csproj" />
@@ -163,5 +176,7 @@ public class XxxCrudTests : IClassFixture<WebApplicationFactory<Program>>
 ```
 
 ## BomItemDto namespace
-`FSH.Modules.Products.Contracts.DTOs` (NOT `.Domain.DTOs`)
-Note: GetBomItemByIdQuery uses `FSH.Modules.Products.Contracts.DTOs.BomItemDto?` as return type.
+
+`FSH.Modules.Products.Contracts.DTOs` (NOT `.Domain.DTOs`) Note:
+GetBomItemByIdQuery uses `FSH.Modules.Products.Contracts.DTOs.BomItemDto?` as
+return type.

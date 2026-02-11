@@ -12,9 +12,6 @@
 		<ProjectReference Include="..\..\..\BuildingBlocks\Shared\Shared.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Folder Include="Application\" />
-	  <Folder Include="Application\Features\v1\Commands\" />
-	  <Folder Include="Application\Features\v1\Queries\" />
 	  <Folder Include="Domain\Events\" />
 	</ItemGroup>
 </Project>
