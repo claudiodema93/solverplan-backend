@@ -89,7 +89,7 @@ public sealed class RefreshTokenCommandHandler
         await _securityAudit.TokenRevokedAsync(subject, clientId!, "RefreshTokenRotated", cancellationToken);
 
         // Issue new tokens
-        var newToken = await _tokenService.IssueAsync(subject, claims, null, cancellationToken);
+        var newToken = await _tokenService.IssueAsync(subject, claims, cancellationToken);
 
         // Persist rotated refresh token for this user
         await _identityService.StoreRefreshTokenAsync(subject, newToken.RefreshToken, newToken.RefreshTokenExpiresAt, cancellationToken);

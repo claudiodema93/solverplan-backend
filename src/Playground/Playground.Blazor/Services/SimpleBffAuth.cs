@@ -25,13 +25,11 @@ internal static class SimpleBffAuth
                 var form = await httpContext.Request.ReadFormAsync();
                 var email = form["Email"].ToString();
                 var password = form["Password"].ToString();
-                var tenant = form["Tenant"].ToString();
 
                 logger.LogInformation("Login attempt for {Email}", email);
 
                 // Call the identity API to get token
                 var token = await tokenClient.IssueAsync(
-                    tenant ?? "root",
                     new GenerateTokenCommand
                     {
                         Email = email,
@@ -53,7 +51,6 @@ internal static class SimpleBffAuth
                     new(ClaimTypes.Email, email),
                     new("access_token", token.AccessToken), // Store JWT for API calls
                     new("refresh_token", token.RefreshToken), // Store refresh token for token renewal
-                    new(CustomClaims.ActiveTenant, tenant ?? "root"), // Store tenant for token refresh
                 };
 
                 // Add name claim
@@ -102,6 +99,8 @@ internal static class SimpleBffAuth
             return Results.Ok();
         })
         .DisableAntiforgery();
+
+
 
         // Logout endpoint - GET for browser redirects (ensures cookie is cleared in browser)
         app.MapGet("/auth/logout", async (HttpContext httpContext) =>

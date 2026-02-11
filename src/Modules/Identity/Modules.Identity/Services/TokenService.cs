@@ -27,7 +27,7 @@ public sealed class TokenService : ITokenService
     public Task<TokenResponse> IssueAsync(
         string subject,
         IEnumerable<Claim> claims,
-        string? tenant = null,
+
         CancellationToken ct = default)
     {
         var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SigningKey));
