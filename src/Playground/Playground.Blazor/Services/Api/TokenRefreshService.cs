@@ -1,3 +1,4 @@
+using FSH.Framework.Shared.Constants;
 using FSH.Playground.Blazor.ApiClient;
 using Microsoft.AspNetCore.Authentication;
 using System.IdentityModel.Tokens.Jwt;
@@ -222,6 +223,8 @@ internal sealed class TokenRefreshService : ITokenRefreshService, IDisposable
 
         AddNameClaim(newClaims, jwtToken);
         AddRoleClaims(newClaims, jwtToken);
+        AddActiveTenantClaim(newClaims, jwtToken);
+        AddTenantsClaims(newClaims, jwtToken);
 
         return newClaims;
     }
@@ -239,6 +242,19 @@ internal sealed class TokenRefreshService : ITokenRefreshService, IDisposable
     {
         var roleClaims = jwtToken.Claims.Where(c => c.Type == "role" || c.Type == ClaimTypes.Role);
         claims.AddRange(roleClaims.Select(r => new Claim(ClaimTypes.Role, r.Value)));
+    }
+
+    private static void AddActiveTenantClaim(List<Claim> claims, JwtSecurityToken jwtToken)
+    {
+        var claim = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimConstants.ActiveTenant);
+        if (claim != null)
+            claims.Add(new Claim(ClaimConstants.ActiveTenant, claim.Value));
+    }
+
+    private static void AddTenantsClaims(List<Claim> claims, JwtSecurityToken jwtToken)
+    {
+        var tenantClaims = jwtToken.Claims.Where(c => c.Type == ClaimConstants.Tenants);
+        claims.AddRange(tenantClaims.Select(c => new Claim(ClaimConstants.Tenants, c.Value)));
     }
 
     private void UpdateCaches(RefreshTokenCommandResponse response, string oldRefreshToken)
