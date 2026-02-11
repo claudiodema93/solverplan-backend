@@ -1,8 +1,11 @@
 @inherits LayoutComponentBase
+@using BlazorBlueprint.Primitives.Services
 
-<MudThemeProvider />
-<MudPopoverProvider />
-<MudDialogProvider />
-<MudSnackbarProvider />
+<div class="page">
+    <main>
+        @Body
+    </main>
+</div>
 
-@Body
+<!-- Required for portal-based components -->
+<PortalHost />

@@ -121,6 +121,8 @@ builder.Services.AddOutputCache(options =>
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddBlazorBlueprintPrimitives();
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())

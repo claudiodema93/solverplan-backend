@@ -1,0 +1,11 @@
+{
+    "mcpServers": {
+        "blazorblueprint": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@blazorblueprint/mcp"
+            ]
+        }
+    }
+}
