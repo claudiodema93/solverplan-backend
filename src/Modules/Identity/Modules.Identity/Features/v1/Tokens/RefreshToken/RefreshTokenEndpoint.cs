@@ -18,6 +18,7 @@ public static class RefreshTokenEndpoint
         return endpoint.MapPost("/token/refresh",
             [AllowAnonymous] async Task<Results<Ok<RefreshTokenCommandResponse>, UnauthorizedHttpResult, ProblemHttpResult>>
             ([FromBody] RefreshTokenCommand command,
+            [FromHeader(Name = "tenant")] string tenant,
             [FromServices] IMediator mediator,
             CancellationToken ct) =>
             {

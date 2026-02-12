@@ -168,7 +168,7 @@ internal sealed class TokenRefreshService : ITokenRefreshService, IDisposable
         }
     }
 
-    private (string AccessToken, string RefreshToken)? GetCurrentTokens(ClaimsPrincipal user)
+    private (string AccessToken, string RefreshToken, string Tenant)? GetCurrentTokens(ClaimsPrincipal user)
     {
         var currentAccessToken = !string.IsNullOrEmpty(_circuitTokenCache.AccessToken)
             ? _circuitTokenCache.AccessToken
@@ -178,19 +178,22 @@ internal sealed class TokenRefreshService : ITokenRefreshService, IDisposable
             ? _circuitTokenCache.RefreshToken
             : user.FindFirst("refresh_token")?.Value;
 
+        var tenant = user.FindFirst("tenant")?.Value ?? "root";
+
         if (string.IsNullOrEmpty(refreshToken) || string.IsNullOrEmpty(currentAccessToken))
         {
             return null;
         }
 
-        return (currentAccessToken, refreshToken);
+        return (currentAccessToken, refreshToken, tenant);
     }
 
     private async Task<RefreshTokenCommandResponse?> CallRefreshApiAsync(
-        (string AccessToken, string RefreshToken) tokens,
+        (string AccessToken, string RefreshToken, string Tenant) tokens,
         CancellationToken cancellationToken)
     {
         var refreshResponse = await _tokenClient.RefreshAsync(
+            tokens.Tenant,
             new RefreshTokenCommand
             {
                 Token = tokens.AccessToken,
@@ -211,6 +214,7 @@ internal sealed class TokenRefreshService : ITokenRefreshService, IDisposable
     {
         var jwtHandler = new JwtSecurityTokenHandler();
         var jwtToken = jwtHandler.ReadJwtToken(response.Token);
+        var tenant = user.FindFirst("tenant")?.Value ?? "root";
 
         var newClaims = new List<Claim>
         {
@@ -218,6 +222,7 @@ internal sealed class TokenRefreshService : ITokenRefreshService, IDisposable
             new(ClaimTypes.Email, user.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty),
             new("access_token", response.Token),
             new("refresh_token", response.RefreshToken),
+            new("tenant", tenant),
         };
 
         AddNameClaim(newClaims, jwtToken);

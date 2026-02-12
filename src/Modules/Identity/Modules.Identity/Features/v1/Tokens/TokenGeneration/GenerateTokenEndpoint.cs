@@ -20,6 +20,7 @@ public static class GenerateTokenEndpoint
         return endpoint.MapPost("/token/issue",
             [AllowAnonymous] async Task<Results<Ok<TokenResponse>, UnauthorizedHttpResult, ProblemHttpResult>>
             ([FromBody] GenerateTokenCommand command,
+            [DefaultValue("root")][FromHeader] string tenant,
             [FromServices] IMediator mediator,
             CancellationToken ct) =>
             {
