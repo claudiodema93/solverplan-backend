@@ -27,7 +27,7 @@ public sealed class CurrentUserServiceTests
         if (name != null)
             claims.Add(new Claim(ClaimTypes.Name, name));
         if (tenant != null)
-            claims.Add(new Claim(CustomClaims.ActiveTenant, tenant));
+            claims.Add(new Claim(CustomClaims.Tenant, tenant));
 
         foreach (var role in roles)
         {

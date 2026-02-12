@@ -128,41 +128,11 @@ public sealed class TenantService : ITenantService
     public async Task<bool> ExistsWithNameAsync(string name, CancellationToken cancellationToken = default) =>
         (await _tenantStore.GetAllAsync().ConfigureAwait(false)).Any(t => t.Name == name);
 
-    public async Task<List<string>> GetAccessibleTenantIdsAsync(string email, CancellationToken cancellationToken)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(email);
-
-        var allTenants = await _tenantStore.GetAllAsync().ConfigureAwait(false);
-        var accessibleIds = new List<string>();
-
-        foreach (var tenant in allTenants.Where(t => t.IsActive))
-        {
-            using var scope = _serviceProvider.CreateScope();
-
-            scope.ServiceProvider.GetRequiredService<IMultiTenantContextSetter>()
-                .MultiTenantContext = new MultiTenantContext<AppTenantInfo>(tenant);
-
-            var resolver = scope.ServiceProvider.GetRequiredService<IUserTenantResolver>();
-            if (await resolver.UserExistsInTenantAsync(email, cancellationToken).ConfigureAwait(false))
-            {
-                accessibleIds.Add(tenant.Id!);
-            }
-        }
-
-        return accessibleIds;
-    }
-
-    public async Task<PagedResponse<TenantDto>> GetAllAsync(GetTenantsQuery query, IReadOnlyCollection<string>? accessibleTenantIds, CancellationToken cancellationToken)
+    public async Task<PagedResponse<TenantDto>> GetAllAsync(GetTenantsQuery query, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(query);
 
         IQueryable<AppTenantInfo> tenants = _dbContext.TenantInfo;
-
-        if (accessibleTenantIds is not null)
-        {
-            tenants = tenants.Where(t => accessibleTenantIds.Contains(t.Id!));
-        }
-
         var specification = new GetTenantsSpecification(query);
         IQueryable<TenantDto> projected = tenants.ApplySpecification(specification);
 

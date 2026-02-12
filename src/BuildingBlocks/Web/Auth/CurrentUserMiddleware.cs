@@ -20,7 +20,7 @@ public class CurrentUserMiddleware(ICurrentUserInitializer currentUserInitialize
         if (activity is not null && context.User?.Identity?.IsAuthenticated == true)
         {
             var userId = context.User.GetUserId();
-            var tenant = context.User.GetActiveTenant();
+            var tenant = context.User.GetTenant();
             var correlationId = context.Request.HttpContext.TraceIdentifier;
 
             if (!string.IsNullOrEmpty(userId))

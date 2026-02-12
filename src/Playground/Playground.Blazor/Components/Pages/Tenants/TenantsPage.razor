@@ -16,15 +16,17 @@
 @if (!_isRootTenantAdmin)
 {
     <MudAlert Severity="Severity.Warning" Class="mb-4">
-        <MudText>You do not have permission to access this page. Only root tenant administrators can manage tenants.
-        </MudText>
+        <MudText>You do not have permission to access this page. Only root tenant administrators can manage tenants.</MudText>
     </MudAlert>
 }
 else
 {
-    <FshPageHeader Title="Tenants"                   Description="Manage organization tenants and subscriptions">
+    <FshPageHeader Title="Tenants"
+                   Description="Manage organization tenants and subscriptions">
         <ActionContent>
-            <MudButton Variant="Variant.Filled"                       Color="Color.Primary"                       StartIcon="@Icons.Material.Filled.Add"
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       StartIcon="@Icons.Material.Filled.Add"
                        OnClick="ShowCreate">
                 New Tenant
             </MudButton>
@@ -34,20 +36,32 @@ else
     @* Stats Cards *@
     <MudGrid Class="mb-4">
         <MudItem xs="6" sm="3">
-            <FshStatCard Icon="@Icons.Material.Filled.Business" IconColor="Color.Primary" Value="@_stats.Total.ToString()"
-                         Label="Total Tenants" Badge="Total" />
+            <FshStatCard Icon="@Icons.Material.Filled.Business"
+                         IconColor="Color.Primary"
+                         Value="@_stats.Total.ToString()"
+                         Label="Total Tenants"
+                         Badge="Total" />
         </MudItem>
         <MudItem xs="6" sm="3">
-            <FshStatCard Icon="@Icons.Material.Filled.CheckCircle"                    IconColor="Color.Success"
-                         Value="@_stats.Active.ToString()"           Label="Active Tenants"                      Badge="Active" />
+            <FshStatCard Icon="@Icons.Material.Filled.CheckCircle"
+                         IconColor="Color.Success"
+                         Value="@_stats.Active.ToString()"
+                         Label="Active Tenants"
+                         Badge="Active" />
         </MudItem>
         <MudItem xs="6" sm="3">
-            <FshStatCard Icon="@Icons.Material.Filled.Cancel"             IconColor="Color.Error"                        Value="@_stats.Inactive.ToString()"
-                         Label="Inactive Tenants"               Badge="Inactive" />
+            <FshStatCard Icon="@Icons.Material.Filled.Cancel"
+                         IconColor="Color.Error"
+                         Value="@_stats.Inactive.ToString()"
+                         Label="Inactive Tenants"
+                         Badge="Inactive" />
         </MudItem>
         <MudItem xs="6" sm="3">
-            <FshStatCard Icon="@Icons.Material.Filled.Warning"       IconColor="Color.Warning"
-                         Value="@_stats.ExpiringSoon.ToString()"               Label="Expiring in 30 days"         Badge="Expiring" />
+            <FshStatCard Icon="@Icons.Material.Filled.Warning"
+                         IconColor="Color.Warning"
+                         Value="@_stats.ExpiringSoon.ToString()"
+                         Label="Expiring in 30 days"
+                         Badge="Expiring" />
         </MudItem>
     </MudGrid>
 
@@ -56,25 +70,34 @@ else
         <MudExpansionPanel Text="Filters" IsInitiallyExpanded="true" Class="fsh-card">
             <MudGrid GutterSize="2">
                 <MudItem xs="12" sm="4">
-                    <MudTextField @bind-Value="_filter.Search"             Label="Search"                 Placeholder="Name, ID, or admin email"
-                                  Adornment="Adornment.Start"   AdornmentIcon="@Icons.Material.Filled.Search"       Immediate="true"
-                                  DebounceInterval="400"                         OnDebounceIntervalElapsed="@((string _) => RefreshData())" />
+                    <MudTextField @bind-Value="_filter.Search"
+                                  Label="Search"
+                                  Placeholder="Name, ID, or admin email"
+                                  Adornment="Adornment.Start"
+                                  AdornmentIcon="@Icons.Material.Filled.Search"
+                                  Immediate="true"
+                                  DebounceInterval="400"
+                                  OnDebounceIntervalElapsed="@((string _) => RefreshData())" />
                 </MudItem>
                 <MudItem xs="6" sm="2">
-                    <MudSelect T="bool?" Value="_filter.IsActive" Label="Status" Clearable="true"
-                               ValueChanged="OnStatusFilterChanged">
+                    <MudSelect T="bool?" Value="_filter.IsActive" Label="Status" Clearable="true" ValueChanged="OnStatusFilterChanged">
                         <MudSelectItem T="bool?" Value="@((bool?)null)">All</MudSelectItem>
                         <MudSelectItem T="bool?" Value="true">Active</MudSelectItem>
                         <MudSelectItem T="bool?" Value="false">Inactive</MudSelectItem>
                     </MudSelect>
                 </MudItem>
                 <MudItem xs="12" sm="6" Class="d-flex align-center justify-end">
-                    <MudButton StartIcon="@Icons.Material.Filled.FilterAltOff"                        Color="Color.Default"                         Variant="Variant.Text"
+                    <MudButton StartIcon="@Icons.Material.Filled.FilterAltOff"
+                               Color="Color.Default"
+                               Variant="Variant.Text"
                                OnClick="ClearFilters">
                         Clear Filters
                     </MudButton>
-                    <MudButton StartIcon="@Icons.Material.Filled.Refresh"                 Color="Color.Primary"                  Variant="Variant.Filled"
-                               OnClick="LoadData"                              Class="ml-2">
+                    <MudButton StartIcon="@Icons.Material.Filled.Refresh"
+                               Color="Color.Primary"
+                               Variant="Variant.Filled"
+                               OnClick="LoadData"
+                               Class="ml-2">
                         Refresh
                     </MudButton>
                 </MudItem>
@@ -84,8 +107,17 @@ else
 
     @* Data Grid *@
     <MudPaper Class="fsh-card pa-0" Style="overflow: hidden;">
-        <MudDataGrid T="TenantDto"         @ref="_dataGrid"               Items="_filtered"      Loading="_loading"                     Hover="true"                     Dense="true"
-                     Striped="true" SortMode="SortMode.Single" Filterable="false"    RowsPerPage="@_pageSize"          Class="tenants-datagrid">
+        <MudDataGrid T="TenantDto"
+                     @ref="_dataGrid"
+                     Items="_filtered"
+                     Loading="_loading"
+                     Hover="true"
+                     Dense="true"
+                     Striped="true"
+                     SortMode="SortMode.Single"
+                     Filterable="false"
+                     RowsPerPage="@_pageSize"
+                     Class="tenants-datagrid">
             <Columns>
                 <TemplateColumn Title="Tenant" Sortable="true" SortBy="@(x => x.Name)">
                     <CellTemplate>
@@ -148,13 +180,11 @@ else
                     <CellTemplate>
                         @if (context.Item.IsActive)
                         {
-                            <MudChip T="string" Color="Color.Success" Size="Size.Small" Variant="Variant.Filled">Active
-                            </MudChip>
+                            <MudChip T="string" Color="Color.Success" Size="Size.Small" Variant="Variant.Filled">Active</MudChip>
                         }
                         else
                         {
-                            <MudChip T="string" Color="Color.Error" Size="Size.Small" Variant="Variant.Filled">Inactive
-                            </MudChip>
+                            <MudChip T="string" Color="Color.Error" Size="Size.Small" Variant="Variant.Filled">Inactive</MudChip>
                         }
                     </CellTemplate>
                 </TemplateColumn>
@@ -162,19 +192,23 @@ else
                     <CellTemplate>
                         <MudStack Row="true" Justify="Justify.FlexEnd" Spacing="0">
                             <MudTooltip Text="View Details">
-                                <MudIconButton Icon="@Icons.Material.Filled.Visibility"                                               Size="Size.Small"
-                                               Color="Color.Primary" OnClick="@(() => GoToDetail(context.Item.Id))" />
+                                <MudIconButton Icon="@Icons.Material.Filled.Visibility"
+                                               Size="Size.Small"
+                                               Color="Color.Primary"
+                                               OnClick="@(() => GoToDetail(context.Item.Id))" />
                             </MudTooltip>
                             <MudTooltip Text="Upgrade Subscription">
-                                <MudIconButton Icon="@Icons.Material.Filled.Upgrade" Size="Size.Small" Color="Color.Info"
+                                <MudIconButton Icon="@Icons.Material.Filled.Upgrade"
+                                               Size="Size.Small"
+                                               Color="Color.Info"
                                                OnClick="@(() => ShowUpgrade(context.Item))" />
                             </MudTooltip>
                             <MudTooltip Text="@GetToggleTooltip(context.Item)">
-                                <MudIconButton
-                                Icon="@(context.Item.IsActive ? Icons.Material.Filled.Block : Icons.Material.Filled.CheckCircle)"
-                                Size="Size.Small"                              Color="@(context.Item.IsActive ? Color.Warning : Color.Success)"
-                                OnClick="@(() => ToggleStatus(context.Item))"
-                                Disabled="@IsToggleDisabled(context.Item)" />
+                                <MudIconButton Icon="@(context.Item.IsActive ? Icons.Material.Filled.Block : Icons.Material.Filled.CheckCircle)"
+                                               Size="Size.Small"
+                                               Color="@(context.Item.IsActive ? Color.Warning : Color.Success)"
+                                               OnClick="@(() => ToggleStatus(context.Item))"
+                                               Disabled="@IsToggleDisabled(context.Item)" />
                             </MudTooltip>
                         </MudStack>
                     </CellTemplate>
@@ -187,8 +221,7 @@ else
                 <MudStack AlignItems="AlignItems.Center" Spacing="4" Class="pa-8">
                     <MudIcon Icon="@Icons.Material.Filled.Business" Size="Size.Large" Color="Color.Default" />
                     <MudText Typo="Typo.h6">No tenants found</MudText>
-                    <MudText Typo="Typo.body2" Class="text-muted">Try adjusting your filters or create a new tenant.
-                    </MudText>
+                    <MudText Typo="Typo.body2" Class="text-muted">Try adjusting your filters or create a new tenant.</MudText>
                 </MudStack>
             </NoRecordsContent>
         </MudDataGrid>
@@ -259,7 +292,7 @@ else
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             var user = authState.User;
 
-            var tenant = user.FindFirst(CustomClaims.ActiveTenant)?.Value;
+            var tenant = user.FindFirst(CustomClaims.Tenant)?.Value;
             var isRootTenant = string.Equals(tenant, MultitenancyConstants.Root.Id, StringComparison.OrdinalIgnoreCase);
 
             var roles = user.FindAll(System.Security.Claims.ClaimTypes.Role).Select(c => c.Value).ToList();

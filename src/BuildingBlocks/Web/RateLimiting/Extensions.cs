@@ -79,7 +79,7 @@ public static class Extensions
 
     private static string GetPartitionKey(HttpContext context)
     {
-        var tenant = context.User?.FindFirst(ClaimConstants.ActiveTenant)?.Value;
+        var tenant = context.User?.FindFirst(ClaimConstants.Tenant)?.Value;
         if (!string.IsNullOrWhiteSpace(tenant))
         {
             return $"tenant:{tenant}";
