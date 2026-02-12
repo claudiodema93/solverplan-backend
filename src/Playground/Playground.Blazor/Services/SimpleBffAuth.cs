@@ -64,15 +64,6 @@ internal static class SimpleBffAuth
                 var roleClaims = jwtToken.Claims.Where(c => c.Type == "role" || c.Type == ClaimTypes.Role);
                 claims.AddRange(roleClaims.Select(r => new Claim(ClaimTypes.Role, r.Value)));
 
-                // Add active_tenant claim
-                var activeTenantClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimConstants.ActiveTenant);
-                if (activeTenantClaim != null)
-                    claims.Add(new Claim(ClaimConstants.ActiveTenant, activeTenantClaim.Value));
-
-                // Add tenants claim (multiple values — one per tenant)
-                var tenantsClaims = jwtToken.Claims.Where(c => c.Type == ClaimConstants.Tenants);
-                claims.AddRange(tenantsClaims.Select(c => new Claim(ClaimConstants.Tenants, c.Value)));
-
                 // Create identity and sign in with cookie
                 var identity = new ClaimsIdentity(claims, "Cookies");
                 var principal = new ClaimsPrincipal(identity);

@@ -7,7 +7,6 @@ using Mediator;
 using System.Security.Claims;
 using Finbuckle.MultiTenant.Abstractions;
 using FSH.Framework.Eventing.Outbox;
-using FSH.Framework.Shared.Constants;
 using FSH.Framework.Shared.Multitenancy;
 using FSH.Modules.Identity.Contracts.Events;
 using Microsoft.Extensions.DependencyInjection;
@@ -84,7 +83,13 @@ public sealed class GenerateTokenCommandHandler
 
         if (identityResult is null)
         {
-            await AuditLoginFailedSafeAsync(request.Email, clientId, "InvalidCredentials", ip, cancellationToken);
+            await _securityAudit.LoginFailedAsync(
+                subjectIdOrName: request.Email,
+                clientId: clientId!,
+                reason: "InvalidCredentials",
+                ip: ip,
+                ct: cancellationToken);
+
             throw new UnauthorizedAccessException("Invalid credentials.");
         }
 
@@ -98,11 +103,7 @@ public sealed class GenerateTokenCommandHandler
             userAgent: ua,
             ct: cancellationToken);
 
-        // Add tenants claim: scan all tenants to find where this user exists
-        var allAccessibleIds = await GetAllAccessibleTenantIdsAsync(request.Email, cancellationToken);
-        var enrichedClaims = EnrichWithTenantsClaim(claims, allAccessibleIds);
-
-        var token = await _tokenService.IssueAsync(subject, enrichedClaims, cancellationToken);
+        var token = await _tokenService.IssueAsync(subject, claims, cancellationToken);
 
         await _identityService.StoreRefreshTokenAsync(subject, token.RefreshToken, token.RefreshTokenExpiresAt, cancellationToken);
 
@@ -123,18 +124,18 @@ public sealed class GenerateTokenCommandHandler
         var fingerprint = Sha256Short(token.AccessToken);
         await _securityAudit.TokenIssuedAsync(
             userId: subject,
-            userName: enrichedClaims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value ?? request.Email,
+            userName: claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value ?? request.Email,
             clientId: clientId!,
             tokenFingerprint: fingerprint,
             expiresUtc: token.AccessTokenExpiresAt,
             ct: cancellationToken);
 
-        await EnqueueTokenGeneratedEventAsync(request, subject, enrichedClaims, clientId, ip, ua, fingerprint, token, cancellationToken);
+        await EnqueueTokenGeneratedEventAsync(request, subject, claims, clientId, ip, ua, fingerprint, token, cancellationToken);
 
         return token;
     }
 
-    // Auto-discovery path: no tenant header — find the tenant by scanning all active tenants in one pass
+    // Auto-discovery path: no tenant header — find the tenant by searching all active tenants
     private async Task<TokenResponse> AuthenticateWithTenantDiscoveryAsync(
         GenerateTokenCommand request,
         string ip, string ua, string? clientId,
@@ -144,10 +145,6 @@ public sealed class GenerateTokenCommandHandler
 
         var allTenants = (await _tenantStore.GetAllAsync()).Where(t => t.IsActive).ToList();
 
-        // One pass: collect all accessible tenant IDs and remember the first match for auth
-        AppTenantInfo? authTenant = null;
-        var allAccessibleIds = new List<string>();
-
         foreach (var tenantInfo in allTenants)
         {
             using var scope = _serviceScopeFactory.CreateScope();
@@ -155,109 +152,71 @@ public sealed class GenerateTokenCommandHandler
             scope.ServiceProvider.GetRequiredService<IMultiTenantContextSetter>()
                 .MultiTenantContext = new MultiTenantContext<AppTenantInfo>(tenantInfo);
 
+            // Check if the user exists in this tenant (cheap lookup, no password check)
             var resolver = scope.ServiceProvider.GetRequiredService<IUserTenantResolver>();
             if (!await resolver.UserExistsInTenantAsync(request.Email, ct))
                 continue;
 
-            allAccessibleIds.Add(tenantInfo.Id!);
-            authTenant ??= tenantInfo; // First tenant found is used for authentication
+            _logger.LogInformation("User {Email} found in tenant {TenantId}. Authenticating.", request.Email, tenantInfo.Id);
+
+            // User is in this tenant — do the full auth flow in this scope
+            var identityService = scope.ServiceProvider.GetRequiredService<IIdentityService>();
+            var identityResult = await identityService.ValidateCredentialsAsync(request.Email, request.Password, ct);
+
+            if (identityResult is null)
+            {
+                await AuditLoginFailedSafeAsync(request.Email, clientId, "InvalidCredentials", ip, ct);
+                throw new UnauthorizedAccessException("Invalid credentials.");
+            }
+
+            var (subject, claims) = identityResult.Value;
+
+            var securityAudit = scope.ServiceProvider.GetRequiredService<ISecurityAudit>();
+            await securityAudit.LoginSucceededAsync(
+                userId: subject,
+                userName: claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value ?? request.Email,
+                clientId: clientId!,
+                ip: ip,
+                userAgent: ua,
+                ct: ct);
+
+            var token = await _tokenService.IssueAsync(subject, claims, ct);
+
+            await identityService.StoreRefreshTokenAsync(subject, token.RefreshToken, token.RefreshTokenExpiresAt, ct);
+
+            try
+            {
+                var sessionService = scope.ServiceProvider.GetRequiredService<ISessionService>();
+                await sessionService.CreateSessionAsync(
+                    subject,
+                    Sha256Short(token.RefreshToken),
+                    ip, ua,
+                    token.RefreshTokenExpiresAt,
+                    ct);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to create session for user {UserId} during tenant-discovery login.", subject);
+            }
+
+            var fingerprint = Sha256Short(token.AccessToken);
+            await securityAudit.TokenIssuedAsync(
+                userId: subject,
+                userName: claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value ?? request.Email,
+                clientId: clientId!,
+                tokenFingerprint: fingerprint,
+                expiresUtc: token.AccessTokenExpiresAt,
+                ct: ct);
+
+            var outboxStore = scope.ServiceProvider.GetRequiredService<IOutboxStore>();
+            await EnqueueTokenGeneratedEventInScopeAsync(request, subject, claims, tenantInfo.Id, clientId, ip, ua, fingerprint, token, outboxStore, ct);
+
+            return token;
         }
 
-        if (authTenant is null)
-        {
-            await AuditLoginFailedSafeAsync(request.Email, clientId, "InvalidCredentials", ip, ct);
-            throw new UnauthorizedAccessException("Invalid credentials.");
-        }
-
-        _logger.LogInformation("User {Email} found in {Count} tenant(s). Authenticating in {TenantId}.",
-            request.Email, allAccessibleIds.Count, authTenant.Id);
-
-        // Authenticate in the first tenant's scope
-        using var authScope = _serviceScopeFactory.CreateScope();
-        authScope.ServiceProvider.GetRequiredService<IMultiTenantContextSetter>()
-            .MultiTenantContext = new MultiTenantContext<AppTenantInfo>(authTenant);
-
-        var identityService = authScope.ServiceProvider.GetRequiredService<IIdentityService>();
-        var identityResult = await identityService.ValidateCredentialsAsync(request.Email, request.Password, ct);
-
-        if (identityResult is null)
-        {
-            await AuditLoginFailedSafeAsync(request.Email, clientId, "InvalidCredentials", ip, ct);
-            throw new UnauthorizedAccessException("Invalid credentials.");
-        }
-
-        var (subject, claims) = identityResult.Value;
-        var enrichedClaims = EnrichWithTenantsClaim(claims, allAccessibleIds);
-
-        var securityAudit = authScope.ServiceProvider.GetRequiredService<ISecurityAudit>();
-        await securityAudit.LoginSucceededAsync(
-            userId: subject,
-            userName: enrichedClaims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value ?? request.Email,
-            clientId: clientId!,
-            ip: ip,
-            userAgent: ua,
-            ct: ct);
-
-        var token = await _tokenService.IssueAsync(subject, enrichedClaims, ct);
-
-        await identityService.StoreRefreshTokenAsync(subject, token.RefreshToken, token.RefreshTokenExpiresAt, ct);
-
-        try
-        {
-            var sessionService = authScope.ServiceProvider.GetRequiredService<ISessionService>();
-            await sessionService.CreateSessionAsync(
-                subject,
-                Sha256Short(token.RefreshToken),
-                ip, ua,
-                token.RefreshTokenExpiresAt,
-                ct);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogWarning(ex, "Failed to create session for user {UserId} during tenant-discovery login.", subject);
-        }
-
-        var fingerprint = Sha256Short(token.AccessToken);
-        await securityAudit.TokenIssuedAsync(
-            userId: subject,
-            userName: enrichedClaims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value ?? request.Email,
-            clientId: clientId!,
-            tokenFingerprint: fingerprint,
-            expiresUtc: token.AccessTokenExpiresAt,
-            ct: ct);
-
-        var outboxStore = authScope.ServiceProvider.GetRequiredService<IOutboxStore>();
-        await EnqueueTokenGeneratedEventInScopeAsync(request, subject, enrichedClaims, authTenant.Id, clientId, ip, ua, fingerprint, token, outboxStore, ct);
-
-        return token;
-    }
-
-    // Scans all active tenants to find where this email exists (used for normal path)
-    private async Task<List<string>> GetAllAccessibleTenantIdsAsync(string email, CancellationToken ct)
-    {
-        var allTenants = (await _tenantStore.GetAllAsync()).Where(t => t.IsActive).ToList();
-        var accessibleIds = new List<string>();
-
-        foreach (var tenantInfo in allTenants)
-        {
-            using var scope = _serviceScopeFactory.CreateScope();
-            scope.ServiceProvider.GetRequiredService<IMultiTenantContextSetter>()
-                .MultiTenantContext = new MultiTenantContext<AppTenantInfo>(tenantInfo);
-
-            var resolver = scope.ServiceProvider.GetRequiredService<IUserTenantResolver>();
-            if (await resolver.UserExistsInTenantAsync(email, ct))
-                accessibleIds.Add(tenantInfo.Id!);
-        }
-
-        return accessibleIds;
-    }
-
-    // Adds the tenants claim to an existing claims collection
-    private static List<Claim> EnrichWithTenantsClaim(IEnumerable<Claim> claims, IReadOnlyCollection<string> tenantIds)
-    {
-        var list = claims.ToList();
-        list.AddRange(tenantIds.Select(id => new Claim(ClaimConstants.Tenants, id)));
-        return list;
+        // No tenant found for this user
+        await AuditLoginFailedSafeAsync(request.Email, clientId, "InvalidCredentials", ip, ct);
+        throw new UnauthorizedAccessException("Invalid credentials.");
     }
 
     private async Task AuditLoginFailedSafeAsync(string email, string? clientId, string reason, string ip, CancellationToken ct)
